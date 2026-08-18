@@ -1,0 +1,36 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+        "heading": "Well, this is awkward",
+        "heading_font": "archivo_n9",
+        "accent": "#E92E30",
+        "subtext": "<p>The page you wanted does not exist, but your next favourite shirt definitely does. Let us get you to it.</p>",
+        "show_search": true,
+        "search_placeholder": "Search for products",
+        "button_label": "Shop new arrivals",
+        "button_link": "/collections/all",
+        "button2_label": "Back to safety",
+        "button2_link": "/",
+        "products_heading": "While you're here",
+        "collection": "",
+        "products_count": 4,
+        "per_row": 4,
+        "shop_more_label": "Shop more"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,27 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "store_details": {
+      "type": "store-details",
+      "settings": {
+        "store_title": "The Bear House - Koramangala",
+        "source_page_handle": "our-store",
+        "show_map": true,
+        "accent_color": "#e92e30",
+        "button_bg": "#1e1e1e",
+        "button_text": "#ffffff"
+      }
+    }
+  },
+  "order": [
+    "store_details"
+  ]
+}

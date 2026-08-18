@@ -1,0 +1,641 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.color_background }};
+    color: {{ section.settings.color_text }};
+    overflow:hidden;
+    position:relative;
+    {% if section.settings.check == true %}
+        border-top:1px solid #3F3F3F26;
+    {% endif %}
+    .fixed-container {
+        padding: 0px 0px;
+    }
+
+    /* .bg-link {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      opacity: 0;
+    } */
+}
+.grid-promotional {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 0px 30px;
+}
+left-top
+img.right-icon_image {
+    width: 42px;
+    margin-bottom: 16px;
+}
+
+.right-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 75%;
+}
+.right-top .right-icon_image{
+    width: 42px;
+    margin: 0 0 20px;
+}
+.right-icon-block {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.right-icon-block img {
+    margin: 0;
+    width: 22px;
+    height: 22px;
+}
+
+.right-icon-text {
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0;
+}
+
+.right-with-icon-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.right-promotional {
+    padding: 95px 60px;
+    background: #FAF3E7;
+    position: relative;
+    overflow: hidden;
+    background-image: url('{{ section.settings.image1 | image_url }}');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    height: 450px;
+}
+.right-top h2 {
+    max-width: 240px;
+    width: 100%;
+    line-height: 120%;
+}
+.left-promotional {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: #F3F3F3;
+    flex-direction: column;
+    padding: 40px 80px;
+    background-image: url('{{ section.settings.image_right | image_url }}');
+    background-size: cover;
+    background-position: left;
+    border-radius: 10px;
+}
+.left-promotional .left-top{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.left-promotional .left-top .right-icon_image{
+    width: 48px;
+}
+img.left-persom_image {
+    position: absolute;
+    right: 70px;
+    width: auto;
+    height: 100%;
+    pointer-events: none;
+}
+
+.left-with-icon-wrap {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    align-items: end;
+    flex-direction: column;
+}
+.left-bottom-right{
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+img.left-icon_image {
+    width: 100%;
+    height: 100%;
+}
+
+.left-icon-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 110px;
+}
+img.right-persom_image {
+    width: 40%;
+}
+
+img.left-persom_image {
+    width: 34%;
+    object-fit: contain;
+}
+.left-with-icon-wrap {
+    z-index: 1;
+}
+.left-bottom-block .counter-title {
+    font-size: 16px;
+    color: #3F3F3FCC;
+    line-height: 1.5;
+    font-weight: 400;
+    font-family: 'Roboto';
+    padding: 0px 34px;
+    border-right: 1px solid rgba(63, 63, 63, 0.1);
+}
+.left-bottom-block .counter-title:last-child {
+    border-right: None;
+}
+.left-bottom-block .counter-title strong{
+    color: #3F3F3F;
+    font-size: 24px;
+    font-weight: 500;
+}
+.left-top-inner {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.left-top-inner h2 {
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: -.2px;
+    margin-right: 15px;
+}
+.left-bottom-block {
+    display: flex;
+    padding: 24px 0px;
+    border-top: 1px solid rgba(63, 63, 63, 0.1);;
+    border-bottom: 1px solid rgba(63, 63, 63, 0.1);
+    margin: 30px 0px;
+}
+
+.left-top .left-bottom-right {
+    display: none;
+}
+.counter-title p{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+@media (max-width: 1750px) and (min-width: 1536px) {
+    .left-wrap-content {
+        max-width: 65%;
+    }
+}
+@media only screen and (max-width: 1660px) {
+    .right-promotional,.left-promotional {
+        padding: 50px;
+    }
+    .left-icon-block{
+            max-width: 150px;
+    }
+    img.right-persom_image {
+        width: 44%;
+    }
+}
+@media(max-width:1536px){
+    .right-promotional,.left-promotional {
+            padding: 60px 30px;
+    }
+    .right-top h2 {
+        font-size: 27px;
+    }
+    .left-bottom-block .counter-title {
+        padding: 0px 16px;
+    }
+    .counter-title p{ 
+        margin-bottom:5px;
+        gap: 2px;
+    }
+    .counter-title p svg{
+        width: 14px;
+    }
+    .left-wrap-content {
+        max-width: 406px;
+    }
+
+    .left-bottom-block {
+        padding: 12px 0px;
+        margin: 16px 0px;
+    }
+
+    .left-top-inner {
+        gap: 5px;
+        width: 100%;
+    }
+
+    .left-top-inner h2 {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 1440px) and (min-width: 1251px) {
+    .left-wrap-content {
+        max-width: 306px;
+    }
+    .right-promotional {
+        height: 330px;
+    }
+
+}
+
+@media only screen and (max-width: 1250px){
+    .grid-promotional {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+    .grid-promotional {
+        margin: 0px 10px;
+    }
+
+    .right-promotional {
+        background-image: url('{{ section.settings.image1_mobile | image_url }}');
+
+    }
+}
+
+@media (max-width: 1250px) and (min-width: 768px) {
+    .right-promotional, .left-promotional {
+        /* min-height: 320px; */
+        aspect-ratio: 960/405;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .left-top-inner {
+        display: flex;
+        gap: 8px;
+    }
+    .left-icon-block {
+        max-width: 100px;
+    }
+    .left-top .left-bottom-right {
+        display: flex;
+    }
+    #shopify-section-{{ section.id }} {
+        padding-top: {{ section.settings.mobile_padding_top }}px;
+        padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+    }
+    .left-top h2 {
+        font-size: 13px;
+    }
+    .left-bottom-block .counter-title strong {
+        font-size: 14px;
+        margin-right: 3px;
+    }
+    .left-bottom-block .counter-title {
+        font-size: 10px;
+        margin: 0px;
+        display: flex;
+        align-items: center;
+        padding: 0px 30px;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .right-promotional {
+        padding: 30px 24px;
+        height: 468px;
+    }
+    .right-top {
+        max-width: 140px;
+    }
+    .right-top h2 {
+        font-size: 18px;
+        line-height: 120%;
+    }
+    .right-with-icon-wrap {
+        gap: 6px;
+        margin-top: 24px;
+    }
+
+    .right-icon-block {
+        gap: 6px;
+    }
+    img.right-block-icon_image {
+        width: 18px;
+        height: 18px;
+    }
+    .right-icon-text {
+        font-size: 14px;
+    }
+    img.right-persom_image {
+        width: 62%;
+        right: -7%;
+        bottom: 0;
+    }
+    .left-promotional {
+        padding: 100% 0px 20px 0px;
+        justify-content: center;
+        align-items: center;
+        background-image: url('{{ section.settings.image_right_mobile | image_url }}');
+        background-position: top center;
+    }
+    .left-with-icon-wrap {
+        margin-top: 16px;
+        align-items: center;
+        gap: 0px;
+    }
+    .left-bottom-block {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0px 0px 15px;
+        margin: 15px 0px;
+        border-top:unset;
+    }
+    .left-top-inner h2 {
+        font-size: 12px;
+        margin-right: 6px;
+    }
+    .left-wrap-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+@media only screen and (max-width: 575px) {
+    .right-promotional {
+        padding: 30px 24px;
+        height: 238px
+    }
+}
+{% endstyle %}
+<div class="section-relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }} {% endif %} promo-{{ section.id }}">
+    <div class="fixed-container">
+        {% if section.settings.text != blank %}
+            <div data-fade class="flex-center-block">
+                <h2>{{ section.settings.text }}</h2>
+            </div>
+        {% endif %}
+        <div class="grid-promotional">
+            <div data-fade class="right-promotional">
+                <div class="right-top">
+                    <img class="right-icon_image" src="{{ section.settings.image | img_url: 'master' }}" width="" height="" alt="{{ section.settings.image.alt }}">
+                    <h2>{{ section.settings.text1 }}</h2>
+                </div>
+                <div class="right-with-icon-wrap">
+                    {% for block in section.blocks %}
+                         {% case block.type %}
+                        {% when 'icon_card' %}
+                        <div class="right-icon-block">
+                            <img class="right-block-icon_image" src="{{ block.settings.image | img_url: 'master' }}" width="" height="" alt="{{ block.settings.image.alt }}">
+                            <div class="right-icon-text">{{ block.settings.text }}</div>
+                        </div>
+                        {% endcase %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div data-fade class="left-promotional">
+                {% if section.settings.image2 != blank %}
+                    <img class="left-persom_image desktop-only" src="{{ section.settings.image2 | img_url: 'master' }}" width="" height="" alt="{{ section.settings.image2.alt }}">
+                {% endif %}
+                <div class="left-with-icon-wrap">
+                    <div class="left-wrap-content">
+                    <h2>{{ section.settings.text_top }}</h2>
+                    <div class="left-bottom-block">
+                        <div class="counter-title">{{ section.settings.download }}</div>
+                        <div class="counter-title">{{ section.settings.rated }}</div>
+                        <div class="counter-title">{{ section.settings.reviews }}</div>
+                    </div>
+                    <div class="left-bottom-right">
+
+                         <div class="left-top-inner">
+                            {% if section.settings.logo2 != blank %}
+                                <img class="right-icon_image" src="{{ section.settings.logo2 | img_url: 'master' }}" width="" height="" alt="{{ section.settings.image.alt }}">
+                            {% endif %}
+                            <h2>{{ section.settings.text2 }}</h2>
+                        </div>
+
+
+                        {% for block in section.blocks %}
+                            {% case block.type %}
+                            {% when 'app_card' %}
+                                <div class="left-icon-block">
+                                    <a class="left-icon-href" href="{{ block.settings.url }}" aria-label="{{ block.settings.title | default: 'Download the app' | escape }}">
+                                    <img class="left-icon_image" src="{{ block.settings.image | img_url: 'master' }}" width="" height="" alt="{{ block.settings.image.alt }}">
+                                    </a>
+                                </div>
+                            {% endcase %}
+                        {% endfor %}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        {% comment %} {% if section.settings.button_link != blank %}
+           <a href="{{ section.settings.button_link }}" class="bg-link" aria-label="{{ section.settings.button_label | default: 'Learn more' | escape }}"></a>
+        {% endif %} {% endcomment %}
+    </div>
+</div>
+<script>
+
+</script>
+{% schema %}
+{
+"name": "Promotional Section",
+"class": "promotional-section",
+"settings": [
+{
+    "type": "text",
+    "id": "custom_class",
+    "label": "Custom Class"
+},
+{
+    "type": "checkbox",
+    "id": "check",
+    "label": "Border Top"
+},
+{
+    "type": "image_picker",
+    "id": "image",
+    "label": "Logo image"
+},
+{
+    "type": "text",
+    "id": "text",
+    "label": "Title"
+},
+{
+    "type": "text",
+    "id": "text1",
+    "label": "Left Title"
+},
+{
+    "type": "image_picker",
+    "id": "image1",
+    "label": "Left image"
+},
+{
+    "type": "image_picker",
+    "id": "image1_mobile",
+    "label": "Left image Mobile"
+},
+{
+    "type": "image_picker",
+    "id": "image_right",
+    "label": "Right image"
+},
+{
+    "type": "image_picker",
+    "id": "image_right_mobile",
+    "label": "Right image mobile"
+},
+{
+    "type": "image_picker",
+    "id": "logo2",
+    "label": "Logo image"
+},
+{
+    "type": "text",
+    "id": "text2",
+    "label": "Right Title"
+},
+{
+    "type": "text",
+    "id": "text_top",
+    "label": "Top Text"
+},
+{
+    "type": "image_picker",
+    "id": "image2",
+    "label": "App image"
+},
+{
+    "type": "richtext",
+    "id": "download",
+    "label": "Download label"
+},
+{
+    "type": "html",
+    "id": "rated",
+    "label": "Rated label"
+},
+{
+    "type": "richtext",
+    "id": "reviews",
+    "label": "Reviews label"
+},
+{
+"type": "range",
+"id": "range",
+"min": 2,
+"max": 6,
+"step": 1,
+"unit": "px",
+"label": "Store Pre View",
+"default": 4
+},
+{
+"type": "range",
+"id": "padding_top",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Top",
+"default": 36
+},
+{
+"type": "range",
+"id": "padding_bottom",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Bottom",
+"default": 36
+},
+{
+"type": "range",
+"id": "mobile_padding_top",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Top",
+"default": 20
+},
+{
+"type": "range",
+"id": "mobile_padding_bottom",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Bottom",
+"default": 20
+},
+{
+"type": "color",
+"id": "color_text",
+"label": "Text Color"
+},
+{
+"type": "color",
+"id": "color_background",
+"label": "Background Color"
+}
+],
+"blocks": [
+    {
+        "type": "icon_card",
+        "name": "Icon Card",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Icon"
+            },
+            {
+                "type": "text",
+                "id": "text",
+                "label": "Text"
+            },
+        ]
+    },
+    {
+        "type": "app_card",
+        "name": "App Card",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Icon"
+            },
+            {
+                "type": "url",
+                "id": "url",
+                "label": "Link"
+            },
+        ]
+    }
+],
+"presets": [
+{
+"name": "Promotional Section",
+}
+]
+}
+{% endschema %}

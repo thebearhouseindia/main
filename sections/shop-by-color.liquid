@@ -1,0 +1,266 @@
+<style>
+.shop-by-color {
+  padding: 40px 50px;
+  margin: 40px 30px 40px 30px;
+  overflow: hidden;
+  background: #EAEAEA;
+  border-radius: 10px;
+}
+
+.shop-by-color__heading {
+  color: #3F3F3F;
+  margin: 0 0 24px;
+}
+
+.shop-by-color__swiper {
+  overflow: visible;
+}
+  #shopify-section-{{ section.id }} { 
+  .swiper-slide{
+  width:unset !important;
+}
+}
+.shop-by-color__item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: auto;
+    padding: 10px;
+    border-radius: 999px;
+    gap: 8px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.shop-by-color__item:hover {
+  transform: translateY(-2px);
+}
+
+.shop-by-color__label {
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+.shop-by-color__item.white  .shop-by-swatch{
+    border: 1px solid #3F3F3F2B;
+}
+.shop-by-color__swiper .swiper-wrapper{
+    align-items: center;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.shop-by-color .shop-by-swatch {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    aspect-ratio: 1;
+    border-radius: 999px;
+}
+.color-collection .shop-by-color {
+  padding: 60px 0px 0px;
+  overflow: hidden;
+  text-align: center;
+}
+.color-collection .shop-by-color__swiper .swiper-wrapper{
+    align-items: center;
+    justify-content: center;
+}
+.color-collection .shop-by-color__swiper {
+    padding: 16px 0px;
+    border-top: 1px solid rgba(63, 63, 63, 0.1);
+    border-bottom: 1px solid rgba(63, 63, 63, 0.1);
+}
+.color-collection .shop-by-color__item.active {
+  border: 1px solid #3f3f3f;
+}
+{% for block in section.blocks %}
+  .shop-by-color__item.white {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+  }
+{% endfor %}
+@media (max-width: 1551px) {
+  .shop-by-color__item {
+    height: auto;
+    padding: 7px 14px 7px 10px;
+    border-radius: 999px;
+  }
+}
+
+@media(max-width:1440px){
+  .shop-by-color {
+    padding: 40px 50px;
+    margin: 20px 20px 20px 20px;
+    overflow: hidden;
+    max-width: 1600px;
+  }
+  .shop-by-color__item{
+  gap:4px;
+  }
+}
+
+@media(max-width:1366px){
+.shop-by-color__swiper {
+    overflow: visible;
+    max-width: 1166px;
+    margin: unset;
+}
+}
+@media (max-width: 768px) {
+  .color-collection .shop-by-color__swiper .swiper-wrapper{
+    align-items: center;
+    justify-content: start;
+    padding-left: 10px;
+}
+.color-collection .shop-by-color {
+  padding: 16px 0px 0px;
+  overflow: hidden;
+  text-align: left;
+}
+
+
+  .shop-by-color {
+    padding: 20px 16px;
+    margin: 30px 10px 30px 10px;
+    overflow: hidden;
+    background: #EAEAEA;
+    border-radius: 10px;
+  }
+  .shop-by-color__label {
+    font-size: 14px;
+  }
+  .shop-by-color__heading {
+  margin-bottom: 12px;
+  }
+
+  .shop-by-color .swiper-slide {
+    width: auto;
+  }
+}
+</style>
+
+<div class="shop-by-color {{ section.settings.custom_class }}">
+    {% if section.settings.heading != blank %}
+      <h2 class="shop-by-color__heading">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    <div class="shop-by-color__swiper swiper shop-by-color-{{ section.id }}">
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          {% assign block_url = block.settings.url %}
+          {% assign block_path = block_url | split: shop.url | last %}
+          {% assign current_path = request.path %}
+          {% if block.settings.color_name != blank and block.settings.collection != blank %}
+            <div class="swiper-slide">
+              <a
+                href="{{ block.settings.collection.url }}"
+                class="shop-by-color__item {{ block.settings.color_name }} {% if current_path == block_path %}active{% endif %}"
+                style="background-color: {{ block.settings.color_code | color_modify: 'alpha', 0.2 }};"
+              >
+                <span class="shop-by-swatch" style="background-color: {{ block.settings.color_code }};"></span>
+                <span
+                  class="shop-by-color__label"
+                  style="color: {{ block.settings.text_color }};"
+                >
+                  {{ block.settings.color_name }}
+                </span>
+              </a>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.shop-by-color-{{ section.id }}', {
+      slidesPerView: 10,
+      spaceBetween: 6,
+      freeMode: true,
+      grabCursor: true,
+
+      breakpoints: {
+        100: {
+          slidesPerView: 'auto',
+          spaceBetween: 4
+        },
+        769: {
+          slidesPerView:'auto',
+          spaceBetween: 6
+        },
+        1440: {
+          slidesPerView:'auto',
+          spaceBetween: 6
+        },
+        1551: {
+          slidesPerView:'auto',
+          spaceBetween: 6
+        }
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Shop By Color (Slider)",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom class"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "SHOP BY COLOR"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "color",
+      "name": "Color Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "color_name",
+          "label": "Color Name",
+          "default": "Blue"
+        },
+        {
+          "type": "color",
+          "id": "color_code",
+          "label": "Color",
+          "default": "#2f4b7c"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "url",
+          "id": "collection",
+          "label": "Redirect Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Color",
+      "blocks": [
+        { "type": "color" },
+        { "type": "color" },
+        { "type": "color" }
+      ]
+    }
+  ]
+}
+{% endschema %}

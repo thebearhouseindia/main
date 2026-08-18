@@ -1,0 +1,50 @@
+{% if template contains 'page' and page.handle == 'press' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://thebearhouse.com/pages/press#webpage",
+      "url": "https://thebearhouse.com/pages/press",
+      "name": "The Bear House Press & Media",
+      "description": "The Bear House featured across 40+ leading Indian publications including Inc42, YourStory, The Tribune, ThePrint, Forbes India, Fashion Network, and Images BoF."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://thebearhouse.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Press & Media", "item": "https://thebearhouse.com/pages/press" }
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://thebearhouse.com/#organization",
+      "name": "The Bear House",
+      "alternateName": ["Bear House", "TBH India"],
+      "url": "https://thebearhouse.com/",
+      "logo": "https://thebearhouse.com/cdn/shop/files/Frame_78.svg",
+      "sameAs": [
+        "https://www.instagram.com/thebearhouse/",
+        "https://www.facebook.com/thebearhouseindia/",
+        "https://in.linkedin.com/company/the-bear-house",
+        "https://www.youtube.com/@thebearhouse"
+      ],
+      "subjectOf": [
+        { "@type": "NewsArticle", "url": "https://inc42.com/startups/the-bear-house-how-this-d2c-brand-stitched-together-an-inr-140-cr-profitable-menswear-business/", "headline": "How This D2C Brand Stitched Together an INR 140 Cr Profitable Menswear Business", "publisher": { "@type": "Organization", "name": "Inc42" } },
+        { "@type": "NewsArticle", "url": "https://yourstory.com/2025/04/the-bear-house-rs-50-cr-funding-jm-financials-pivate-equity-arm", "headline": "The Bear House Raises Rs 50 Cr Series A", "datePublished": "2025-04", "publisher": { "@type": "Organization", "name": "YourStory" } },
+        { "@type": "NewsArticle", "url": "https://www.tribuneindia.com/news/business/the-bear-house-secures-rs-3-crore-investment-deal-from-namita-thapar-on-shark-tank-india/", "headline": "The Bear House Secures Rs 3 Cr Investment from Namita Thapar on Shark Tank India", "datePublished": "2025-03", "publisher": { "@type": "Organization", "name": "The Tribune" } },
+        { "@type": "NewsArticle", "url": "https://theprint.in/ani-press-releases/the-bear-house-secures-rs-3-crore-investment-deal-from-namita-thapar-on-shark-tank-india/2563740/", "headline": "Rs 3 Cr Shark Tank India Investment", "publisher": { "@type": "Organization", "name": "ThePrint" } },
+        { "@type": "NewsArticle", "url": "https://ms.forbesindia.com/dgems-forbes/bearhouse/", "headline": "The Bear House on Forbes India d.Gems", "publisher": { "@type": "Organization", "name": "Forbes India" } },
+        { "@type": "NewsArticle", "url": "https://www.fibre2fashion.com/interviews/industry-speak/the-bear-house/harsh-somaiya/14043", "headline": "Harsh Somaiya on Building The Bear House", "publisher": { "@type": "Organization", "name": "Fibre2Fashion" } },
+        { "@type": "NewsArticle", "url": "https://www.ceoinsightsindia.com/leader/tanvi-somaiya-a-perfectionist-constantly-improving-herself-her-brand-cid-1242.html", "headline": "Tanvi Somaiya Leadership Profile", "publisher": { "@type": "Organization", "name": "CEO Insights India" } },
+        { "@type": "NewsArticle", "url": "https://in.fashionnetwork.com/news/The-bear-house-enters-offline-market-with-store-at-broadway-in-delhi,1679907.html", "headline": "The Bear House Enters Offline Market with Store at Broadway in Delhi", "datePublished": "2024-11-19", "publisher": { "@type": "Organization", "name": "Fashion Network" } },
+        { "@type": "NewsArticle", "url": "https://www.indianretailer.com/news/bear-house-expands-retail-first-offline-store-delhi", "headline": "Bear House Expands Retail, First Offline Store in Delhi", "datePublished": "2024-11-18", "publisher": { "@type": "Organization", "name": "Indian Retailer" } },
+        { "@type": "NewsArticle", "url": "https://www.bwdisrupt.com/article/the-bear-house-bags-rs-3-cr-deal-from-namita-thapar-on-shark-tank-india-550879", "headline": "The Bear House Bags Rs 3 Cr Deal from Namita Thapar", "publisher": { "@type": "Organization", "name": "BW Disrupt" } },
+        { "@type": "NewsArticle", "url": "https://www.imagesbof.in/the-bear-house-crosses-500-points-of-sale-eyes-30-more-stores-in-fy27/", "headline": "The Bear House Crosses 500 Points of Sale", "publisher": { "@type": "Organization", "name": "Images Business of Fashion" } }
+      ]
+    }
+  ]
+}
+</script>
+{% endif %}

@@ -1,0 +1,66 @@
+{%- if linklists[block.settings.menu].links.size > 0 -%}
+  {%- if block.settings.show_footer_title -%}
+    <h2 class="h4 footer__title small--hide">
+      {{ block.settings.title }}
+    </h2>
+    <button 
+      type="button" 
+      class="h4 footer__title collapsible-trigger medium-up--hide" 
+      aria-controls="Footer-{{ block.id }}"
+    >
+      {{ block.settings.title }}
+
+      <span class="collapsible-trigger__icon" role="presentation">
+
+        <svg class="icon-plus" aria-hidden="true" viewBox="0 0 20 20">
+          <path d="M10 2v16M2 10h16" stroke="#000" stroke-width="2" fill="none"></path>
+        </svg>
+
+        <svg class="icon-minus" aria-hidden="true" viewBox="0 0 20 20">
+          <path d="M2 10h16" stroke="#000" stroke-width="2" fill="none"></path>
+        </svg>
+
+      </span>
+    </button>
+  {%- endif -%}
+  <div
+    {% if block.settings.show_footer_title %}
+      id="Footer-{{ block.id }}" class="collapsible-content collapsible-content--small"
+    {% endif %}>
+    <div class="collapsible-content__inner">
+      <div class="footer__collapsible{% unless block.settings.show_footer_title %} footer_collapsible--disabled{% endunless %}">
+        <ul class="no-bullets site-footer__linklist">
+          {%- for link in linklists[block.settings.menu].links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.querySelectorAll(".site-footer .collapsible-trigger, .site-footer .collapsible-content")
+    .forEach(el => el.classList.remove("is-open"));
+
+  const blockIsOpen = new MutationObserver((mutations) => {
+    mutations.forEach(m => {
+      if (m.attributeName === "class") {
+        const target = m.target;
+
+        if (target.classList.contains("is-open")) {
+          target.classList.remove("is-open");
+        }
+      }
+    });
+  });
+
+  document.querySelectorAll(".site-footer .collapsible-trigger, .site-footer .collapsible-content")
+    .forEach(el => {
+      blockIsOpen.observe(el, { attributes: true });
+    });
+
+});
+</script>

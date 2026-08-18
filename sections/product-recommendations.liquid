@@ -1,0 +1,301 @@
+{%- liquid
+  assign number_of_products = section.settings.related_count | plus: 0
+  assign current_id = product.id
+  assign want_type = product.type | downcase | strip
+
+  # ---- Optional same-category collection, used only to TOP UP if Shopify's
+  #      related set is short. Resolved from product.type, plural-aware, and
+  #      never a catch-all / promo collection. Same category only, always.
+  assign type_handle = product.type | handleize
+  assign type_handle_p = type_handle | append: 's'
+  assign want_type_p = want_type | append: 's'
+  assign deny = '|all|products|boost-all|boost|yourtoken-all-products-collection|under-2999|18-gst-products|newarrival|new-arrivals|new-arrival|sale|best-sellers|bestsellers|trending|featured|in-my-city|18-gst-belt|'
+
+  assign pool = collections[type_handle]
+  if pool == blank or pool.products_count == 0
+    assign pool = collections[type_handle_p]
+  endif
+  if pool == blank or pool.products_count == 0
+    for c in product.collections
+      assign ctl = c.title | downcase | strip
+      if ctl == want_type or ctl == want_type_p
+        assign pool = c
+        break
+      endif
+    endfor
+  endif
+  if pool != blank
+    assign ph = pool.handle | prepend: '|' | append: '|'
+    if deny contains ph
+      assign pool = blank
+    endif
+  endif
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    .section-header {
+      margin-bottom: 30px;
+      padding-inline: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-header .section-header__title {
+      font-size: 28px;
+      color: #3f3f3f;
+      font-weight: 500;
+      line-height: 1;
+      text-align: left;
+    }
+    .grid-product__meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      padding: 16px 16px 0;
+    }
+
+    .grid-product__title {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1;
+      margin-bottom: 10px;
+      letter-spacing: -.2px;
+      text-transform: uppercase;
+      color: #3f3f3fcc;
+    }
+
+    .grid-product__price {
+        font-size: 16px;
+        color: #3f3f3f;
+        font-weight: 600;
+        line-height: 1;
+        margin-top: 0;
+        display: flex;
+        text-align: center;
+    }
+
+    .grid-product__price span {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 8px;
+        font-family: Roboto;
+        font-weight: 500;
+        font-size: 16px !important;
+        line-height: 100%;
+        letter-spacing: -.2px;
+        text-transform: uppercase;
+    }
+
+    .featured-collection .grid__item .grid-product__price--original {
+        font-size: 16px;
+        color: #3f3f3fe6;
+        font-weight: 300;
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 8px;
+        font-family: Roboto;
+        font-weight: 500;
+        font-size: 16px !important;
+        line-height: 100%;
+        opacity: 50%;
+        letter-spacing: -.2px;
+        text-transform: uppercase;
+    }
+
+    .grid {
+      margin: 0 !important;
+    }
+
+    .page-width {
+        padding: 0 !important;
+    }
+
+    .grid__item {
+      padding-left: 2px !important;
+
+      &:first-child {
+        padding-left: 0px !important;
+      }
+    }
+
+    .icon-wishlist-heart-empty.wishlist-btn {
+      top: 10px !important;
+    }
+
+    .icon-wishlist-heart-empty.wishlist-btn  .count  {
+      display: none;
+    }
+
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      .section-header .section-header__title {
+          font-size: 16px;
+      }
+
+      .section-header {
+          margin-bottom: 10px;
+          padding-inline: 16px;
+      }
+
+      .grid-product__meta {
+        padding: 8px 6px 0;
+      }
+
+      .grid-product__title {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      .grid-product__price--original,
+      .grid-product__price {
+        font-size: 14px;
+      }
+
+      .grid-overflow-wrapper .grid__item:first-child,
+      .grid-overflow-wrapper .grid__item:last-child {
+        margin: 0 !important;
+      }
+
+      .grid-overflow-wrapper .grid__item {
+        flex: 0 0 44vw;
+        width: 44vw;
+      }
+    }
+  }
+</style>
+
+<div
+  id="Recommendations-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="product-recommendations-static"
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&intent=related&limit=10">
+
+  <div
+    data-section-id="{{ product.id }}"
+    data-subsection
+    data-section-type="collection-grid"
+    class="index-section">
+
+    {%- if recommendations.performed -%}
+
+      {%- comment -%}
+        Build the grid into a variable first so the heading only shows when at
+        least one product renders. Category is guaranteed: we only ever render
+        products of the same product.type as the current product.
+      {%- endcomment -%}
+      {%- capture rec_grid -%}
+        {%- assign shown = 0 -%}
+        {%- assign seen = '|' -%}
+
+        {%- comment -%} 1) Shopify's related products, filtered to the same type {%- endcomment -%}
+        {%- for pr in recommendations.products -%}
+          {%- if shown >= number_of_products -%}{%- break -%}{%- endif -%}
+          {%- if pr.id == current_id -%}{%- continue -%}{%- endif -%}
+          {%- assign prt = pr.type | downcase | strip -%}
+          {%- if want_type != '' and prt != want_type -%}{%- continue -%}{%- endif -%}
+          {%- assign key = pr.handle | prepend: '|' | append: '|' -%}
+          {%- if seen contains key -%}{%- continue -%}{%- endif -%}
+          {%- render 'product-grid-item', product: pr, per_row: section.settings.products_per_row, quick_shop_enable: settings.quick_shop_enable, fallback: '39vw' -%}
+          {%- assign seen = seen | append: pr.handle | append: '|' -%}
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endfor -%}
+
+        {%- comment -%} 2) If still short, top up from the SAME category collection only {%- endcomment -%}
+        {%- if shown < number_of_products and pool != blank -%}
+          {%- for pr in pool.products -%}
+            {%- if shown >= number_of_products -%}{%- break -%}{%- endif -%}
+            {%- if pr.id == current_id -%}{%- continue -%}{%- endif -%}
+            {%- assign key = pr.handle | prepend: '|' | append: '|' -%}
+            {%- if seen contains key -%}{%- continue -%}{%- endif -%}
+            {%- render 'product-grid-item', product: pr, per_row: section.settings.products_per_row, quick_shop_enable: settings.quick_shop_enable, fallback: '39vw' -%}
+            {%- assign seen = seen | append: pr.handle | append: '|' -%}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endcapture -%}
+
+      {%- assign rec_grid_check = rec_grid | strip -%}
+      {%- if rec_grid_check != blank -%}
+        <div class="page-width">
+          <header class="section-header">
+            <h3 class="section-header__title">
+              {{ section.settings.product_recommendations_heading }}
+            </h3>
+          </header>
+        </div>
+
+        <div class="page-width page-width--flush-small">
+          <div class="grid-overflow-wrapper">
+            <div class="product-recommendations page-width">
+              <div class="grid grid--uniform" data-aos="overflow__animation">
+                {{ rec_grid }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- unless recommendations.performed -%}
+  <script>
+    (function () {
+      var el = document.getElementById('Recommendations-{{ section.id }}');
+      if (!el || !el.dataset.url) return;
+      fetch(el.dataset.url)
+        .then(function (r) { return r.text(); })
+        .then(function (html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var incoming = doc.getElementById('Recommendations-{{ section.id }}');
+          if (incoming) { el.innerHTML = incoming.innerHTML; }
+        })
+        .catch(function () {});
+    })();
+  </script>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "t:sections.product-recommendations.name",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows Shopify's related products, limited to the same product type. Heading hides automatically when there is nothing relevant to show."
+    },
+    {
+      "type": "text",
+      "id": "product_recommendations_heading",
+      "label": "t:sections.product-recommendations.settings.product_recommendations_heading.label",
+      "default": "You may also like"
+    },
+    {
+      "type": "range",
+      "id": "related_count",
+      "label": "t:sections.product-recommendations.settings.related_count.label",
+      "default": 6,
+      "min": 2,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "label": "t:sections.product-recommendations.settings.products_per_row.label",
+      "default": 3,
+      "min": 2,
+      "max": 5,
+      "step": 1
+    }
+  ],
+  "disabled_on": {
+    "groups": ["footer", "header", "custom.popups"]
+  }
+}
+{% endschema %}

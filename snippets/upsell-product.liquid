@@ -1,0 +1,121 @@
+<style>
+.product-details {
+    overflow: hidden;
+}
+.upsell-title-wrap {
+    margin-bottom: 14px;
+}
+h3.label-class {
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  text-align: left;
+}
+.upsell-swiper-wrapper {
+  padding-top: 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 0px;
+}
+@media (max-width: 768px) {
+  .upsell-swiper-wrapper {
+    padding-top: 20px;
+  }
+  .upsell-swiper {
+    margin-right: -10px;
+  }
+}
+</style>
+
+{%- assign upsell_products = product.metafields.custom.upsell_products.value -%}
+{%- if upsell_products != blank -%}
+{%- assign unique_id = section.id -%}
+<div class="upsell-swiper-wrapper">
+    <div class="upsell-title-wrap">
+        <h3 class="label-class">Style with</h3>
+    </div>
+  <div  class="swiper upsell-swiper upsell-swiper-{{ unique_id }}">
+    <div class="swiper-wrapper upsells-swiper-wrapper">
+    {%- for upsell_product in upsell_products -%}
+
+  {%- if upsell_product.options.size > 1 -%}
+    {% assign primary_option = upsell_product.options_with_values[0] %}
+    {% assign fixed_second_value = upsell_product.options_with_values[1].values[0] %}
+
+    {%- for primary_value in primary_option.values -%}
+      {% assign target_variant = nil %}
+      {%- for v in upsell_product.variants -%}
+        {%- if v.option1 == primary_value and v.option2 == fixed_second_value -%}
+          {% assign target_variant = v %}
+          {% break %}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if target_variant -%}
+        <div class="swiper-slide upsell-swiper-slide">
+          {% render 'mini-card-product',
+            product: upsell_product,
+            variant: target_variant,
+            section_id: section.id
+          %}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+
+  {%- else -%}
+    <div class="swiper-slide upsell-swiper-slide">
+      {% render 'mini-card-product',
+        product: upsell_product,
+        section_id: section.id
+      %}
+    </div>
+  {%- endif -%}
+
+{%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- endif -%}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var swiper_bundle = new Swiper('.swiper.upsell-swiper-{{ unique_id }}', {
+    slidesPerView: 1.7,
+    spaceBetween: 6,
+    watchSlidesProgress: true,
+    watchSlidesVisibility: true,
+    navigation: {
+      nextEl: '.next-{{ unique_id }}',
+      prevEl: '.prev-{{ unique_id }}',
+    },
+    breakpoints: {
+      300: { slidesPerView: 1.5,spaceBetween: 4, },
+      992: { slidesPerView: 1.5 ,spaceBetween:6,},
+      1660: { slidesPerView: 1.7 ,spaceBetween:6,},
+    }
+  });
+});
+
+$(document).ready(function() {
+  function keepUpsellButtonsEnabled() {
+    $('.upsell-quick-add-wrapper .quick-add__button--add').each(function() {
+      var $btn = $(this);
+      
+      $btn.prop('disabled', false);
+      $btn.removeAttr('disabled');
+      
+      $btn.removeClass('disabled');
+    });
+  }
+  $(document).on('optionValueSelectionChanged', function() {
+    setTimeout(function() {
+      keepUpsellButtonsEnabled();
+    }, 100); 
+  });
+$(document).on('variant:changed variant:updated change', function() {
+    setTimeout(keepUpsellButtonsEnabled, 100);
+  });
+});
+</script>

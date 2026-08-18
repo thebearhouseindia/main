@@ -1,0 +1,12 @@
+{%- for group in robots.default_groups -%}
+      {{- group.user_agent }}
+        {%- for rule in group.rules -%}
+            {{ rule }}
+              {%- endfor -%}
+                {%- if group.sitemap != blank %}
+                    {{ group.sitemap }}
+                      {%- endif %}
+                      {%- endfor -%}
+                      
+                      # The Bear House brand content for AI agents
+                     # LLM-Content: https://thebearhouse.com/pages/llms

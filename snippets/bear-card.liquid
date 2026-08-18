@@ -1,0 +1,185 @@
+{% style %}
+
+.bear-card {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr;
+    background: #F2F2F2;
+    padding: 20px 0px 20px 20px;
+    border-radius: 6px;
+    gap:2px;
+}
+.blocks-card-here {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 6px;
+}
+
+.icon-text {
+    display: flex;
+    gap: 6px;
+}
+h3.bear-card-title {
+   font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 120%;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    margin: unset;
+    color: #3F3F3F;
+}
+.bear-card-content {
+   font-family: 'Roboto';
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: 0;
+    color: #3F3F3F;
+    margin: 10px 0px 12px;
+}
+.bear-card-content p {
+    margin: unset;
+}
+a.bear-card-link {
+   font-family: 'Roboto';
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    color: #3F3F3F;
+}
+.image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.left-side-part {
+    max-width: 157px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-around;
+}
+.bear-card-icon {
+    position: relative;
+    overflow: hidden;
+}
+.bear-card-icon img {
+    width: auto;
+    height: auto;
+}
+
+
+@media(max-width:1280px){
+.bear-card-content {
+ margin: 6px 0px 8px;
+}
+.bear-card {
+    padding: 14px 0px 14px 14px;
+}
+h3.bear-card-title {
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 14px;
+}
+}
+
+
+@media(max-width:768px){
+.bear-card {
+    padding: 16px 0px 16px 16px;
+    grid-template-columns: 1fr 0.3fr;
+}
+.image-side {
+    width: 100%;
+    height: auto;
+}
+
+h3.bear-card-title {
+    font-size: 14px;
+}
+
+a.bear-card-link {
+    font-size: 12px;
+}
+.blocks-card-here {
+    grid-template-columns: 1fr;
+    gap: 2px;
+}
+
+.left-side-part {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: unset;
+    justify-content: space-between;
+}
+
+.bear-card-content {
+    text-align: left;
+    font-size: 13px;
+    margin: 8px 0px 15px;
+}
+
+}
+{% endstyle %}
+
+<div class="relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
+  
+  <div class="blocks-card-here">
+    
+    {% for block in section.blocks %}
+        {% case block.type %}
+        {% when 'bear-card' %}
+        <div class="bear-card" {{ block.shopify_attributes }}>
+            <div class="left-side-part">
+                <div class="icon-text">
+                    {% if block.settings.icon_image != blank %}
+                    <div class="bear-card-icon">
+                        <img 
+                        src="{{ block.settings.icon_image | image_url: width: 300 }}" 
+                        alt="{{ block.settings.bear_Text }}"
+                        loading="lazy"
+                        width="" height=""
+                        >
+                    </div>
+                    {% endif %}
+                
+                    {% if block.settings.bear_Text != blank %}
+                    <h3 class="bear-card-title">
+                        {{ block.settings.bear_Text }}
+                    </h3>
+                    {% endif %}
+                </div>
+
+                {% if block.settings.richtext != blank %}
+                <div class="bear-card-content">
+                    {{ block.settings.richtext }}
+                </div>
+                {% endif %}
+                
+                {% if block.settings.url_text != blank %}
+                <a href="{{ block.settings.url_text }}" class="bear-card-link">
+                    <span class="bear-card-join">
+                    {{ block.settings.jointext }}
+                </span>
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="image-side">
+            {%  if block.settings.bear_image != blank %}
+                <img src="{{ block.settings.bear_image | img_url:'master' }}" width="" height="">
+            {% endif %}    
+            </div> 
+        </div>
+          
+      {% endcase %}
+      
+    {% endfor %}
+    
+  </div>
+  
+</div>

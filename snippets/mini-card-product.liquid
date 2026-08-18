@@ -1,0 +1,102 @@
+<div class="product-card-mini">
+  <div class="mini_inner">
+    <a href="{{ product.url }}">
+      <img 
+        src="{{ product.featured_image | image_url }}" 
+        alt="{{ product.title }}" width="" height=""
+        class="product-card-image">
+    </a>
+  </div>
+
+  <div>
+    <h3 class="product-card-title">{{ product.title }}</h3>
+
+    <div class="mini-price">
+      <div class="product-card-price">
+      ₹{{ product.price | money_without_trailing_zeros | replace: "Rs. ", "" }}
+    </div>
+
+    {% if product.compare_at_price > product.price %}
+      <div class="product-card-compare-price">
+        <s>₹{{ product.compare_at_price | money_without_trailing_zeros | replace: "Rs. ", "" }}</s>
+      </div>
+    {% endif %}
+    </div>
+
+
+    <form action="/cart/add" method="post" class="product-card-atc">
+      <input 
+        type="hidden" 
+        name="id" 
+        value="{{ product.selected_or_first_available_variant.id }}">
+
+      <button type="submit" class="btn product-card-btn">
+        Add
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+.product-card-mini {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px;
+  border: 1px solid rgba(63, 63, 63, 0.1);
+  border-radius: 10px;
+  text-align: left;
+}
+.product-card-mini .mini_inner {
+  max-width: 90px;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.product-card-mini .product-card-title {
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 130%;
+  letter-spacing: 0;
+  color: rgba(63, 63, 63, 0.8);
+  margin-bottom: 6px;
+}
+.product-card-mini .mini-price {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.product-card-mini .product-card-compare-price {
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: -0.2px;
+  color: rgba(63, 63, 63, 0.5);
+}
+.product-card-mini .product-card-price {
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: -0.2px;
+  color: #3f3f3f;
+}
+.product-card-mini .product-card-btn {
+  border-radius: 24px;
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 100%;
+  letter-spacing: -0.2px;
+  min-width: 50px;
+}
+@media (max-width: 768px) {
+  .product-card-mini {
+    gap: 10px;
+    padding: 6px;
+  }
+}
+</style>

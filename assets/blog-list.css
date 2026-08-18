@@ -1,0 +1,194 @@
+
+.blog-lists .blog-t{
+    display:none;
+}
+.column-grid {
+    display: grid;
+     grid-template-columns: repeat(4, 1fr);
+    column-gap: 6px;
+    row-gap: 6px;
+}
+.column-grid .new-article-card:nth-of-type(1){
+  grid-column: span 2;
+  color:black;
+}
+.new-articale-detail-block {
+    padding: 20px;
+    background: #F2F2F2;
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    border: 1px solid;
+    border-top: none;
+    border-color: #3f3f3f1a;
+    border-radius: 0px 0px 10px 10px;
+}
+.new-article-info {
+display: flex;
+font-family: 'Roboto';
+font-weight: 400;
+font-size: 14px;
+line-height: 140%;
+text-transform: uppercase;
+color:#3F3F3F;
+}
+h3.new-article-title {
+    font-family: 'Roboto';
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 130%;
+    margin: 12px 0px 0px;
+    text-transform: capitalize;
+    color:#3F3F3F;
+}
+a.new-article-img-wrap.height-article img {
+    height: 220px;
+    object-fit: cover;
+    width: 100%;
+}
+a.read-link {
+    font-family: 'Roboto';
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    color:#3F3F3F;
+}
+/* ---- */
+.blog-tag-filter {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px 0px;
+    border-top: 1px solid rgba(63, 63, 63, 0.1);
+    border-bottom: 1px solid rgba(63, 63, 63, 0.1);
+}
+.blog-tag{
+    font-family: 'Roboto';
+    font-size: 14px;
+    line-height: 120%;
+    text-transform: uppercase;
+    position:relative;
+    color:#3F3F3F;
+    padding: 10px 14px;
+    background: #ffffff;
+    border-radius: 25px;
+    border: 1px solid rgba(63, 63, 63, 0.08);
+    font-weight: 400;
+    white-space: nowrap;
+}
+.blog-tag.active{
+  font-weight:500;
+  color:#3F3F3F;
+  background: #DDDDDD;
+  border: 1px solid rgba(63, 63, 63, 0.5);  
+}
+.blog-lists.page-width.page-content .grid{
+padding:0;
+margin:0
+}
+.blog-lists.page-width.page-content  .section-header {
+        margin-bottom: 16px;
+}
+.blog-lists.page-width.page-content {
+    max-width: 100%;
+    padding: 0px 30px;
+}
+h2.bear-title {
+text-align: left;
+font-family: 'Roboto';
+font-weight: 500;
+font-size: 28px;
+line-height: 100%;
+text-transform: uppercase;
+color:#3F3F3F;
+margin: 0px 0px 30px 0px;
+text-align: center;
+}
+.blog-lists.page-width.page-content .section-header {
+    margin-bottom: 30px;
+    margin-left: -30px;
+    margin-right: -30px;
+}
+.new-article-card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+@media(max-width:768px){
+    a.new-article-img-wrap.height-article img {
+        height: 103px;
+    }
+    .column-grid {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        column-gap: 4px;
+        row-gap: 4px;
+    }
+    .column-grid .new-article-card:nth-of-type(1) {
+        grid-column: span 1;
+        color: #000;
+    }
+    .blog-lists.page-width.page-content {
+        max-width: 100%;
+        padding: 0 10px;
+    
+    }
+    h2.bear-title {font-size:16px;margin: 0 0 14px; text-align: left; padding-left: 10px;}
+    .blog-tag { font-size: 12px;}
+    .blog-tag-filter {
+        display: flex;
+        gap: 2px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        justify-content: start;
+        padding-left: 10px;
+    }
+    .blog-lists.page-width.page-content .section-header {
+        margin-bottom: 16px;
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+    .new-articale-detail-block {
+        padding:10px;
+        height: unset;
+    }
+    .new-article-info {
+        font-size: 11px;
+    }
+    h3.new-article-title {
+        font-size: 12px;
+        margin: 10px 0 0;
+    }   
+    a.read-link {
+        margin:12px 0px 0px;
+        font-size:12px;
+    }  
+    .loading-btn {
+        width: 100%;
+        margin: 30px auto 0px;
+    }
+    .new-article-card {
+        border-radius: 4px;
+    }
+    .new-articale-detail-block {
+        border-radius: 0px 0px 4px 4px;
+    }
+}
+
+@media(max-width:600px){
+.blog-tag.active:after {
+    bottom: 0px;
+    height: 1px;
+}
+
+.blog-tag-filter {
+    margin-bottom: 16px;
+}
+}

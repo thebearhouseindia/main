@@ -1,0 +1,78 @@
+<div class="footer__item-padding">
+  {%- if block.settings.logo != blank -%}
+    <div class="footer__logo-wrapper desk_logo">
+      <img
+        src="{{ block.settings.logo | image_url: width: 300 }}"
+        alt="{{ block.settings.title }}"
+        class="footer__logo"
+        width="{{ block.settings.logo.width }}"
+        height="{{ block.settings.logo.height }}"
+        loading="lazy"
+      >
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.show_footer_title -%}
+    {% if block.settings.title %}
+      <h2 class="h4 footer__title">{{ block.settings.title }}</h2>
+    {% endif %}
+  {%- endif -%}
+
+  <div class="collapsible-content__inner">
+    <div class="footer__collapsible{% unless block.settings.show_footer_title %} footer_collapsible--disabled{% endunless %}">
+      {%- if block.settings.text -%}
+        {{ block.settings.text }}
+      {%- endif -%}
+
+      {%- form 'customer', id: 'newsletter-footer' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="note note--success">
+            {{ 'general.newsletter_form.newsletter_confirmation' | t }}
+          </div>
+        {%- endif -%}
+
+        {%- if form.context == 'footer' and form.errors -%}
+          {{ form.errors | default_errors }}
+        {%- endif -%}
+
+        <label for="Email-{{ block.id }}" class="hidden-label">
+          {{ 'general.newsletter_form.newsletter_email' | t }}
+        </label>
+
+        <label for="newsletter-submit-{{ block.id }}" class="hidden-label">
+          {{ 'general.newsletter_form.submit' | t }}
+        </label>
+
+        <input type="hidden" name="contact[tags]" value="prospect,newsletter">
+        <input type="hidden" name="contact[context]" value="footer">
+
+        <div class="footer__newsletter">
+          <input
+            type="email"
+            value="{% if customer %}{{ customer.email }}{% endif %}"
+            placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}"
+            name="contact[email]"
+            id="Email-{{ block.id }}"
+            class="footer__newsletter-input"
+            autocorrect="off"
+            autocapitalize="off"
+            required
+          >
+
+          <button
+            type="submit"
+            id="newsletter-submit-{{ block.id }}"
+            class="footer__newsletter-btn"
+            name="commit"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.25 4.5L12.75 10L7.25 15.5" stroke="#3F3F3F"/>
+            </svg>
+
+            <span class="footer__newsletter-btn-label"> SIGN UP NOW </span>
+          </button>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</div>

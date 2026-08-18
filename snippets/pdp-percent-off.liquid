@@ -1,0 +1,59 @@
+{%- comment -%}
+  PDP % OFF pill.
+  Shows the real percent off next to the product price and updates live
+  when the shopper switches variant (size / colour). Mirrors the dynamic
+  percent logic used by the collection-card badge (tbh-sale-flag).
+
+  Usage (inside the price block):
+    {%- render 'pdp-percent-off', variant: current_variant, product: product -%}
+{%- endcomment -%}
+
+{%- liquid
+  assign v = variant | default: product.selected_or_first_available_variant
+  assign pct = 0
+  if v.compare_at_price > v.price
+    assign pct = v.compare_at_price | minus: v.price | times: 100.0 | divided_by: v.compare_at_price | round
+  endif
+-%}
+
+<span data-tbh-pct-off class="tbh-pct-off{% if pct <= 0 %} hide{% endif %}" aria-hidden="true">{{ pct }}% OFF</span>
+
+{% style %}
+  .tbh-pct-off{
+    display:inline-block;
+    margin-left:8px;
+    padding:2px 8px;
+    font-size:12px;
+    font-weight:700;
+    line-height:1.5;
+    letter-spacing:.02em;
+    border-radius:4px;
+    background:var(--colorSaleTag, #e92e30);
+    color:var(--colorSaleTagText, #ffffff);
+    vertical-align:middle;
+    white-space:nowrap;
+  }
+  .tbh-pct-off.hide{display:none !important;}
+  @media (max-width:767px){
+    .tbh-pct-off{font-size:11px;padding:2px 7px;margin-left:6px;}
+  }
+{% endstyle %}
+
+<script>
+  (function(){
+    function upd(v){
+      var el = document.querySelector('[data-tbh-pct-off]');
+      if(!el || !v){ return; }
+      var mrp = v.compare_at_price, sp = v.price;
+      if(mrp && mrp > sp){
+        el.textContent = Math.round((mrp - sp) / mrp * 100) + '% OFF';
+        el.classList.remove('hide');
+      } else {
+        el.classList.add('hide');
+      }
+    }
+    document.addEventListener('variant:change', function(e){
+      upd(e.detail && e.detail.variant);
+    });
+  })();
+</script>

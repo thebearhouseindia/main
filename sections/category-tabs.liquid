@@ -1,0 +1,240 @@
+<style>
+.category-tabs {
+  padding: 24px 0;
+}
+
+.category-tabs__inner {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: center;
+    padding-top: 10px;
+}
+.category-tabs__inner::-webkit-scrollbar {
+  display: none;
+}
+
+.category-tab {
+  position: relative;
+  background: #e92e3010;
+  padding: 10px 14px;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #000;
+  text-decoration: none;
+  border-radius: 2px;
+  font-weight: 400;
+  line-height: 1;
+  border-radius: 999px;
+  border: 1px solid #392e3014;
+  transition: all 0.3s ease-in-out;
+}
+.category-tab:hover {
+  background: #e92e3176;
+  color: #000;
+}
+
+.category-tab.is-active {
+  background: #e6e6e6;
+}
+
+/* Highlighted tab (controlled per tab in the customizer) */
+.category-tab.is-highlight {
+  background: var(--tab-hl-bg, #e92e30);
+  border-color: var(--tab-hl-bg, #e92e30);
+  color: var(--tab-hl-text, #ffffff);
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(0,0,0,.15);
+}
+.category-tab.is-highlight .category-tab__label {
+  color: var(--tab-hl-text, #ffffff);
+}
+.category-tab.is-highlight:hover {
+  filter: brightness(.92);
+  color: var(--tab-hl-text, #ffffff);
+}
+.category-tab.is-highlight.is-pulse {
+  animation: tbhTabPulse 2s ease-in-out infinite;
+}
+@keyframes tbhTabPulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--tab-hl-bg, #e92e30) 45%, transparent); }
+  50%      { box-shadow: 0 0 0 6px transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .category-tab.is-highlight.is-pulse { animation: none; }
+}
+
+.category-tab__badge {
+  position: absolute;
+  top: -9px;
+  left: 0;
+  right: 0;
+  background: #E92E30;
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 5px 2px;
+  border-radius: 10px;
+  font-weight: 400;
+  margin: auto;
+  width: fit-content;
+}
+
+.category-tab__label {
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 991px) {
+  .category-tabs__inner {
+    justify-content: start;
+    gap: 2px;
+  }
+  .category-tabs {
+    padding: 10px 0px 20px 10px;
+  }
+  .category-tab__badge {
+    top: -11px;
+  }
+}
+@media (max-width: 768px) {
+  .category-tab {
+    font-size: 12px;
+    padding: 7px 8px;
+  }
+}
+</style>
+
+<div class="category-tabs">
+  <div class="category-tabs__inner">
+
+    {% for block in section.blocks %}
+      <a
+        href="{{ block.settings.link }}"
+        class="category-tab{% if block.settings.active %} is-active{% endif %}{% if block.settings.highlight %} is-highlight{% if block.settings.highlight_pulse %} is-pulse{% endif %}{% endif %}"
+        {% if block.settings.highlight %}style="--tab-hl-bg: {{ block.settings.highlight_bg }}; --tab-hl-text: {{ block.settings.highlight_text }};"{% endif %}
+        {{ block.shopify_attributes }}
+      >
+        {% if block.settings.show_badge %}
+          <span class="category-tab__badge">
+            {{ block.settings.badge_text }}
+          </span>
+        {% endif %}
+
+        <span class="category-tab__label">
+          {{ block.settings.label }}
+        </span>
+      </a>
+    {% endfor %}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Category Tabs",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tab label",
+          "default": "LIMITED DROP"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Tab link"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show badge",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge text",
+          "default": "NEW"
+        },
+        {
+          "type": "checkbox",
+          "id": "active",
+          "label": "Set as active tab",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Highlight"
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight",
+          "label": "Highlight this tab",
+          "info": "Turns the tab into a filled button to draw clicks.",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight_pulse",
+          "label": "Pulse animation",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "highlight_bg",
+          "label": "Highlight background",
+          "default": "#e92e30"
+        },
+        {
+          "type": "color",
+          "id": "highlight_text",
+          "label": "Highlight text",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category Tabs",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": {
+            "label": "LIMITED DROP",
+            "show_badge": true,
+            "badge_text": "NEW",
+            "active": true
+          }
+        },
+        {
+          "type": "tab",
+          "settings": { "label": "TOP WEAR" }
+        },
+        {
+          "type": "tab",
+          "settings": { "label": "BOTTOM WEAR" }
+        },
+        {
+          "type": "tab",
+          "settings": { "label": "FOOT WEAR" }
+        },
+        {
+          "type": "tab",
+          "settings": { "label": "INNER WEAR" }
+        },
+        {
+          "type": "tab",
+          "settings": { "label": "ACCESSORIES" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

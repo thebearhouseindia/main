@@ -1,0 +1,340 @@
+{%- assign h1_text = collection.title -%}
+{%- if collection.handle == 'all' or collection.title == 'Products' or collection.title == 'All' -%}
+  {%- assign h1_text = 'Shop All Menswear' -%}
+{%- elsif collection.handle == 'new-arrivals' -%}
+  {%- assign h1_text = 'New Arrivals for Men' -%}
+{%- elsif collection.handle == 'sale' or collection.handle == 'best-sellers' -%}
+  {%- assign h1_text = collection.title | append: ' for Men' -%}
+{%- elsif collection.title contains 'Men' or collection.title contains 'men' -%}
+  {%- assign h1_text = collection.title -%}
+{%- else -%}
+  {%- assign h1_text = collection.title | append: ' for Men' -%}
+{%- endif -%}
+{%- if collection.description != blank -%}
+  {%- assign tagline_text = collection.description | strip_html | strip -%}
+{%- else -%}
+  {%- assign tagline_text = 'Discover our ' | append: collection.title | append: ' edit at The Bear House. Premium menswear crafted with precision fit, breathable fabrics, and durable construction. Free shipping across India and 7-day easy returns & exchange.' -%}
+{%- endif -%}
+
+{% comment %} sale changes  {% endcomment %}
+{%- if template.suffix == 'sale' -%}
+  <h1 class="seo-collection-h1" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">{{ h1_text }}</h1>
+{%- else -%}
+  <div class="seo-collection-heading" style="max-width: 1420px; margin: 32px auto 16px; padding: 0 40px; text-align: center;">
+    <h1 class="seo-collection-h1" style="font-size: clamp(22px, 2.6vw, 28px); font-weight: 500; letter-spacing: 1.5px; line-height: 1.3; color: #1a1a1a; margin: 0; text-transform: uppercase; text-align: center;">{{ h1_text }}</h1>
+  </div>
+{%- endif -%}
+{%- liquid
+  assign current_filter_size = 0
+
+  for filter in collection.filters
+    assign current_filter_size = current_filter_size | plus: filter.active_values.size
+  endfor
+-%}
+{{ 'collection-tlpc.css' | asset_url | stylesheet_tag }}
+{% render 'searchtap-collection-template' %}
+
+<div
+  class="collection-content my-default"
+  data-section-id="{{ section.id }}"
+  data-section-type="collection-grid"
+>
+  <div id="CollectionAjaxContent">
+    <div class="default-collection">
+      <div class="grid">
+        <div class="grid__item medium-up--one-fifth grid__item--sidebar">
+          {%- render 'collection-grid-filters',
+            collection: collection,
+            enable_sidebar: section.settings.enable_sidebar,
+            filter_style: section.settings.filter_style,
+            collapsed: section.settings.collapsed,
+            enable_color_swatches: section.settings.enable_color_swatches,
+            enable_swatch_labels: section.settings.enable_swatch_labels
+          -%}
+        </div>
+        {% comment %} <div class="grid__item medium-up--four-fifths grid__item--content">
+          {%- liquid
+            for block in section.blocks
+              case block.type
+              when 'product_grid'
+                assign paginate_by = block.settings.per_row | times: block.settings.rows_per_page
+              endcase
+            endfor
+          -%}
+          {%- paginate collection.products by paginate_by -%}
+          {%- for block in section.blocks -%}
+            <div {{ block.shopify_attributes }} {%- if block.type == 'product-grid' -%}data-scroll-to{%- endif -%}>
+              {%- case block.type -%}
+              {%- when 'collection_description' -%}
+                {%- if collection.description != blank and current_filter_size == 0 -%}
+                  <div class="rte collection__description">
+                    {{ collection.description }}
+                  </div>
+                {%- endif -%}
+              {%- when 'subcollections' -%}
+                {%- if paginate.current_page == 1 and current_filter_size == 0 -%}
+                  {%- render 'subcollections', per_row: block.settings.subcollections_per_row -%}
+                {%- endif -%}
+              {%- when 'product_grid' -%}
+                <div data-scroll-to>
+                  {% render 'collection-grid',
+                    collection: collection,
+                    items: collection.products,
+                    enable_sidebar: section.settings.enable_sidebar,
+                    filter_style: section.settings.filter_style,
+                    enable_sort: section.settings.enable_sort,
+                    enable_collection_count: block.settings.enable_collection_count,
+                    per_row: block.settings.per_row,
+                    mobile_flush_grid: block.settings.mobile_flush_grid,
+                    quick_shop_enable: settings.quick_shop_enable
+                  %}
+                  {%- if paginate.pages > 1 -%}
+                    {%- render 'pagination', paginate: paginate -%}
+                  {%- endif -%}
+                </div>
+              {%- endcase -%}
+            </div>
+          {%- endfor -%}
+
+          {%- endpaginate -%}
+        </div> {% endcomment %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- if section.settings.enable_sidebar == false or section.settings.filter_style == 'drawer' or collection.filters.size == 0 -%}
+{% comment %}
+  Override grid styles if sidebar is disabled
+{% endcomment %}
+{% style %}
+  .collection-content .grid__item--sidebar { width: 0; padding:0; }
+  .collection-content .grid__item--content { width: 100%; }
+  .grid__item--sidebar { position: static; overflow: hidden; }
+{% endstyle %}
+{%- endif -%}
+
+{%- comment -%} BEGIN - TBH Collection SEO Content + FAQ (redesigned 2026-06-26, reads existing metafields only) {%- endcomment -%}
+
+{%- if collection.metafields.custom.seo_content != blank or collection.metafields.custom.faq_content != blank -%}
+<section class="tbh-seo" aria-label="About {{ collection.title | escape }}">
+  <div class="tbh-seo__wrap">
+
+    {%- if collection.metafields.custom.seo_content != blank -%}
+      <div class="tbh-seo__seo">{{ collection.metafields.custom.seo_content | metafield_tag }}</div>
+    {%- endif -%}
+
+    {%- if collection.metafields.custom.faq_content != blank -%}
+      {%- comment -%} Parse existing flat FAQ HTML (<p><strong>Q</strong><br>A</p>) into native accordions. No metafield edits required. {%- endcomment -%}
+      {%- capture faq_str -%}{{ collection.metafields.custom.faq_content }}{%- endcapture -%}
+      {%- assign h3split = faq_str | split: '</h3>' -%}
+      {%- if h3split.size > 1 -%}
+        {%- assign faq_heading = h3split.first | split: '<h3>' | last | strip_html | strip -%}
+        {%- assign faq_body = h3split | last -%}
+      {%- else -%}
+        {%- assign faq_heading = 'Frequently Asked Questions' -%}
+        {%- assign faq_body = faq_str -%}
+      {%- endif -%}
+      <div class="tbh-seo__faq">
+        {%- if faq_heading != blank -%}<h3>{{ faq_heading }}</h3>{%- endif -%}
+        {%- assign faq_paras = faq_body | split: '</p>' -%}
+        {%- for para in faq_paras -%}
+          {%- assign pt = para | strip -%}
+          {%- if pt == blank -%}{%- continue -%}{%- endif -%}
+          {%- if pt contains '<strong>' and pt contains '<br' -%}
+            {%- assign inner = pt | split: '<p>' | last | replace: '<br/>', '<br>' | replace: '<br />', '<br>' -%}
+            {%- assign qa = inner | split: '<br>' -%}
+            {%- assign q_full = qa | first -%}
+            {%- assign q_text = q_full | replace: '<strong>', '' | replace: '</strong>', '' | strip -%}
+            {%- assign a_html = inner | remove_first: q_full | remove_first: '<br>' | strip -%}
+            <details class="tbh-acc">
+              <summary>{{ q_text }}</summary>
+              <div><p>{{ a_html }}</p></div>
+            </details>
+          {%- else -%}
+            {%- assign clean = pt | split: '<p>' | last | strip -%}
+            {%- if clean != blank -%}<p>{{ clean }}</p>{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{%- comment -%} FAQ structured data. Strip any existing script wrapper, then output once as valid hidden JSON-LD. {%- endcomment -%}
+{%- if collection.metafields.custom.faq_schema != blank -%}
+  {%- capture faq_schema_raw -%}{{ collection.metafields.custom.faq_schema }}{%- endcapture -%}
+  {%- assign faq_schema_clean = faq_schema_raw | replace: '<script type="application/ld+json">', '' | replace: '<script type="application/Id+json">', '' | replace: "<script type='application/ld+json'>", '' | replace: '<script>', '' | replace: '</script>', '' | strip -%}
+  <script type="application/ld+json">{{ faq_schema_clean }}</script>
+{%- endif -%}
+
+{% style %}
+.tbh-seo{
+  --tbh-ink:#1A1A1A; --tbh-body:#3C3A36; --tbh-muted:#7A746B;
+  --tbh-bg:#FAF8F5; --tbh-line:#E7E2DA; --tbh-red:#C8102E;
+  --tbh-serif:Georgia,"Times New Roman",serif;
+  background:var(--tbh-bg); border-top:1px solid var(--tbh-line);
+  padding:60px 24px 72px;
+}
+.tbh-seo *{box-sizing:border-box}
+.tbh-seo__wrap{max-width:760px;margin:0 auto}
+.tbh-seo .tbh-eyebrow{font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--tbh-red);margin:0 0 14px;max-width:none}
+.tbh-seo__seo h2{font-family:var(--tbh-serif);font-weight:500;font-size:30px;line-height:1.18;color:var(--tbh-ink);margin:0 0 6px;letter-spacing:.2px}
+.tbh-seo__seo h2::after{content:"";display:block;width:34px;height:2px;background:var(--tbh-red);margin:18px 0 22px}
+.tbh-seo__seo h3{font-family:inherit;font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--tbh-ink);margin:30px 0 10px}
+.tbh-seo .tbh-lead{font-size:17px;line-height:1.6;color:var(--tbh-ink);max-width:62ch;margin:0 0 26px}
+.tbh-seo__seo > p{font-size:16.5px;line-height:1.78;color:var(--tbh-body);max-width:64ch;margin:0 0 8px}
+.tbh-seo__seo ul,.tbh-seo__seo ol{margin:0 0 14px;padding-left:20px;color:var(--tbh-body);font-size:16.5px;line-height:1.78;max-width:64ch}
+.tbh-seo__seo li{margin:0 0 6px}
+.tbh-seo__seo a{color:var(--tbh-ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--tbh-red)}
+.tbh-seo details.tbh-acc{border-bottom:1px solid var(--tbh-line)}
+.tbh-seo__seo details.tbh-acc:first-of-type{margin-top:14px;border-top:1px solid var(--tbh-line)}
+.tbh-seo__faq details.tbh-acc:first-of-type{border-top:1px solid var(--tbh-line)}
+.tbh-seo summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 2px;font-size:17px;font-weight:500;color:var(--tbh-ink)}
+.tbh-seo summary::-webkit-details-marker{display:none}
+.tbh-seo summary:hover{color:var(--tbh-red)}
+.tbh-seo summary:focus-visible{outline:2px solid var(--tbh-red);outline-offset:4px;border-radius:2px}
+.tbh-seo summary::after{content:"";width:9px;height:9px;flex:0 0 auto;margin-top:-4px;border-right:2px solid var(--tbh-muted);border-bottom:2px solid var(--tbh-muted);transform:rotate(45deg);transition:transform .25s ease,border-color .25s ease}
+.tbh-seo details[open] summary::after{transform:rotate(225deg);border-color:var(--tbh-red)}
+.tbh-seo .tbh-acc > div{padding:0 2px 22px}
+.tbh-seo .tbh-acc > div p{margin:0;font-size:16px;line-height:1.78;color:var(--tbh-body);max-width:64ch}
+.tbh-seo__faq{margin-top:54px}
+.tbh-seo__faq h3{font-family:var(--tbh-serif);font-weight:500;font-size:22px;color:var(--tbh-ink);margin:6px 0 14px;letter-spacing:.2px;text-transform:none}
+.tbh-seo .tbh-foot{margin-top:40px;font-size:14px;color:var(--tbh-muted);line-height:1.6}
+.tbh-seo .tbh-foot a{color:var(--tbh-ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--tbh-red)}
+.tbh-seo .tbh-foot a:hover{color:var(--tbh-red)}
+@media (max-width:640px){
+  .tbh-seo{padding:44px 20px 56px}
+  .tbh-seo__seo h2{font-size:25px}
+  .tbh-seo summary{font-size:16px;padding:18px 2px}
+}
+@media (prefers-reduced-motion:reduce){.tbh-seo summary::after{transition:none}}
+{% endstyle %}
+{%- endif -%}
+
+{%- comment -%} END - TBH Collection SEO Content + FAQ {%- endcomment -%}
+
+
+{% schema %}
+{
+  "name": "t:sections.main-collection.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main-collection.settings.header_filtering_and_sorting"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sidebar",
+      "label": "t:sections.main-collection.settings.enable_sidebar.label",
+      "default": true,
+      "info": "t:sections.main-collection.settings.enable_sidebar.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapsed",
+      "label": "t:sections.main-collection.settings.collapsed.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "filter_style",
+      "label": "t:sections.main-collection.settings.filter_style.label",
+      "default": "sidebar",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "t:sections.main-collection.settings.filter_style.options.sidebar.label"
+        },
+        {
+          "value": "drawer",
+          "label": "t:sections.main-collection.settings.filter_style.options.drawer.label"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_swatches",
+      "label": "t:sections.main-collection.settings.enable_color_swatches.label",
+      "info": "t:sections.main-collection.settings.enable_color_swatches.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_swatch_labels",
+      "label": "t:common.enable_swatch_labels.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sort",
+      "label": "t:sections.main-collection.settings.enable_sort.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_description",
+      "name": "t:sections.main-collection.blocks.collection_description.name",
+      "limit": 1
+    },
+    {
+      "type": "product_grid",
+      "name": "t:sections.main-collection.blocks.products.name",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_collection_count",
+          "label": "t:sections.main-collection.blocks.products.settings.enable_collection_count.label",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "per_row",
+          "label": "t:sections.main-collection.blocks.products.settings.per_row.label",
+          "default": 4,
+          "min": 2,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "type": "range",
+          "id": "rows_per_page",
+          "label": "t:sections.main-collection.blocks.products.settings.rows_per_page.label",
+          "default": 7,
+          "min": 3,
+          "max": 20,
+          "step": 1
+        },
+        {
+          "type": "checkbox",
+          "id": "mobile_flush_grid",
+          "label": "t:sections.main-collection.blocks.products.settings.mobile_flush_grid.label",
+          "default": false
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "subcollections",
+      "name": "t:sections.main-collection.blocks.subcollections.name",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.main-collection.blocks.subcollections.settings.content"
+        },
+        {
+          "type": "range",
+          "id": "subcollections_per_row",
+          "label": "t:sections.main-collection.blocks.subcollections.settings.subcollections_per_row.label",
+          "default": 5,
+          "min": 2,
+          "max": 5,
+          "step": 1
+        }
+      ],
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,414 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  background-color: {{ section.settings.color_background }};
+  color: {{ section.settings.color_text }};
+  overflow:hidden;
+      .fixed-container {
+          padding: 0;
+      }
+      .flex-center-block{
+          padding: 0 30px;
+          align-items: flex-start;
+      }
+      .flex-center-block.is-load-more{
+          align-items: center;
+      }
+  }
+  .swipers-wrapper-inside {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 40px 2px;
+  }
+  .load-more-button {
+      font-family: Roboto;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 150%;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      margin-top: 50px;
+      cursor: pointer;
+      transition: background-size 0.3s ease-out;
+      padding-bottom: 2px;
+      &:hover{
+          background-size: 100% 1px;
+      }
+
+      button {
+      border: 2px solid #ee4740;
+      color: #ee4740;
+      padding: 8px 24px;
+      }
+  }
+
+  .swipers-slide-inside {
+      display: none;
+  }
+  .swipers-slide-inside.is-visible {
+      display: block;
+  }
+
+  @media only screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} {
+          padding-top: {{ section.settings.mobile_padding_top }}px;
+          padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+          .flex-center-block{
+              padding: 0 10px;
+              align-items: flex-start;
+              text-align: left;
+          }
+      }
+      .swipers-wrapper-inside {
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+          gap: 16px 2px;
+      }
+  }
+  @media only screen and (max-width: 600px) {
+   .swipers-wrapper-inside {
+      grid-template-columns: 1fr 1fr;
+  }
+  .flex-center-block.is-load-more {
+      align-items: center !important;
+  }
+
+  .load-more-button {
+      margin-top: 30px;
+      background-size: 100% 1px;
+      padding-bottom: 0px;
+      button {
+      border: 1px solid #ee4740;
+      padding: 2px 4px;
+      font-size: 12px;
+      }
+  }
+  }
+/* CLS fix: reserve product-grid height so the page doesn't jump when cards render */
+  @media only screen and (min-width: 769px) {
+      #shopify-section-{{ section.id }} .tab-content-wrap {
+          min-height: 1032px;
+      }
+  }
+{% endstyle %}
+<div
+  gsap-fadin-anim
+  class="relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }} {% endif %}"
+>
+  <div class="fixed-container">
+    <div data-fade class="flex-center-block section-heading">
+      {% if section.settings.title != blank %}
+        <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <div class="tab-wrap">
+        {% for block in section.blocks %}
+          <div data-id="tab_is-{{ forloop.index }}" class="tab-button">{{ block.settings.text }}</div>
+        {% endfor %}
+        {% comment %} <div class="tabsline"><span class="inline-line"></span></div> {% endcomment %}
+      </div>
+    </div>
+    <div data-fade class="tab-content-wrap">
+      {% for block in section.blocks %}
+        <div
+          data-id="tab_is-{{ forloop.index }}"
+          class="tab-content"
+          data-collection="{{ block.settings.collection.handle }}"
+          data-loaded="{% if forloop.first %}true{% else %}false{% endif %}"
+        >
+          <div class="swipers-inside">
+            <div class="swipers-wrapper-inside">
+              {% if forloop.first %}
+                {% for product in block.settings.collection.products limit: 10 %}
+                  <div class="swipers-slide-inside new-product-card" data-index="{{ forloop.index }}">
+                    {%- render 'product-grid-item', product: product, quick_shop_enable: settings.quick_shop_enable -%}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="flex-center-block is-load-more">
+            <div class="load-more-button" data-page="1">
+              <button>Load More</button>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% comment %}
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+
+      function getItemsPerLoad() {
+          return window.innerWidth <= 768 ? 4 : 10;
+      }
+
+      $("#shopify-section-{{ section.id }}").each(function () {
+          var $section = $(this);
+
+          function initTab($tab) {
+          var itemsPerLoad = getItemsPerLoad();
+          var $cards = $tab.find(".swipers-slide-inside");
+          var $btn = $tab.find(".load-more-button");
+
+          var visibleCount = itemsPerLoad;
+
+          $cards.removeClass("is-visible");
+          $cards.slice(0, visibleCount).addClass("is-visible");
+
+          toggleButton();
+
+          $btn.off("click").on("click", function () {
+              visibleCount += itemsPerLoad;
+              $cards.slice(0, visibleCount).addClass("is-visible");
+              toggleButton();
+          });
+
+          function toggleButton() {
+              if (visibleCount >= $cards.length) {
+              $btn.hide();
+              } else {
+              $btn.show();
+              }
+          }
+          }
+
+          // TAB CLICK
+          $section.find(".tab-button").on("click", function () {
+          var tabId = $(this).data("id");
+
+          $section.find(".tab-button").removeClass("active");
+          $(this).addClass("active");
+
+          $section.find(".tab-content").removeClass("active");
+          var $activeTab = $section.find('.tab-content[data-id="' + tabId + '"]');
+          $activeTab.addClass("active");
+
+          initTab($activeTab);
+          moveUnderline();
+          });
+
+          // INIT FIRST TAB
+          var $firstBtn = $section.find(".tab-button").first();
+          $firstBtn.addClass("active").trigger("click");
+
+          function moveUnderline() {
+          var $active = $section.find(".tab-button.active");
+          if (!$active.length) return;
+          var leftPos = $active.position().left;
+          var tabWidth = $active.outerWidth();
+          $section.find(".inline-line").css({
+              width: tabWidth + "px",
+              transform: "translateX(" + leftPos + "px)"
+          });
+          }
+
+          $(window).on("resize", function () {
+          var $activeTab = $section.find(".tab-content.active");
+          if ($activeTab.length) {
+              initTab($activeTab);
+          }
+          moveUnderline();
+          });
+      });
+      });
+  </script>
+{% endcomment %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var SECTION_ID      = 'ajax-product-grid'; // helper section handle
+    var FETCH_SIZE      = 10;                   // server page size; must match `limit: 10` and `by 10`
+    var INITIAL_MOBILE  = 4;                    // products shown on first load (mobile)
+    var INITIAL_DESKTOP = 10;                   // products shown on first load (desktop)
+    var STEP            = 20;                   // products added per Load More click (both devices)
+ 
+    function isMobile() { return window.innerWidth <= 768; }
+    function initialCount() { return isMobile() ? INITIAL_MOBILE : INITIAL_DESKTOP; }
+ 
+    $('#shopify-section-{{ section.id }}').each(function () {
+      var $section = $(this);
+ 
+      function fetchBatch(handle, page) {
+        var url = '/collections/' + handle + '?section_id=' + SECTION_ID + '&page=' + page;
+        return fetch(url)
+          .then(function (r) { return r.text(); })
+          .then(function (html) {
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.querySelectorAll('.swipers-slide-inside');
+          })
+          .catch(function () { return []; });
+      }
+ 
+      function updateButton($tab) {
+        var total = $tab.find('.swipers-slide-inside').length;
+        var visible = $tab.data('visible') || 0;
+        var $btn = $tab.find('.load-more-button');
+        if (visible >= total && $tab.data('exhausted')) { $btn.hide(); } else { $btn.show(); }
+      }
+ 
+      // Reveal cards up to `target`, fetching more server pages first if needed.
+      function revealTo($tab, target) {
+        var $cards = $tab.find('.swipers-slide-inside');
+        if (target > $cards.length && !$tab.data('exhausted') && !$tab.data('loading')) {
+          $tab.data('loading', true);
+          var nextPage = ($tab.data('page') || 0) + 1;
+          fetchBatch($tab.data('collection'), nextPage).then(function (nodes) {
+            if (!nodes.length) {
+              $tab.data('exhausted', true);
+            } else {
+              $tab.find('.swipers-wrapper-inside').append(nodes);
+              $tab.data('page', nextPage);
+              if (nodes.length < FETCH_SIZE) { $tab.data('exhausted', true); }
+            }
+            $tab.data('loading', false);
+            revealTo($tab, target); // continue until we reach target or run out
+          });
+          return;
+        }
+        $cards.slice(0, target).addClass('is-visible');
+        $tab.data('visible', Math.min(target, $cards.length));
+        updateButton($tab);
+      }
+ 
+      // First reveal for a tab.
+      function showInitial($tab) {
+        revealTo($tab, initialCount());
+      }
+ 
+      // One Load More click: add STEP more (constant +20).
+      // Mobile: 4 -> 24 -> 44 ...   Desktop: 10 -> 30 -> 50 ...
+      function loadMore($tab) {
+        if ($tab.data('loading')) return;
+        var target = ($tab.data('visible') || 0) + STEP;
+        revealTo($tab, target);
+      }
+ 
+      // TAB CLICK
+      $section.find('.tab-button').on('click', function () {
+        var tabId = $(this).data('id');
+        $section.find('.tab-button').removeClass('active');
+        $(this).addClass('active');
+        $section.find('.tab-content').removeClass('active');
+        var $tab = $section.find('.tab-content[data-id="' + tabId + '"]');
+        $tab.addClass('active');
+ 
+        if ($tab.attr('data-loaded') !== 'true') {
+          // deferred tab: mark loaded, first reveal will fetch page 1
+          $tab.attr('data-loaded', 'true');
+          $tab.data('page', 0);
+          showInitial($tab);
+        } else if (($tab.data('visible') || 0) === 0) {
+          showInitial($tab); // server-rendered tab, first reveal
+        } else {
+          updateButton($tab);
+        }
+      });
+ 
+      // LOAD MORE — button click only (no scroll auto-load)
+      $section.on('click', '.load-more-button', function () {
+        loadMore($(this).closest('.tab-content'));
+      });
+ 
+      // INIT: first tab is server-rendered (page 1). Show 4 on mobile / 10 on desktop.
+      var $firstTab = $section.find('.tab-content').first();
+      $section.find('.tab-button').first().addClass('active');
+      $firstTab.addClass('active').data('page', 1);
+      showInitial($firstTab);
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection Tab V2",
+  "class": "collection_tab",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom Class"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Padding Bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Padding Bottom",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text Color"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "Background Color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "block",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Title"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Tab V2"
+    }
+  ]
+}
+{% endschema %}

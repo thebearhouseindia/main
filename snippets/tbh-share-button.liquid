@@ -1,0 +1,113 @@
+{%- comment -%}
+  TBH share button.
+  Params:
+    product   (required)
+    label     (default 'Share')
+    align     (default 'left')  -> left | center | right
+    icon_only (default false)   -> round icon, no text label
+{%- endcomment -%}
+{%- assign sh_label = label | default: 'Share' -%}
+{%- assign sh_align = align | default: 'left' -%}
+{%- assign sh_url = shop.url | append: product.url -%}
+<div class="tbh-share tbh-share--{{ sh_align }}{% if icon_only %} tbh-share--icononly{% endif %}"
+  data-share-url="{{ sh_url }}"
+  data-share-title="{{ product.title | escape }}">
+  <button type="button" class="tbh-share__btn" aria-haspopup="true" aria-expanded="false" aria-label="Share this product">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line>
+      <line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line>
+    </svg>
+    {%- unless icon_only -%}
+      {%- if sh_label != blank -%}<span class="tbh-share__label">{{ sh_label }}</span>{%- endif -%}
+    {%- endunless -%}
+  </button>
+  <div class="tbh-share__menu" role="menu">
+    <button type="button" class="tbh-share__item" data-net="copy" role="menuitem">Copy link</button>
+    <a class="tbh-share__item" data-net="whatsapp" target="_blank" rel="noopener" role="menuitem" href="#">WhatsApp</a>
+    <a class="tbh-share__item" data-net="facebook" target="_blank" rel="noopener" role="menuitem" href="#">Facebook</a>
+    <a class="tbh-share__item" data-net="x" target="_blank" rel="noopener" role="menuitem" href="#">X</a>
+    <a class="tbh-share__item" data-net="email" role="menuitem" href="#">Email</a>
+  </div>
+</div>
+{% style %}
+  .tbh-share{position:relative;display:flex;margin:12px 0}
+  .tbh-share--center{justify-content:center}
+  .tbh-share--right{justify-content:flex-end}
+  .tbh-share__btn{display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid #d9d9d9;border-radius:24px;padding:8px 14px;cursor:pointer;color:#1c1c1c;font:inherit;font-size:13px;line-height:1}
+  .tbh-share__btn:hover{border-color:#1c1c1c}
+  .tbh-share__label{text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  .tbh-share--icononly{margin:0}
+  .tbh-share--icononly .tbh-share__btn{border-radius:50%;padding:0;width:38px;height:38px;justify-content:center;gap:0}
+  .tbh-share--icononly .tbh-share__label{display:none}
+  .tbh-share__menu{position:absolute;top:calc(100% + 8px);left:0;z-index:30;min-width:184px;background:#fff;border:1px solid #e6e6e6;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:6px;display:none}
+  .tbh-share--right .tbh-share__menu{left:auto;right:0}
+  .tbh-share--center .tbh-share__menu{left:50%;transform:translateX(-50%)}
+  .tbh-share__menu.is-open{display:block}
+  .tbh-share__item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-radius:7px;padding:9px 10px;font:inherit;font-size:13px;color:#1c1c1c;cursor:pointer;text-decoration:none}
+  .tbh-share__item:hover{background:#f4f4f4}
+  .tbh-share__toast{position:absolute;top:calc(100% + 8px);left:0;background:#1c1c1c;color:#fff;font-size:12px;padding:7px 10px;border-radius:7px;opacity:0;transform:translateY(-4px);transition:.18s;pointer-events:none;white-space:nowrap;z-index:31}
+  .tbh-share--right .tbh-share__toast{left:auto;right:0}
+  .tbh-share__toast.is-show{opacity:1;transform:translateY(0)}
+{% endstyle %}
+<script>
+  (function(){
+    function enc(s){return encodeURIComponent(s);}
+    function fallbackCopy(text){
+      var t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';
+      document.body.appendChild(t);t.focus();t.select();
+      try{document.execCommand('copy');}catch(e){}
+      document.body.removeChild(t);
+    }
+    function toast(root,msg){
+      var el=root.querySelector('.tbh-share__toast');
+      if(!el){el=document.createElement('div');el.className='tbh-share__toast';root.appendChild(el);}
+      el.textContent=msg;el.classList.add('is-show');
+      setTimeout(function(){el.classList.remove('is-show');},1600);
+    }
+    function init(root){
+      if(root.__tbhShare){return;} root.__tbhShare=true;
+      var url=root.getAttribute('data-share-url');
+      var title=root.getAttribute('data-share-title')||document.title;
+      var btn=root.querySelector('.tbh-share__btn');
+      var menu=root.querySelector('.tbh-share__menu');
+      var links={
+        whatsapp:'https://wa.me/?text='+enc(title+' '+url),
+        facebook:'https://www.facebook.com/sharer/sharer.php?u='+enc(url),
+        x:'https://twitter.com/intent/tweet?text='+enc(title)+'&url='+enc(url),
+        email:'mailto:?subject='+enc(title)+'&body='+enc(url)
+      };
+      root.querySelectorAll('[data-net]').forEach(function(el){
+        var net=el.getAttribute('data-net');
+        if(links[net]){el.setAttribute('href',links[net]);}
+      });
+      function closeMenu(){menu.classList.remove('is-open');btn.setAttribute('aria-expanded','false');}
+      function openMenu(){menu.classList.add('is-open');btn.setAttribute('aria-expanded','true');}
+      btn.addEventListener('click',function(e){
+        e.preventDefault();
+        if(navigator.share){navigator.share({title:title,url:url}).catch(function(){});return;}
+        menu.classList.contains('is-open')?closeMenu():openMenu();
+      });
+      root.querySelectorAll('[data-net]').forEach(function(el){
+        el.addEventListener('click',function(e){
+          if(el.getAttribute('data-net')==='copy'){
+            e.preventDefault();
+            var done=function(){toast(root,'Link copied');closeMenu();};
+            if(navigator.clipboard&&navigator.clipboard.writeText){
+              navigator.clipboard.writeText(url).then(done,function(){fallbackCopy(url);done();});
+            }else{fallbackCopy(url);done();}
+          }else{closeMenu();}
+        });
+      });
+      document.addEventListener('click',function(e){ if(!root.contains(e.target)){ closeMenu(); } });
+      document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ closeMenu(); } });
+    }
+    function boot(){
+      var els=document.querySelectorAll('.tbh-share');
+      for(var i=0;i<els.length;i++){ init(els[i]); }
+    }
+    if(document.readyState!=='loading'){boot();}else{document.addEventListener('DOMContentLoaded',boot);}
+  })();
+</script>

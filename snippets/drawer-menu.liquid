@@ -1,0 +1,668 @@
+{% # Kwikpass changes - [Starts] %}
+<script>
+  function autoLogin (){
+        document.getElementById('kwik-pass-text').textContent = "ACCOUNT";
+      }
+      window.addEventListener('user-loggedin', function(event) {
+         const { token } = event?.detail;
+         if (token){
+           autoLogin();
+         }
+      });
+    document.addEventListener('DOMContentLoaded',function () {
+      var userToken = localStorage.getItem('KWIKSESSIONTOKEN');
+      if (userToken){
+        autoLogin();
+      }
+  })
+</script>
+{% # Kwikpass changes - [Ends] %}
+{%- assign animation_row = 1 -%}
+{%- assign drawer_position = 'right' -%}
+{% if logo_alignment == 'center' %}
+  {%- assign drawer_position = 'left' -%}
+{% endif %}
+
+{% comment %} <div id="NavDrawer" class="drawer drawer--{{ drawer_position }}"> {% endcomment %}
+<div id="NavDrawer" class="drawer drawer--left">
+  <div class="drawer__contents">
+    <div class="drawer__fixed-header">
+      <div class="drawer__header appear-animation appear-delay-{{ animation_row }}">
+        <div class="h2 drawer__title">MENU</div>
+        <div class="drawer__close">
+          <button type="button" class="drawer__close-button js-drawer-close">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-close" viewBox="0 0 64 64"><title>icon-X</title><path d="m19 17.61 27.12 27.13m0-27.12L19 44.74"/></svg>
+            <span class="icon__fallback-text">{{ 'general.drawers.close_menu' | t }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    {% comment %} {% if settings.menu1 != blank %}
+      <div class="menu-with-img-mobile">
+        <ul class="collection-menu">
+          {% for link in settings.menu1.links %}
+            {% if link.type == 'collection_link' %}
+              {% assign collection = link.object %}
+              <li class="mobile-menu-item">
+                <a href="{{ collection.url }}">
+                  {% if collection.metafields.custom.thumbnail_image != blank %}
+                    <img width="" height="" class="mobile-menu-collection_image" src="{{ collection.metafields.custom.thumbnail_image | img_url: 'master' }}" alt="{{ collection.title }}" loading="lazy">
+                  {% endif %}
+                  <span class="mobile-menu-item-title">
+                    {{ link.title }}
+                  </span>
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %} {% endcomment %}
+
+
+    
+    <div class="drawer__scrollable">
+
+    <div>
+      {% if settings.menu1 != blank %}
+        <div class="menu-block-top">
+          <h3 class="menu-heading">{{ settings.menu1.title }}</h3>
+
+          <ul class="mobile-nav-inner">
+            {% for link in settings.menu1.links %}
+              <li class="mobile-nav__item">
+
+                {%- assign collection = nil -%}
+                {%- if link.type == 'collection_link' -%}
+                  {%- assign collection = link.object -%}
+                {%- endif -%}
+
+                <a href="{{ link.url }}" 
+                  class="mobile-nav__link"
+                  onclick="
+                    {% if link.links != blank %}
+                      event.preventDefault();
+                      openSubmenu('submenu-{{ forloop.index }}');
+                    {% endif %}
+                  ">
+
+                  {% if collection and collection.metafields.custom.thumbnail_image != blank %}
+                    <img 
+                      class="mobile-menu-collection_image"
+                      src="{{ collection.metafields.custom.thumbnail_image | img_url: 'master' }}"
+                      alt="{{ collection.title }}"
+                      loading="lazy" width="" height=""
+                    >
+                  {% endif %}
+
+                  <span>{{ link.title }}</span>
+                </a>
+
+                {% if link.links != blank %}
+                  <div id="submenu-{{ forloop.index }}" class="mobile-submenu">
+
+                    <div class="submenu-header">
+                      <button class="submenu-back" onclick="closeSubmenu('submenu-{{ forloop.index }}')">
+                        ←
+                      </button>
+
+                      <span class="submenu-title">{{ link.title }}</span>
+                    </div>
+
+                    <ul class="submenu-list">
+                      {% for childlink in link.links %}
+                        <li>
+                          <a href="{{ childlink.url }}">
+                            {{ childlink.title }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+
+                  </div>
+                {% endif %}
+
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <div class="drawer_menu_main">
+        <div class="drawer_menu_top">
+          {% if settings.drop_image1 %}
+            <a href="{{ settings.drop_link1 }}">
+              <img 
+                src="{{ settings.drop_image1 | image_url }}"
+                alt="Icon"
+                class="drop_image1" width="" height=""
+              >
+            </a>
+          {% endif %}
+          <div class="drop_text1">{{ settings.drop_text1 }}</div>
+        </div>
+        <div class="drawer_menu_bottom">
+          <div class="drawer_menu_bottoms">
+            {% if settings.drop_image2 %}
+              <a href="{{ settings.drop_link2 }}">
+                <img 
+                  src="{{ settings.drop_image2 | image_url }}"
+                  alt="Icon"
+                  class="drop_image2" width="" height=""
+                >
+              </a>
+            {% endif %}
+              <div class="drop_text2 drop_bottom">{{ settings.drop_text2 }}</div>
+          </div>
+          <div class="drawer_menu_bottoms">
+            {% if settings.drop_image3 %}
+              <a href="{{ settings.drop_link3 }}">
+                <img 
+                  src="{{ settings.drop_image3 | image_url }}"
+                  alt="Icon"
+                  class="drop_image3" width="" height=""
+                >
+              </a>
+            {% endif %}
+              <div class="drop_text3 drop_bottom">{{ settings.drop_text3 }}</div>
+          </div>
+        </div>
+      </div>
+        
+
+
+        {% if settings.menu != blank %}
+          <div class="menu-block">
+            <h3 class="menu-heading">{{ settings.menu.title }}</h3>
+            <ul class="mobile-nav">
+              {% for link in settings.menu.links %}
+
+                {% assign full_title = link.title %}
+                {% assign extra_text = '' %}
+                {% assign clean_title = full_title %}
+
+                {% if full_title contains '[' and full_title contains ']' %}
+                  {% assign extra_text = full_title | split:'[' | last | split:']' | first %}
+                  {% assign clean_title = full_title | split:'[' | first %}
+                {% endif %}
+
+                <li class="mobile-nav__item appear-animation appear-delay-{{ animation_row }}">
+                  <a href="{{ link.url }}" class="mobile-nav__link mobile-nav__link--top-level">
+                    {{ clean_title | strip }}
+                    {% if extra_text != blank %}
+                      <span class="menu-extra-text {{ extra_text | downcase | strip }}">
+                        {{ extra_text | strip }}
+                      </span>
+                    {% endif %}
+                  </a>
+                </li>
+
+              {% endfor %}
+
+            </ul>
+          </div>
+        {% endif %}
+    </div>
+
+      {% comment %} <ul class="mobile-nav{% if settings.type_navigation_style == 'heading' %} mobile-nav--heading-style{% endif %}" role="navigation" aria-label="Primary">
+        {%- for link in main_menu.links -%}
+          {%- assign animation_row = animation_row | plus: 1 -%}
+          {%- assign child_list_handle = link.url | handleize | append: forloop.index -%}
+          {%- assign has_dropdown = false -%}
+          {%- if link.links != blank -%}
+            {%- assign has_dropdown = true -%}
+          {%- endif -%}
+
+          <li class="mobile-nav__item appear-animation appear-delay-{{ animation_row }}">
+            {%- if has_dropdown -%}
+              <div class="mobile-nav__has-sublist">
+                {%- if link.url == '#' -%}
+                  <button type="button"
+                    aria-controls="Linklist-{{ child_list_handle }}"{% if link.active or link.child_active %} aria-open="true"{% endif %}
+                    class="mobile-nav__link--button mobile-nav__link--top-level collapsible-trigger collapsible--auto-height{% if link.active or link.child_active %} is-open{% endif %}">
+                    <span class="mobile-nav__faux-link"{% if link.active %} data-active="true"{% endif %}>
+                      {{ link.title }}
+                    </span>
+                    <div class="mobile-nav__toggle">
+                      <span class="faux-button">
+                        {%- render 'collapsible-icons' -%}
+                      </span>
+                    </div>
+                  </button>
+                {%- else -%}
+                  <a href="{{ link.url }}"
+                    class="mobile-nav__link mobile-nav__link--top-level"
+                    id="Label-{{ child_list_handle }}"
+                    {% if link.active %}data-active="true"{% endif %}>
+                    {{ link.title }}
+                  </a>
+                  <div class="mobile-nav__toggle">
+                    <button type="button"
+                      aria-controls="Linklist-{{ child_list_handle }}"{% if link.active or link.child_active %} aria-open="true"{% endif %}
+                      aria-labelledby="Label-{{ child_list_handle }}"
+                      class="collapsible-trigger collapsible--auto-height{% if link.active or link.child_active %} is-open{% endif %}">
+                      {%- render 'collapsible-icons' -%}
+                    </button>
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- else -%}
+              <a href="{{ link.url }}" class="mobile-nav__link mobile-nav__link--top-level"{% if link.active %} data-active="true"{% endif %}>{{ link.title }}</a>
+            {%- endif -%}
+
+            {%- if has_dropdown -%}
+              <div id="Linklist-{{ child_list_handle }}"
+                class="mobile-nav__sublist collapsible-content collapsible-content--all{% if link.active or link.child_active %} is-open{% endif %}"
+                {% if link.active or link.child_active %}style="height: auto;"{% endif %}>
+                <div class="collapsible-content__inner">
+                  <ul class="mobile-nav__sublist">
+                    {%- for childlink in link.links -%}
+                      {%- assign has_sub_dropdown = false -%}
+                      {%- assign grand_child_list_handle = childlink.url | handleize | append: forloop.index -%}
+                      {%- if childlink.links != blank -%}
+                        {%- assign has_sub_dropdown = true -%}
+                      {%- endif -%}
+
+                      <li class="mobile-nav__item">
+                        <div class="mobile-nav__child-item">
+                          {%- if childlink.url == '#' and has_sub_dropdown -%}
+                            <button type="button"
+                            aria-controls="Sublinklist-{{ child_list_handle }}-{{ grand_child_list_handle }}"{% if childlink.active or childlink.child_active %} aria-open="true"{% endif %}
+                            class="mobile-nav__link--button collapsible-trigger{% if childlink.active or childlink.child_active %} is-open{% endif %}">
+                              <span class="mobile-nav__faux-link"{% if childlink.active %} data-active="true"{% endif %}>{{ childlink.title | escape }}</span>
+                              {%- render 'collapsible-icons-alt' -%}
+                            </button>
+                          {%- else -%}
+                            <a href="{{ childlink.url }}"
+                              class="mobile-nav__link"
+                              id="Sublabel-{{ grand_child_list_handle }}"
+                              {% if childlink.active %}data-active="true"{% endif %}>
+                              {{ childlink.title | escape }}
+                            </a>
+                          {%- endif -%}
+                          {%- if childlink.url != '#' and has_sub_dropdown -%}
+                            <button type="button"
+                              aria-controls="Sublinklist-{{ child_list_handle }}-{{ grand_child_list_handle }}"
+                              aria-labelledby="Sublabel-{{ grand_child_list_handle }}"
+                              class="collapsible-trigger{% if childlink.active or childlink.child_active %} is-open{% endif %}">
+                              {%- render 'collapsible-icons-alt' -%}
+                            </button>
+                          {%- endif -%}
+                        </div>
+
+                        {%- if has_sub_dropdown -%}
+                          <div
+                            id="Sublinklist-{{ child_list_handle }}-{{ grand_child_list_handle }}"
+                            aria-labelledby="Sublabel-{{ grand_child_list_handle }}"
+                            class="mobile-nav__sublist collapsible-content collapsible-content--all{% if childlink.active or childlink.child_active %} is-open{% endif %}"
+                            {% if childlink.active or childlink.child_active %}style="height: auto;"{% endif %}>
+                            <div class="collapsible-content__inner">
+                              <ul class="mobile-nav__grandchildlist">
+                                {%- for grandchildlink in childlink.links -%}
+                                  <li class="mobile-nav__item">
+                                    <a href="{{ grandchildlink.url }}" class="mobile-nav__link"{% if grandchildlink.active %} data-active="true"{% endif %}>
+                                      {{ grandchildlink.title }}
+                                    </a>
+                                  </li>
+                                {%- endfor -%}
+                              </ul>
+                            </div>
+                          </div>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+
+        {%- assign have_secondary_list = false -%}
+        {%- if section.settings.toolbar_menu != blank or shop.customer_accounts_enabled -%}
+          {%- assign have_secondary_list = true -%}
+        {%- endif -%}
+
+        {%- if have_secondary_list -%}
+          <li class="mobile-nav__item mobile-nav__item--secondary">
+            <div class="grid">
+              {%- if section.settings.toolbar_menu != blank -%}
+                {%- for link in toolbar_menu.links -%}
+                  {%- assign animation_row = animation_row | plus: 1 -%}
+                  <div class="grid__item one-half appear-animation appear-delay-{{ animation_row }} medium-up--hide">
+                    <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+                  </div>
+                {%- endfor -%}
+              {%- endif -%}
+
+              {%- if shop.customer_accounts_enabled -%}
+                {%- assign animation_row = animation_row | plus: 1 -%}
+                <div class="grid__item one-half appear-animation appear-delay-{{ animation_row }}">
+                  <a href="{{ routes.account_url }}" class="mobile-nav__link">
+                    {%- if customer -%}
+                      {{ 'layout.customer.account' | t }}
+                    {%- else -%}
+                      {{ 'layout.customer.log_in' | t }}
+                    {%- endif -%}
+                  </a>
+                </div>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endif -%}
+      </ul> {% endcomment %}
+
+      <div class="account-social">
+        {% # Kwikpass changes - [Starts] %}
+        {% comment %} <a href="/account/login" class="login-btn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.99479 10.8333C12.296 10.8333 14.1615 8.96785 14.1615 6.66667C14.1615 4.36548 12.296 2.5 9.99479 2.5C7.6936 2.5 5.82812 4.36548 5.82812 6.66667C5.82812 8.96785 7.6936 10.8333 9.99479 10.8333Z" stroke="#3F3F3F" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16.6615 17.5002C16.6615 15.7321 15.9591 14.0364 14.7088 12.7861C13.4586 11.5359 11.7629 10.8335 9.99479 10.8335C8.22668 10.8335 6.53099 11.5359 5.28075 12.7861C4.0305 14.0364 3.32813 15.7321 3.32812 17.5002" stroke="#3F3F3F" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>LOGIN</span>
+        </a> {% endcomment %}
+         <a href="javascript:void(0);" onclick="kpHandleLogin('/account');" class="login-btn">
+          <svg width="20" height="20" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg" id="kpicon">
+     <path d="M22.9129 12.935L13.7571 23.0474C13.5348 23.2929 13.1284 23.1084 13.1669 22.7794L14.0816 14.9731H10.6991C10.4034 14.9731 10.2484 14.6219 10.4478 14.4035L20.3133 3.59739C20.5589 3.32834 20.9984 3.58134 20.8891 3.92887L18.2354 12.3664H22.6607C22.9557 12.3664 23.1109 12.7163 22.9129 12.935Z" fill="#FEA203"/>
+     <path id="svgkp-path" fill-rule="evenodd" clip-rule="evenodd" d="M16.6079 5.35819C16.4805 5.1933 16.3421 5.03582 16.1932 4.8869C15.2702 3.96387 14.0183 3.44531 12.7129 3.44531C11.4075 3.44531 10.1556 3.96387 9.2326 4.8869C8.30957 5.80993 7.79102 7.06183 7.79102 8.36719C7.79102 9.67255 8.30957 10.9244 9.2326 11.8475C9.48368 12.0986 9.75909 12.3197 10.0533 12.5086L11.0235 11.4503C10.7335 11.2914 10.4649 11.0911 10.227 10.8531C9.56766 10.1938 9.19727 9.29959 9.19727 8.36719C9.19727 7.43479 9.56766 6.54057 10.227 5.88127C10.8863 5.22196 11.7805 4.85156 12.7129 4.85156C13.6453 4.85156 14.5395 5.22196 15.1988 5.88127C15.3636 6.04604 15.5103 6.22549 15.6377 6.41654L16.6079 5.35819ZM20.6413 18.6497L19.6746 19.7132C20.1676 20.4122 20.4473 21.2264 20.4473 22.0781V23.8359C20.4473 24.2243 20.7621 24.5391 21.1504 24.5391C21.5387 24.5391 21.8535 24.2243 21.8535 23.8359V22.0781C21.8535 20.7863 21.4016 19.6103 20.6413 18.6497ZM12.3111 17.5078H10.3026C7.27113 17.5078 4.97852 19.6394 4.97852 22.0781V23.8359C4.97852 24.2243 4.66372 24.5391 4.27539 24.5391C3.88707 24.5391 3.57227 24.2243 3.57227 23.8359V22.0781C3.57227 18.6922 6.67684 16.1016 10.3026 16.1016H12.4885L12.3111 17.5078Z" fill="currentColor" stroke="currentColor"/>
+     </svg>
+          <span id="kwik-pass-text">
+           LOGIN
+          </span>
+
+        </a>
+         {% # Kwikpass changes - [Ends] %}
+       
+        {%- assign animation_row = animation_row | plus: 1 -%}
+        <ul class="mobile-nav__social appear-animation appear-delay-{{ animation_row }}">
+          {%- if settings.social_instagram_link != blank -%}
+            <li class="mobile-nav__social-item">
+              <a target="_blank" rel="noopener" href="{{ settings.social_instagram_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Instagram' }}">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-instagram" viewBox="0 0 32 32"><title>instagram</title><path fill="#444" d="M16 3.094c4.206 0 4.7.019 6.363.094 1.538.069 2.369.325 2.925.544.738.287 1.262.625 1.813 1.175s.894 1.075 1.175 1.813c.212.556.475 1.387.544 2.925.075 1.662.094 2.156.094 6.363s-.019 4.7-.094 6.363c-.069 1.538-.325 2.369-.544 2.925-.288.738-.625 1.262-1.175 1.813s-1.075.894-1.813 1.175c-.556.212-1.387.475-2.925.544-1.663.075-2.156.094-6.363.094s-4.7-.019-6.363-.094c-1.537-.069-2.369-.325-2.925-.544-.737-.288-1.263-.625-1.813-1.175s-.894-1.075-1.175-1.813c-.212-.556-.475-1.387-.544-2.925-.075-1.663-.094-2.156-.094-6.363s.019-4.7.094-6.363c.069-1.537.325-2.369.544-2.925.287-.737.625-1.263 1.175-1.813s1.075-.894 1.813-1.175c.556-.212 1.388-.475 2.925-.544 1.662-.081 2.156-.094 6.363-.094zm0-2.838c-4.275 0-4.813.019-6.494.094-1.675.075-2.819.344-3.819.731-1.037.4-1.913.944-2.788 1.819S1.486 4.656 1.08 5.688c-.387 1-.656 2.144-.731 3.825-.075 1.675-.094 2.213-.094 6.488s.019 4.813.094 6.494c.075 1.675.344 2.819.731 3.825.4 1.038.944 1.913 1.819 2.788s1.756 1.413 2.788 1.819c1 .387 2.144.656 3.825.731s2.213.094 6.494.094 4.813-.019 6.494-.094c1.675-.075 2.819-.344 3.825-.731 1.038-.4 1.913-.944 2.788-1.819s1.413-1.756 1.819-2.788c.387-1 .656-2.144.731-3.825s.094-2.212.094-6.494-.019-4.813-.094-6.494c-.075-1.675-.344-2.819-.731-3.825-.4-1.038-.944-1.913-1.819-2.788s-1.756-1.413-2.788-1.819c-1-.387-2.144-.656-3.825-.731C20.812.275 20.275.256 16 .256z"/><path fill="#444" d="M16 7.912a8.088 8.088 0 0 0 0 16.175c4.463 0 8.087-3.625 8.087-8.088s-3.625-8.088-8.088-8.088zm0 13.338a5.25 5.25 0 1 1 0-10.5 5.25 5.25 0 1 1 0 10.5zM26.294 7.594a1.887 1.887 0 1 1-3.774.002 1.887 1.887 0 0 1 3.774-.003z"/></svg>
+                <span class="icon__fallback-text">Instagram</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_linkedin_link != blank -%}
+            <li class="mobile-nav__social-item">
+              <a target="_blank" rel="noopener" href="{{ settings.social_linkedin_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'LinkedIn' }}">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-linkedin" viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.881 3.87 6 2.5 6S.02 4.881.02 3.5C.02 2.12 1.13 1 2.5 1s2.48 1.12 2.48 2.5zM5 8H0v16h5V8zm7.982 0H8.014v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0V24H24V13.869c0-7.88-8.922-7.593-11.018-3.714V8z"/></svg>
+                <span class="icon__fallback-text">LinkedIn</span>
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if settings.social_facebook_link != blank -%}
+            <li class="mobile-nav__social-item">
+              <a target="_blank" rel="noopener" href="{{ settings.social_facebook_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Facebook' }}">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-facebook" viewBox="0 0 14222 14222"><path d="M14222 7112c0 3549.352-2600.418 6491.344-6000 7024.72V9168h1657l315-2056H8222V5778c0-562 275-1111 1159-1111h897V2917s-814-139-1592-139c-1624 0-2686 984-2686 2767v1567H4194v2056h1806v4968.72C2600.418 13603.344 0 10661.352 0 7112 0 3184.703 3183.703 1 7111 1s7111 3183.703 7111 7111Zm-8222 7025c362 57 733 86 1111 86-377.945 0-749.003-29.485-1111-86.28Zm2222 0v-.28a7107.458 7107.458 0 0 1-167.717 24.267A7407.158 7407.158 0 0 0 8222 14137Zm-167.717 23.987C7745.664 14201.89 7430.797 14223 7111 14223c319.843 0 634.675-21.479 943.283-62.013Z"/></svg>
+                <span class="icon__fallback-text">Facebook</span>
+              </a>
+            </li>
+          {%- endif -%}
+          
+        
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.mobile-nav__social {
+  margin: 0px;
+  gap: 2px;
+}
+.account-social .mobile-nav__social-item {
+  border: none;
+}
+.account-social {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 16px 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.account-social .mobile-nav__social a {
+  padding: 4.42px 8px;
+  width: auto;
+  background: #F4F4F4;
+}
+.mobile-menu-collection_image {
+  width: 114px;
+  height: 114px;
+  object-fit: cover;
+  margin-bottom: 6px;
+  border-radius: 6px;
+}
+.mobile-submenu {
+  position: absolute;
+  top: 0;
+  left: 100%;      
+  width: 100%;
+  background: #F9F9F9;
+  transition: transform 0.4s ease;
+  z-index: 100;
+  height: 100%;
+  overflow-y: auto;
+  transform: translateX(0);
+  padding: 10px;
+}
+.mobile-submenu.active {
+  transform: translateX(-100%);
+}
+.mobile-nav-inner {
+  margin: 0px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+.menu-block-top {
+  position: relative;
+  padding: 10px 10px 4px;
+}
+.mobile-nav__link {
+  padding: 5px 0px;
+  font-family: Roboto;
+  font-size: 12px !important;
+  line-height: 100%;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
+}
+.menu-block-top .mobile-nav__link {
+  text-align: center;
+}
+.menu-heading {
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #3F3F3F;
+}
+.menu-block {
+  padding: 16px 10px 0px 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.mobile-nav {
+  margin: 0px;
+}
+.mobile-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: column;  
+  grid-template-rows: repeat(4, auto); 
+  gap: 0px 31px;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 14px;
+}
+.mobile-nav li:nth-child(-n+4) {
+  grid-column: 1;
+}
+.account-social span {
+    text-decoration: underline;
+    font-size:14px;
+}
+.account-social a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.mobile-nav li:nth-child(n+5) {
+  grid-column: 2;
+}
+
+.mobile-nav__item:after {
+  content: none;
+}
+.drawer__scrollable {
+  padding: 0px;
+  justify-content: space-between;
+}
+.menu-block-top .mobile-nav__item {
+  max-width: calc(33.33% - 2px);
+  width: 100%;
+  float: left;
+}
+.menu-block-top .mobile-nav__item {
+    position: unset;
+    margin-bottom: 8px;
+}
+.menu-block-top .submenu-list {
+  margin: 0;
+  padding: 0;
+}
+.menu-block-top .submenu-list li {
+  list-style: none;
+}
+.submenu-header {
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #3F3F3F;
+}
+.submenu-list li a {
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #3F3F3F;
+}
+.drawer_menu_top {
+  position: relative;
+}
+.drop_text1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: Roboto;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.drawer_menu_main {
+  padding: 0px 10px;
+}
+.drawer_menu_bottom {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+  margin-bottom: 16px;
+}
+.drawer_menu_bottoms {
+  position: relative;
+}
+.drop_bottom {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #3F3F3F;
+  transform: translateY(-50%);
+}
+.drawer__title {
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #3f3f3f;
+}
+.drawer__fixed-header {
+  padding: 0px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.menu-extra-text {
+  padding: 2px 4px;
+  background: #E92E30;
+  color: #ffffff;
+  font-family: Roboto;
+  font-weight: 600;
+  font-size: 9px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  display: none;
+}
+.mobile-nav__social a .icon {
+  position: relative;
+  top: 0;
+  fill: #3F3F3F;
+  width: 16px;
+  height: 16px;
+}
+@media (max-width: 768px){
+  .drop_bottom{
+    right: 10px;
+  }
+  .account-social{
+    padding: 10px 10px;
+  }
+  .account-social .mobile-nav__social a{
+      padding: 8.42px 10px;
+  }
+}
+</style>
+
+<script>
+function openSubmenu(id) {
+  var submenu = document.getElementById(id);
+  if (!submenu) return;
+
+  // Close any other submenu first
+  document.querySelectorAll('.mobile-submenu').forEach(function(menu) {
+    if (menu !== submenu) {
+      menu.classList.remove('active');
+    }
+  });
+
+  submenu.classList.add('active');
+}
+
+function closeSubmenu(id) {
+  var submenu = document.getElementById(id);
+  if (submenu) {
+    submenu.classList.remove('active');
+  }
+}
+</script>

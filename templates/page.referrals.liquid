@@ -1,0 +1,828 @@
+{% style %}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+.referrush-referral-page {
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #ffffff;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+
+.referrush-referral-page .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* Button */
+.referrush-referral-page .referrush-refer-btn {
+  display: inline-block;
+  background: #0a0a0a;
+  color: #fff;
+  padding: 16px 40px;
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: transform 0.2s;
+  box-shadow: inset 2px 4px 8.5px rgba(255, 255, 255, 0.48);
+}
+.referrush-referral-page .referrush-refer-btn:hover { transform: scale(1.02); }
+.referrush-referral-page .referrush-refer-btn:active { transform: scale(0.98); }
+
+/* ========== HERO SECTION ========== */
+
+/* Mobile Hero */
+.referrush-referral-page .hero-mobile { display: none; }
+
+/* Desktop Hero */
+.referrush-referral-page .hero-desktop {
+  background: #fff;
+}
+.referrush-referral-page .hero-desktop .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+}
+.referrush-referral-page .hero-content {
+  padding: 20px;
+}
+.referrush-referral-page .hero-title {
+  font-size: 48px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  color: #1a1a1a;
+}
+.referrush-referral-page .hero-subtitle {
+  font-size: 18px;
+  color: #4a4a4a;
+  margin-bottom: 32px;
+  text-transform: capitalize;
+}
+.referrush-referral-page .hero-image-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.referrush-referral-page .hero-image {
+  width: 100%;
+  max-height: 90vh;
+  object-fit: cover;
+}
+
+/* Mobile Hero Styles */
+.referrush-referral-page .hero-header {
+  display: flex;
+  min-height: 140px;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px 56px;
+  background: #EE4741;
+}
+.referrush-referral-page .hero-logo-img {
+  height: 32px;
+  object-fit: contain;
+}
+.referrush-referral-page .hero-logo-placeholder {
+  display: flex;
+  height: 48px;
+  width: 120px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 2px dashed rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.1);
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(0,0,0,0.7);
+}
+.referrush-referral-page .hero-card {
+  margin-top: -24px;
+  padding: 40px 20px;
+  background: #fff;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
+}
+.referrush-referral-page .hero-card-inner {
+  max-width: 500px;
+  margin: 0 auto;
+}
+.referrush-referral-page .hero-title-mobile {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+}
+
+/* Mobile Product Gallery */
+.referrush-referral-page .hero-gallery {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px -20px 0;
+  padding: 8px 0;
+  overflow: hidden;
+}
+.referrush-referral-page .product-card-blur {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 120px;
+  height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 0.9;
+  filter: blur(1px);
+  background: #d1d1d1;
+}
+.referrush-referral-page .product-card-blur--left { left: -30px; }
+.referrush-referral-page .product-card-blur--right { right: -30px; }
+.referrush-referral-page .product-card-blur img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.referrush-referral-page .product-card-featured {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 165px;
+  height: 200px;
+  border-radius: 12px;
+  border: 2px solid #EE4741;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+.referrush-referral-page .product-card-featured img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.referrush-referral-page .product-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 145px;
+  height: 180px;
+  border-radius: 12px;
+  border: 2px dashed #999;
+  background: #d1d1d1;
+}
+.referrush-referral-page .product-placeholder-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: #666;
+  text-align: center;
+  padding: 0 8px;
+}
+
+.referrush-referral-page .hero-subtitle-mobile {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  color: #4a4a4a;
+}
+.referrush-referral-page .hero-cta-mobile {
+  margin-top: 24px;
+  text-align: center;
+}
+.referrush-referral-page .hero-cta-mobile .referrush-refer-btn {
+  padding: 14px 32px;
+  font-size: 16px;
+}
+
+/* ========== STEPS SECTION ========== */
+.referrush-referral-page .steps {
+  padding: 100px 0;
+  background: #fff;
+}
+.referrush-referral-page .section-header {
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+.referrush-referral-page .section-header h2 {
+  font-size: 36px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+}
+.referrush-referral-page .section-header p {
+  font-size: 18px;
+  font-weight: 300;
+  color: #4a4a4a;
+  text-transform: capitalize;
+}
+.referrush-referral-page .steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.referrush-referral-page .step-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  border-radius: 20px;
+  background: #e8e8e8;
+  border: 1px solid #EE4741;
+}
+.referrush-referral-page .step-number {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 18px;
+  color: #4a4a4a;
+  opacity: 0.35;
+}
+.referrush-referral-page .step-icon {
+  order: -1;
+  margin-bottom: 20px;
+  color: #EE4741;
+  filter: drop-shadow(0 4px 0 rgba(0,0,0,0.95));
+}
+.referrush-referral-page .step-icon svg {
+  width: 64px;
+  height: 90px;
+}
+.referrush-referral-page .step-card h3 {
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #1a1a1a;
+}
+.referrush-referral-page .step-divider {
+  height: 2px;
+  background: #EE4741;
+  border: none;
+  margin: 12px 0;
+}
+.referrush-referral-page .step-card > p {
+  font-size: 16px;
+  font-weight: 300;
+  color: #4a4a4a;
+}
+
+/* ========== FAQ SECTION ========== */
+.referrush-referral-page .referrush-faq {
+  padding: 80px 0;
+  background: #fff;
+}
+.referrush-referral-page .referrush-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+.referrush-referral-page .referrush-faq-intro {
+  padding: 0 8px;
+}
+.referrush-referral-page .referrush-faq-intro h2 {
+  font-size: 36px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  color: #1a1a1a;
+}
+.referrush-referral-page .referrush-faq-intro-divider {
+  display: none;
+}
+.referrush-referral-page .referrush-faq-intro > p {
+  font-size: 18px;
+  font-weight: 300;
+  color: #4a4a4a;
+  line-height: 1.6;
+}
+.referrush-referral-page .referrush-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.referrush-referral-page .referrush-faq-item {
+  background: #e8e8e8;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: inset 2px 4px 8.5px rgba(0, 0, 0, 0.12);
+}
+.referrush-referral-page .referrush-faq-question {
+  width: 100%;
+  padding: 24px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  color: #1a1a1a;
+}
+.referrush-referral-page .referrush-faq-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: #4a4a4a;
+  transition: transform 0.3s;
+}
+.referrush-referral-page .referrush-faq-arrow svg {
+  width: 11px;
+  height: 6px;
+}
+.referrush-referral-page .referrush-faq-item.active .referrush-faq-arrow { transform: rotate(180deg); }
+.referrush-referral-page .referrush-faq-answer {
+  padding: 0 24px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  font-size: 16px;
+  color: #4a4a4a;
+  opacity: 0.8;
+}
+.referrush-referral-page .referrush-faq-item.active .referrush-faq-answer {
+  padding: 0 24px 24px;
+  max-height: 200px;
+}
+
+/* Contact Card */
+.referrush-referral-page .contact-card {
+  background: #e8e8e8;
+  border-radius: 19px;
+  padding: 32px;
+  text-align: center;
+}
+.referrush-referral-page .contact-card h3 {
+  font-size: 23px;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+  text-transform: capitalize;
+}
+.referrush-referral-page .contact-card p {
+  font-size: 16px;
+  font-weight: 300;
+  color: #4a4a4a;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.referrush-referral-page .contact-card strong {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+.referrush-referral-page .contact-card--desktop {
+  display: block;
+  margin-top: 40px;
+}
+.referrush-referral-page .contact-section { display: none; }
+
+/* ========== CTA SECTION ========== */
+.referrush-referral-page .cta-section {
+  padding: 96px 0;
+  background: #EE4741;
+}
+.referrush-referral-page .cta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  text-align: center;
+}
+.referrush-referral-page .cta-title {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #0a0a0a;
+  margin: 0;
+}
+.referrush-referral-page .cta-subtitle {
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(10, 10, 10, 0.7);
+  max-width: 400px;
+  margin: 0;
+}
+.referrush-referral-page .cta-btn {
+  margin-top: 8px;
+  display: inline-block;
+  background: #0a0a0a;
+  color: #fff;
+  padding: 20px 40px;
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: transform 0.2s;
+  box-shadow: inset 2px 4px 8.5px rgba(255, 255, 255, 0.48);
+}
+.referrush-referral-page .cta-btn:hover { transform: scale(1.02); }
+.referrush-referral-page .cta-btn:active { transform: scale(0.98); }
+
+/* ========== MOBILE STYLES ========== */
+@media (max-width: 768px) {
+  /* Hero Mobile */
+  .referrush-referral-page .hero-desktop { display: none; }
+  .referrush-referral-page .hero-mobile { display: block; }
+
+  /* Steps Mobile */
+  .referrush-referral-page .steps { padding: 80px 0; }
+  .referrush-referral-page .section-header h2 { font-size: 28px; }
+  .referrush-referral-page .section-header p { font-size: 14px; }
+  .referrush-referral-page .steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .referrush-referral-page .step-card {
+    padding: 8px 8px 16px;
+    border-radius: 11px;
+  }
+  .referrush-referral-page .step-number {
+    top: 8px;
+    right: 8px;
+    font-size: 18px;
+  }
+  .referrush-referral-page .step-icon {
+    order: 1;
+    margin-top: 16px;
+    margin-bottom: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .referrush-referral-page .step-icon svg {
+    width: 64px;
+    height: 64px;
+  }
+  .referrush-referral-page .step-card h3 {
+    margin-top: 24px;
+    font-size: 14px;
+  }
+  .referrush-referral-page .step-card > p {
+    font-size: 11px;
+  }
+  .referrush-referral-page .step-divider {
+    margin: 4px 0;
+    height: 1px;
+  }
+
+  /* FAQ Mobile */
+  .referrush-referral-page .referrush-faq { padding: 0 0 0; }
+  .referrush-referral-page .referrush-faq-grid { grid-template-columns: 1fr; gap: 40px; }
+  .referrush-referral-page .referrush-faq-intro { margin-bottom: 0; }
+  .referrush-referral-page .referrush-faq-intro h2 { font-size: 24px; }
+  .referrush-referral-page .referrush-faq-intro > p { font-size: 14px; }
+  .referrush-referral-page .referrush-faq-intro-divider {
+    display: block;
+    height: 1px;
+    background: #EE4741;
+    margin: 16px 0 24px;
+  }
+  .referrush-referral-page .referrush-faq-item { border-radius: 19px; }
+  .referrush-referral-page .referrush-faq-answer { font-size: 14px; }
+  .referrush-referral-page .referrush-faq-question .referrush-faq-number { display: inline; }
+  .referrush-referral-page .contact-card--desktop { display: none; }
+  .referrush-referral-page .referrush-faq-list { max-width: 500px; margin: 0 auto; }
+
+  /* Contact Mobile */
+  .referrush-referral-page .contact-section {
+    display: block;
+    padding: 48px 0;
+    background: #fff;
+  }
+  .referrush-referral-page .contact-card--mobile {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 32px 48px;
+    box-shadow: inset 2px 4px 8.5px rgba(0, 0, 0, 0.12);
+  }
+
+  /* CTA Mobile */
+  .referrush-referral-page .cta-section { padding: 64px 0; }
+  .referrush-referral-page .cta-inner { gap: 24px; }
+  .referrush-referral-page .cta-title { font-size: 24px; }
+  .referrush-referral-page .cta-subtitle { font-size: 14px; }
+  .referrush-referral-page .cta-btn {
+    padding: 16px 32px;
+    font-size: 16px;
+  }
+}
+
+{% endstyle %}
+
+<div class="referrush-referral-page">
+
+<!-- ========== MOBILE HERO ========== -->
+<section class="hero-mobile">
+  <!-- Mobile Header with Logo -->
+  <div class="hero-header">
+    <img src="https://firebasestorage.googleapis.com/v0/b/refero1.appspot.com/o/merchants%2Fthebearhouseindia.myshopify.com%2Freferral-page%2Flogo?alt=media&token=9f23fe7c-a5d4-4720-836f-a720a720ce20" alt="2000 x 2000.jpg" class="hero-logo-img" />
+  </div>
+
+  <!-- Mobile Hero Card -->
+  <div class="hero-card">
+    <div class="hero-card-inner">
+      <h1 class="hero-title-mobile">Earn More by Sharing What You Trust</h1>
+
+      <!-- Mobile Product Gallery -->
+      <div class="hero-gallery">
+        <!-- Left Blurred Product -->
+        <div class="product-card-blur product-card-blur--left">
+          <img src="https://firebasestorage.googleapis.com/v0/b/refero1.appspot.com/o/merchants%2Fthebearhouseindia.myshopify.com%2Freferral-page%2Fmobile-hero-1?alt=media&token=7705abf1-5e9b-4825-9efd-f6f6b9617a5b" alt="LEFT IMG" />
+        </div>
+
+        <!-- Featured Center Product -->
+        <div class="product-card-featured">
+          <img src="https://firebasestorage.googleapis.com/v0/b/refero1.appspot.com/o/merchants%2Fthebearhouseindia.myshopify.com%2Freferral-page%2Fmobile-hero-2?alt=media&token=97d1ec76-3fa1-4776-beb2-e4893d6b79de" alt="center IMG" />
+        </div>
+
+        <!-- Right Blurred Product -->
+        <div class="product-card-blur product-card-blur--right">
+          <img src="https://firebasestorage.googleapis.com/v0/b/refero1.appspot.com/o/merchants%2Fthebearhouseindia.myshopify.com%2Freferral-page%2Fmobile-hero-3?alt=media&token=f72ae40e-ca0d-4c51-bdf3-475229e3ac46" alt="RIGHT IMG" />
+        </div>
+      </div>
+
+      <p class="hero-subtitle-mobile">Trusted products. Simple sharing. Real earnings.</p>
+
+      <div class="hero-cta-mobile">
+        <button class="referrush-refer-btn">Refer & Win</button>
+        <p style="margin-top: 15px; font-size: 10px; text-align: center; color: #4a4a4a;">
+          By continuing, you agree to our <a href="https://referrush.com/referrer-terms" target="_blank" rel="noopener noreferrer" style="text-decoration: underline; color: inherit;">Terms & Conditions</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DESKTOP HERO ========== -->
+<section class="hero-desktop">
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">Earn More by Sharing What You Trust</h1>
+      <p class="hero-subtitle">Trusted products. Simple sharing. Real earnings.</p>
+      <button class="referrush-refer-btn">Refer & Win</button>
+      <p style="margin-top: 15px; font-size: 10px; color: #4a4a4a;">
+        By continuing, you agree to our <a href="https://referrush.com/referrer-terms" target="_blank" rel="noopener noreferrer" style="text-decoration: underline; color: inherit;">Terms & Conditions</a>
+      </p>
+    </div>
+    <div class="hero-image-wrapper">
+      <img src="https://firebasestorage.googleapis.com/v0/b/refero1.appspot.com/o/merchants%2Fthebearhouseindia.myshopify.com%2Freferral-page%2Fdesktop-hero-1?alt=media&token=5551ef8c-5c85-4e5b-9a0f-d651b7e87e1b" alt="hero image" class="hero-image" />
+    </div>
+  </div>
+</section>
+
+<!-- ========== STEPS SECTION ========== -->
+<section class="steps">
+  <div class="container">
+    <header class="section-header">
+      <h2>How it works</h2>
+      <p>A simple flow. Meaningful rewards.</p>
+    </header>
+
+    <div class="steps-grid">
+      
+      <div class="step-card">
+        <span class="step-number">01</span>
+        <h3>Share your referral link</h3>
+        <hr class="step-divider" />
+        <p>To your friend</p>
+        <div class="step-icon">
+          <svg width="64" height="90" viewBox="0 0 81 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_56_141)">
+<path d="M43.815 6.74072L74.1482 37.074L43.815 65.7221V47.1851C20.2224 47.1851 10.1113 72.4628 10.1113 72.4628C10.1113 43.8147 18.5372 25.2777 43.815 25.2777V6.74072Z" fill="#EE4741" stroke="#EE4741" stroke-width="1.13928" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<filter id="filter0_d_56_141" x="0" y="0" width="80.8887" height="84.8761" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="3.98747"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0463943 0 0 0 0 0 0 0 0 0 0 0 0 0 0.95 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_56_141"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_56_141" result="shape"/>
+</filter>
+</defs>
+</svg>
+
+        </div>
+      </div>
+      
+      <div class="step-card">
+        <span class="step-number">02</span>
+        <h3>Your friend places an order</h3>
+        <hr class="step-divider" />
+        <p>With your link</p>
+        <div class="step-icon">
+          <svg width="64" height="90" viewBox="0 0 62 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_56_140)">
+<path d="M29.906 0C13.4154 0 0 13.4154 0 29.906C0 46.3967 13.4154 59.8121 29.906 59.8121C46.3967 59.8121 59.8121 46.3967 59.8121 29.906H53.0832C53.0832 42.6859 42.6859 53.0832 29.906 53.0832C17.1262 53.0832 6.72886 42.6859 6.72886 29.906C6.72886 17.1262 17.1262 6.72886 29.906 6.72886V0ZM48.3481 6.43728L29.6444 29.7914L20.9043 22.6289L15.915 28.6998L27.7304 38.3894C28.1318 38.7205 28.5951 38.9684 29.0933 39.1186C29.5915 39.2688 30.1146 39.3183 30.6321 39.2642C31.1496 39.2102 31.6512 39.0537 32.1076 38.8038C32.564 38.5539 32.9661 38.2156 33.2904 37.8087L54.4838 11.3493L48.3481 6.43728Z" fill="#EE4741"/>
+</g>
+<defs>
+<filter id="filter0_d_56_140" x="0" y="0" width="61.5214" height="63.7996" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="1.70892" dy="3.98747"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.95 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_56_140"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_56_140" result="shape"/>
+</filter>
+</defs>
+</svg>
+
+        </div>
+      </div>
+      
+      <div class="step-card">
+        <span class="step-number">03</span>
+        <h3>Order has been delivered</h3>
+        <hr class="step-divider" />
+        <p>To your friend</p>
+        <div class="step-icon">
+          <svg width="64" height="90" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_56_142)">
+<path d="M8.47338 0C7.06115 0 5.93137 0.564892 5.08403 1.69468L1.41223 6.21381C0.564892 7.3436 0 8.47338 0 9.88561V45.1914C0 48.2983 2.54201 50.8403 5.64892 50.8403H29.0919C28.527 49.1456 28.2446 47.1685 28.2446 45.1914C28.2446 35.8706 35.8706 28.2446 45.1914 28.2446C47.1685 28.2446 49.1456 28.527 50.8403 29.0919V9.88561C50.8403 8.47338 50.2754 7.3436 49.428 6.21381L45.4738 1.41223C44.9089 0.564892 43.7791 0 42.3669 0H8.47338ZM8.19093 2.82446H42.0844L44.6265 5.64892H5.93137L8.19093 2.82446ZM8.47338 33.8935H25.4201V42.3669H8.47338V33.8935ZM51.6876 36.1531L41.5196 46.3211L37.0004 41.802L33.8935 45.1914L41.802 53.6647L55.3594 40.1073L51.6876 36.1531Z" fill="#EE4741"/>
+</g>
+<defs>
+<filter id="filter0_d_56_142" x="0" y="0" width="57.6379" height="57.6522" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="2.27856" dy="3.98747"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.95 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_56_142"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_56_142" result="shape"/>
+</filter>
+</defs>
+</svg>
+
+        </div>
+      </div>
+      
+      <div class="step-card">
+        <span class="step-number">04</span>
+        <h3>You receive your payout</h3>
+        <hr class="step-divider" />
+        <p>Congratulations!!</p>
+        <div class="step-icon">
+          <svg width="64" height="90" viewBox="0 0 65 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_56_143)">
+<path d="M60.9507 3.81736C60.9507 2.80493 60.5422 1.83397 59.815 1.11808C59.0879 0.402185 58.1017 0 57.0734 0H20.8851C19.8568 0 18.8706 0.402185 18.1435 1.11808C17.4163 1.83397 17.0078 2.80493 17.0078 3.81736V24.1766C17.0078 25.1891 17.4163 26.16 18.1435 26.8759C18.8706 27.5918 19.8568 27.994 20.8851 27.994H57.0734C58.1017 27.994 59.0879 27.5918 59.815 26.8759C60.5422 26.16 60.9507 25.1891 60.9507 24.1766V3.81736ZM55.7809 22.2679C55.7809 22.4367 55.7128 22.5985 55.5916 22.7178C55.4705 22.8371 55.3061 22.9042 55.1347 22.9042H22.8238C22.6524 22.9042 22.488 22.8371 22.3668 22.7178C22.2456 22.5985 22.1776 22.4367 22.1776 22.2679V5.80239C22.1776 5.63365 22.2456 5.47183 22.3668 5.35251C22.488 5.23319 22.6524 5.16616 22.8238 5.16616H55.1347C55.3061 5.16616 55.4705 5.23319 55.5916 5.35251C55.7128 5.47183 55.7809 5.63365 55.7809 5.80239V22.2679Z" fill="#EE4741"/>
+<path d="M33.8101 14.0733C33.8101 15.4232 34.3548 16.7179 35.3243 17.6724C36.2938 18.6269 37.6088 19.1632 38.9799 19.1632C40.351 19.1632 41.6659 18.6269 42.6355 17.6724C43.605 16.7179 44.1496 15.4232 44.1496 14.0733C44.1496 12.7234 43.605 11.4288 42.6355 10.4743C41.6659 9.51977 40.351 8.98352 38.9799 8.98352C37.6088 8.98352 36.2938 9.51977 35.3243 10.4743C34.3548 11.4288 33.8101 12.7234 33.8101 14.0733ZM51.6458 38.25L42.5212 41.2275C42.4329 41.2533 42.352 41.2989 42.2847 41.3607C42.2174 41.4225 42.1656 41.4989 42.1334 41.5838C41.7181 42.4673 41.0542 43.215 40.2204 43.7382C39.3865 44.2615 38.4178 44.5383 37.429 44.5359H27.0895C26.7467 44.5359 26.418 44.4018 26.1756 44.1632C25.9332 43.9246 25.797 43.6009 25.797 43.2634C25.797 42.926 25.9332 42.6023 26.1756 42.3637C26.418 42.125 26.7467 41.991 27.0895 41.991H37.429C38.1145 41.991 38.772 41.7229 39.2567 41.2456C39.7415 40.7683 40.0138 40.121 40.0138 39.4461C40.0138 38.7711 39.7415 38.1238 39.2567 37.6465C38.772 37.1693 38.1145 36.9012 37.429 36.9012H28.3819C25.4111 34.6211 21.8035 33.2891 18.0424 33.0838H12.7176C11.0952 33.1444 9.5101 33.5803 8.09066 34.3562L0.336036 38.1991C0.234054 38.254 0.149012 38.335 0.0898719 38.4335C0.0307322 38.5321 -0.000314893 38.6445 2.40792e-06 38.7589V52.5014C0.00231532 52.6153 0.0344638 52.7267 0.0933348 52.8248C0.152206 52.9229 0.235805 53.0044 0.336036 53.0613C0.434274 53.1172 0.54571 53.1466 0.659145 53.1466C0.77258 53.1466 0.884017 53.1172 0.982254 53.0613L9.30555 47.9715C9.62982 47.7717 9.99512 47.6452 10.3751 47.6011C10.755 47.5571 11.1402 47.5967 11.5027 47.717C37.3514 56.2679 28.6404 56.2934 57.6944 41.8383C57.9322 41.7464 58.1385 41.5896 58.2891 41.3863C58.4397 41.1831 58.5284 40.9418 58.5446 40.6907C58.5609 40.4397 58.5042 40.1892 58.381 39.9688C58.2579 39.7483 58.0735 39.567 57.8495 39.4461C57.0085 38.7359 55.995 38.2524 54.9078 38.0428C53.8205 37.8332 52.6967 37.9045 51.6458 38.25Z" fill="#EE4741"/>
+</g>
+<defs>
+<filter id="filter0_d_56_143" x="0" y="0" width="64.368" height="56.3943" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="3.41783" dy="2.84819"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.95 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_56_143"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_56_143" result="shape"/>
+</filter>
+</defs>
+</svg>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- ========== FAQ SECTION ========== -->
+<section class="referrush-faq">
+  <div class="container referrush-faq-grid">
+    <!-- FAQ Intro -->
+    <div class="referrush-faq-intro">
+      <h2>FAQs</h2>
+      <div class="referrush-faq-intro-divider"></div>
+      <p>Find quick answers to common questions below.</p>
+
+      <!-- Contact Card (desktop only) -->
+      <div class="contact-card contact-card--desktop">
+        <h3>Still have questions?</h3>
+        <p>Reach out to us at</p>
+        <strong>support@thebearhouse.com</strong>
+      </div>
+    </div>
+
+    <!-- FAQ List -->
+    <div class="referrush-faq-list">
+      
+      <div class="referrush-faq-item">
+        <button class="referrush-faq-question" style="white-space: inherit;">
+          <span>Who can join the referral program?</span>
+          <span class="referrush-faq-arrow"><svg viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M9.6121 0.13125L5.16407 4.79654L0.716034 0.13125C0.636566 0.0477213 0.52988 0.000957503 0.418786 0.000957503C0.307693 0.000957503 0.201007 0.0477213 0.121539 0.13125C0.0830589 0.171817 0.0524888 0.220237 0.0316192 0.273676C0.0107496 0.327114 0 0.384496 0 0.442461C0 0.500426 0.0107496 0.557808 0.0316192 0.611246C0.0524888 0.664685 0.0830589 0.713105 0.121539 0.753672L4.85347 5.71773C4.93657 5.80488 5.04802 5.85366 5.16407 5.85366C5.28011 5.85366 5.39156 5.80488 5.47466 5.71773L10.2066 0.75463C10.2453 0.714033 10.2761 0.665493 10.2972 0.611878C10.3182 0.558262 10.329 0.500656 10.329 0.442461C10.329 0.384266 10.3182 0.32666 10.2972 0.273044C10.2761 0.219429 10.2453 0.170889 10.2066 0.130292C10.1271 0.0467633 10.0204 0 9.90934 0C9.79825 0 9.69157 0.0467633 9.6121 0.130292V0.13125Z" fill="currentColor"/>
+</svg></span>
+        </button>
+        <div class="referrush-faq-answer">Anyone can join our referral program.</div>
+      </div>
+      
+      <div class="referrush-faq-item">
+        <button class="referrush-faq-question" style="white-space: inherit;">
+          <span>How is my referral tracked?</span>
+          <span class="referrush-faq-arrow"><svg viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M9.6121 0.13125L5.16407 4.79654L0.716034 0.13125C0.636566 0.0477213 0.52988 0.000957503 0.418786 0.000957503C0.307693 0.000957503 0.201007 0.0477213 0.121539 0.13125C0.0830589 0.171817 0.0524888 0.220237 0.0316192 0.273676C0.0107496 0.327114 0 0.384496 0 0.442461C0 0.500426 0.0107496 0.557808 0.0316192 0.611246C0.0524888 0.664685 0.0830589 0.713105 0.121539 0.753672L4.85347 5.71773C4.93657 5.80488 5.04802 5.85366 5.16407 5.85366C5.28011 5.85366 5.39156 5.80488 5.47466 5.71773L10.2066 0.75463C10.2453 0.714033 10.2761 0.665493 10.2972 0.611878C10.3182 0.558262 10.329 0.500656 10.329 0.442461C10.329 0.384266 10.3182 0.32666 10.2972 0.273044C10.2761 0.219429 10.2453 0.170889 10.2066 0.130292C10.1271 0.0467633 10.0204 0 9.90934 0C9.79825 0 9.69157 0.0467633 9.6121 0.130292V0.13125Z" fill="currentColor"/>
+</svg></span>
+        </button>
+        <div class="referrush-faq-answer">Your referral is tracked via your unique referral link/discount code used.</div>
+      </div>
+      
+      <div class="referrush-faq-item">
+        <button class="referrush-faq-question" style="white-space: inherit;">
+          <span>What happens if an order is returned or cancelled?</span>
+          <span class="referrush-faq-arrow"><svg viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M9.6121 0.13125L5.16407 4.79654L0.716034 0.13125C0.636566 0.0477213 0.52988 0.000957503 0.418786 0.000957503C0.307693 0.000957503 0.201007 0.0477213 0.121539 0.13125C0.0830589 0.171817 0.0524888 0.220237 0.0316192 0.273676C0.0107496 0.327114 0 0.384496 0 0.442461C0 0.500426 0.0107496 0.557808 0.0316192 0.611246C0.0524888 0.664685 0.0830589 0.713105 0.121539 0.753672L4.85347 5.71773C4.93657 5.80488 5.04802 5.85366 5.16407 5.85366C5.28011 5.85366 5.39156 5.80488 5.47466 5.71773L10.2066 0.75463C10.2453 0.714033 10.2761 0.665493 10.2972 0.611878C10.3182 0.558262 10.329 0.500656 10.329 0.442461C10.329 0.384266 10.3182 0.32666 10.2972 0.273044C10.2761 0.219429 10.2453 0.170889 10.2066 0.130292C10.1271 0.0467633 10.0204 0 9.90934 0C9.79825 0 9.69157 0.0467633 9.6121 0.130292V0.13125Z" fill="currentColor"/>
+</svg></span>
+        </button>
+        <div class="referrush-faq-answer">If an order is returned or cancelled, your referral reward will be cancelled</div>
+      </div>
+      
+      <div class="referrush-faq-item">
+        <button class="referrush-faq-question" style="white-space: inherit;">
+          <span>Do I get my reward immediately after my friend places an order?</span>
+          <span class="referrush-faq-arrow"><svg viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M9.6121 0.13125L5.16407 4.79654L0.716034 0.13125C0.636566 0.0477213 0.52988 0.000957503 0.418786 0.000957503C0.307693 0.000957503 0.201007 0.0477213 0.121539 0.13125C0.0830589 0.171817 0.0524888 0.220237 0.0316192 0.273676C0.0107496 0.327114 0 0.384496 0 0.442461C0 0.500426 0.0107496 0.557808 0.0316192 0.611246C0.0524888 0.664685 0.0830589 0.713105 0.121539 0.753672L4.85347 5.71773C4.93657 5.80488 5.04802 5.85366 5.16407 5.85366C5.28011 5.85366 5.39156 5.80488 5.47466 5.71773L10.2066 0.75463C10.2453 0.714033 10.2761 0.665493 10.2972 0.611878C10.3182 0.558262 10.329 0.500656 10.329 0.442461C10.329 0.384266 10.3182 0.32666 10.2972 0.273044C10.2761 0.219429 10.2453 0.170889 10.2066 0.130292C10.1271 0.0467633 10.0204 0 9.90934 0C9.79825 0 9.69157 0.0467633 9.6121 0.130292V0.13125Z" fill="currentColor"/>
+</svg></span>
+        </button>
+        <div class="referrush-faq-answer">Short answer no, you will receive your reward after your friends order gets delivered and a safety period gets over which is typically the exchange/return period.</div>
+      </div>
+      
+      <div class="referrush-faq-item">
+        <button class="referrush-faq-question" style="white-space: inherit;">
+          <span>How will I receive my reward?</span>
+          <span class="referrush-faq-arrow"><svg viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M9.6121 0.13125L5.16407 4.79654L0.716034 0.13125C0.636566 0.0477213 0.52988 0.000957503 0.418786 0.000957503C0.307693 0.000957503 0.201007 0.0477213 0.121539 0.13125C0.0830589 0.171817 0.0524888 0.220237 0.0316192 0.273676C0.0107496 0.327114 0 0.384496 0 0.442461C0 0.500426 0.0107496 0.557808 0.0316192 0.611246C0.0524888 0.664685 0.0830589 0.713105 0.121539 0.753672L4.85347 5.71773C4.93657 5.80488 5.04802 5.85366 5.16407 5.85366C5.28011 5.85366 5.39156 5.80488 5.47466 5.71773L10.2066 0.75463C10.2453 0.714033 10.2761 0.665493 10.2972 0.611878C10.3182 0.558262 10.329 0.500656 10.329 0.442461C10.329 0.384266 10.3182 0.32666 10.2972 0.273044C10.2761 0.219429 10.2453 0.170889 10.2066 0.130292C10.1271 0.0467633 10.0204 0 9.90934 0C9.79825 0 9.69157 0.0467633 9.6121 0.130292V0.13125Z" fill="currentColor"/>
+</svg></span>
+        </button>
+        <div class="referrush-faq-answer">You will receive your payout on your phone number and email with the steps on how to redeem it.</div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT SECTION (mobile only) ========== -->
+<section class="contact-section">
+  <div class="container">
+    <div class="contact-card contact-card--mobile">
+      <h3>Still have questions?</h3>
+      <p>Reach out to us at</p>
+      <strong>support@thebearhouse.com</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA SECTION ========== -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner">
+      <h2 class="cta-title">Ready to Start Earning?</h2>
+      <p class="cta-subtitle">Join thousands of happy referrers and turn your network into rewards!</p>
+      <button class="cta-btn">Refer & Win</button>
+      <p style="margin-top: 15px; font-size: 10px; text-align: center; color: rgba(10, 10, 10, 0.7);">
+        By continuing, you agree to our <a href="https://referrush.com/referrer-terms" target="_blank" rel="noopener noreferrer" style="text-decoration: underline; color: inherit;">Terms & Conditions</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+  // FAQ accordion functionality
+  document.querySelectorAll(".referrush-referral-page .referrush-faq-question").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      btn.parentElement.classList.toggle("active");
+    });
+  });
+});
+
+document.querySelectorAll(".referrush-refer-btn, .cta-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (typeof window.openReferRushSignupForm === 'function') {
+      window.openReferRushSignupForm();
+    }
+  });
+});
+
+</script>

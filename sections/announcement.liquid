@@ -1,0 +1,195 @@
+<style>
+  {%- if settings.color_announcement == settings.color_body_bg -%}
+    .announcement-bar {
+      border-bottom: 1px solid;
+    }
+  {%- endif -%}
+</style>
+
+{%- render 'announcement-bar', section: section -%}
+
+{% schema %}
+{
+  "name": "t:sections.header.settings.header_announcement_bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "announcement_compact",
+      "label": "t:sections.header.settings.announcement_compact.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "announcement",
+      "name": "t:sections.header.blocks.announcement.name",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:sections.header.blocks.announcement.settings.text.label",
+          "default": "Hassle-free returns"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "t:sections.header.blocks.announcement.settings.link_text.label",
+          "default": "30-day postage paid returns"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.header.blocks.announcement.settings.link.label"
+        }
+      ]
+    },
+    {
+      "type": "countdown",
+      "name": "Countdown timer",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "cd_prefix",
+          "label": "Headline above timer",
+          "default": "Biggest sale is live now!!"
+        },
+        {
+          "type": "header",
+          "content": "Sale end date and time (IST)"
+        },
+        {
+          "type": "number",
+          "id": "cd_year",
+          "label": "Year",
+          "default": 2026
+        },
+        {
+          "type": "select",
+          "id": "cd_month",
+          "label": "Month",
+          "default": "06",
+          "options": [
+            { "value": "01", "label": "January" },
+            { "value": "02", "label": "February" },
+            { "value": "03", "label": "March" },
+            { "value": "04", "label": "April" },
+            { "value": "05", "label": "May" },
+            { "value": "06", "label": "June" },
+            { "value": "07", "label": "July" },
+            { "value": "08", "label": "August" },
+            { "value": "09", "label": "September" },
+            { "value": "10", "label": "October" },
+            { "value": "11", "label": "November" },
+            { "value": "12", "label": "December" }
+          ]
+        },
+        {
+          "type": "number",
+          "id": "cd_day",
+          "label": "Day (1 to 31)",
+          "default": 30
+        },
+        {
+          "type": "number",
+          "id": "cd_hour",
+          "label": "Hour, 24 hour clock (0 to 23)",
+          "default": 23
+        },
+        {
+          "type": "number",
+          "id": "cd_minute",
+          "label": "Minute (0 to 59)",
+          "default": 59
+        },
+        {
+          "type": "header",
+          "content": "Labels under the boxes"
+        },
+        {
+          "type": "text",
+          "id": "cd_label_days",
+          "label": "Days label",
+          "default": "Days"
+        },
+        {
+          "type": "text",
+          "id": "cd_label_hours",
+          "label": "Hours label",
+          "default": "Hrs"
+        },
+        {
+          "type": "text",
+          "id": "cd_label_mins",
+          "label": "Minutes label",
+          "default": "Mins"
+        },
+        {
+          "type": "text",
+          "id": "cd_label_secs",
+          "label": "Seconds label",
+          "default": "Secs"
+        },
+        {
+          "type": "header",
+          "content": "Style"
+        },
+        {
+          "type": "color",
+          "id": "cd_color",
+          "label": "Number colour",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "range",
+          "id": "cd_number_size",
+          "label": "Number size",
+          "min": 14,
+          "max": 28,
+          "step": 1,
+          "unit": "px",
+          "default": 18
+        },
+        {
+          "type": "checkbox",
+          "id": "cd_bold",
+          "label": "Bold numbers",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "cd_hide_seconds",
+          "label": "Hide seconds box",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "cd_expired_text",
+          "label": "Text shown after the sale ends",
+          "default": "Sale ended"
+        },
+        {
+          "type": "checkbox",
+          "id": "cd_hide_on_end",
+          "label": "Hide this message after the sale ends",
+          "default": false
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Optional link"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "settings": {}
+  },
+  "disabled_on": {
+    "groups": ["footer", "custom.popups"]
+  }
+}
+{% endschema %}

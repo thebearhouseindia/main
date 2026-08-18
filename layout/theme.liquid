@@ -1,0 +1,920 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ settings.text_direction }}">
+<head>
+
+
+ <!-- Gokwik theme code start -->
+
+{% render 'gokwik' %}
+<link rel="dns-prefetch" href="https://pdp.gokwik.co/">
+<link rel="dns-prefetch" href="https://api.gokwik.co">
+
+<!-- Gokwik theme code End -->
+
+{%- if template == 'list-collections' -%}
+  <script>window.location.replace('/collections/all');</script>
+{%- endif -%}
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_button }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+  <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
+  <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+  <link rel="dns-prefetch" href="https://maps.googleapis.com">
+  <link rel="dns-prefetch" href="https://maps.gstatic.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  {%- if settings.favicon != blank -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
+  {%- endif -%}
+
+
+
+  
+<script>
+    // Short debug script - paste in mobile console
+{% comment %} console.log('=== QUICK DEBUG ==='); {% endcomment %}
+
+// Check if element exists
+const filterBar = document.querySelector('.st-collection-page-bar');
+{% comment %} console.log('Filter bar exists:', !!filterBar); {% endcomment %}
+
+if (filterBar) {
+const styles = window.getComputedStyle(filterBar);
+{% comment %} console.log('Display:', styles.display);
+console.log('Visibility:', styles.visibility);
+console.log('Height:', filterBar.offsetHeight + 'px');
+console.log('Classes:', filterBar.className); {% endcomment %}
+
+// Force show it
+filterBar.style.cssText = 'display: flex !important; position: sticky !important; top: 80px !important; z-index: 9999 !important; background: red !important; padding: 20px !important; width: 100% !important;';
+{% comment %} console.log('Forced red background - can you see it now?'); {% endcomment %}
+} else {
+{% comment %} console.log('Element NOT FOUND'); {% endcomment %}
+
+// Check collection wrapper
+const wrapper = document.querySelector('.collection-grid__wrapper');
+{% comment %} console.log('Collection wrapper exists:', !!wrapper); {% endcomment %}
+
+if (wrapper) {
+  {% comment %} console.log('Wrapper HTML preview:', wrapper.innerHTML.substring(0, 200)); {% endcomment %}
+}
+}
+
+// Create the missing filter bar for mobile
+function createMobileFilterBar() {
+// Don't create if already exists
+if (document.querySelector('.st-collection-page-bar')) return;
+
+// Create filter bar
+const filterBar = document.createElement('div');
+filterBar.className = 'st-collection-page-bar';
+filterBar.style.cssText = `
+  position: sticky !important;
+  top: 80px !important;
+  z-index: 999 !important;
+  background: #d9cdc2 !important;
+  padding: 8px 17px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+`;
+
+filterBar.innerHTML = `
+  <div style="font-size: 12px;">FILTER AND ORDER</div>
+  <div style="font-size: 11px;">Showing Products</div>
+  <div style="display: flex; gap: 5px;">
+    <button style="padding: 5px; border: 1px solid #999; background: white; font-size: 10px;">⊞</button>
+    <button style="padding: 5px; border: 1px solid #999; background: white; font-size: 10px;">☰</button>
+  </div>
+`;
+
+// Insert at top of main content
+const main = document.querySelector('main') || document.querySelector('#MainContent') || document.body;
+main.insertBefore(filterBar, main.firstChild);
+
+{% comment %} console.log('Mobile filter bar created!'); {% endcomment %}
+}
+
+// Run it
+createMobileFilterBar();
+</script>
+
+  {%- render 'seo-title' -%}
+
+ {%- if page_description != blank -%}
+<meta name="description" content="{{ page_description | escape }}">
+{%- elsif template.name == 'product' and product != blank -%}
+<meta name="description" content="Shop {{ product.title | escape }} online at The Bear House. {{ product.description | strip_html | truncate: 140 | escape }} Free shipping across India and hassle-free returns.">
+{%- elsif template.name == 'collection' and collection != blank -%}
+<meta name="description" content="Shop {{ collection.title | escape }} at The Bear House. Premium menswear with precision-tailored fits, breathable fabrics, durable construction. Free shipping across India and hassle-free returns.">
+{%- elsif template.name == 'article' and article != blank -%}
+<meta name="description" content="{{ article.title | escape }}. {{ article.excerpt_or_content | strip_html | truncate: 150 | escape }} Read more on The Bear House blog.">
+{%- elsif template.name == 'index' -%}
+<meta name="description" content="The Bear House is a premium menswear brand in India offering precision-tailored shirts, trousers, polos, t-shirts and cargos. Trusted by 1M+ customers. Free shipping and hassle-free returns.">
+{%- else -%}
+<meta name="description" content="The Bear House. Premium menswear in India with precision-tailored fits, breathable fabrics and durable construction. Free shipping and hassle-free returns.">
+{%- endif -%}
+
+  {%- render 'social-meta-tags' -%}
+  {%- render 'head.import-map' -%}
+  {%- render 'head.is-land' -%}
+
+  {%- if settings.type_base_font_family -%}
+    <link rel="preload" as="font" type="font/woff2" href="{{ settings.type_base_font_family | font_url }}" crossorigin>
+  {%- endif -%}
+  {%- if settings.type_header_font_family and settings.type_header_font_family != settings.type_base_font_family -%}
+    <link rel="preload" as="font" type="font/woff2" href="{{ settings.type_header_font_family | font_url }}" crossorigin>
+  {%- endif -%}
+
+  {%- render 'font-face' -%}
+  {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+  {{ 'home-tlpc.css' | asset_url | stylesheet_tag }}
+  {{ 'tlpc-global-style.css' | asset_url | stylesheet_tag }}
+  {%- render 'css-variables' -%}
+
+  
+  <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+
+    window.theme = window.theme || {};
+    theme.routes = {
+      home: "{{ routes.root_url }}",
+      cart: "{{ routes.cart_url | append: '.js' }}",
+      cartPage: "{{ routes.cart_url }}",
+      cartAdd: "{{ routes.cart_add_url | append: '.js' }}",
+      cartChange: "{{ routes.cart_change_url | append: '.js' }}",
+      search: "{{ routes.search_url }}",
+      predictiveSearch: "{{ routes.predictive_search_url }}"
+    };
+    theme.strings = {
+      soldOut: {{ 'products.product.sold_out' | t | json }},
+      unavailable: {{ 'products.product.unavailable' | t | json }},
+      inStockLabel: {{ 'products.product.in_stock_label' | t | json }},
+      oneStockLabel: {{ 'products.product.stock_label.one' | t: count: '[count]' | json }},
+      otherStockLabel: {{ 'products.product.stock_label.other' | t: count: '[count]' | json }},
+      willNotShipUntil: {{ 'products.product.will_not_ship_until' | t: date: '[date]' | json }},
+      willBeInStockAfter: {{ 'products.product.will_be_in_stock_after' | t: date: '[date]' | json }},
+      waitingForStock: {{ 'products.product.waiting_for_stock' | t | json }},
+      savePrice: {{ 'products.general.save_html' | t: saved_amount: '[saved_amount]' | json }},
+      cartEmpty: {{ 'cart.general.empty' | t | json }},
+      cartTermsConfirmation: {{ 'cart.general.terms_confirm' | t | json }},
+      searchCollections: {{ 'general.search.collections' | t | json }},
+      searchPages: {{ 'general.search.pages' | t | json }},
+      searchArticles: {{ 'general.search.articles' | t | json }},
+      productFrom: {{ 'products.general.from_text_html' | t: price: '' | json }},
+      maxQuantity: {{ 'cart.general.max_quantity' | t: quantity: '[quantity]', title: '[title]' | json }}
+    };
+    theme.settings = {
+      cartType: {{ settings.cart_type | json }},
+      isCustomerTemplate: {% if request.page_type contains 'customers/' %}true{% else %}false{% endif %},
+      moneyFormat: {{ shop.money_format | json }},
+      saveType: {{ settings.product_save_type | json }},
+      productImageSize: {{ settings.product_grid_image_size | json }},
+      productImageCover: {{ settings.product_grid_image_fill }},
+      predictiveSearch: {{ settings.predictive_search_enabled }},
+      predictiveSearchType: {{ settings.search_type | json }},
+      predictiveSearchVendor: {{ settings.predictive_search_show_vendor | json }},
+      predictiveSearchPrice: {{ settings.predictive_search_show_price | json }},
+      quickView: {{ settings.quick_shop_enable }},
+      themeName: 'Impulse',
+      themeVersion: "8.1.0"
+    };
+    document.addEventListener("DOMContentLoaded", () => {
+      const fadeElements = document.querySelectorAll("[data-fade]");
+
+      const observer = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const el = entry.target;
+
+              const delay = el.dataset.delay || 0;
+              const duration = el.dataset.duration || 600;
+
+              el.style.transitionDuration = duration + "ms";
+              el.style.transitionDelay = delay + "ms";
+
+              el.classList.add("is-visible");
+              observer.unobserve(el); // animate only once
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      fadeElements.forEach(el => observer.observe(el));
+    });
+  </script>
+  
+  {{ content_for_header }}
+  {% style %}
+    :root {
+      /* Root Variables */
+      /* ========================= */
+      --root-color-primary: {{ settings.color_body_text }};
+      --color-primary: {{ settings.color_body_text }};
+      --root-color-secondary: {{ settings.color_body_bg }};
+      --color-secondary: {{ settings.color_body_bg }};
+      --color-sale-tag: {{ settings.color_sale_tag }};
+      --color-sale-tag-text: {{ settings.color_sale_tag_text }};
+      --layout-section-padding-block: 3rem;
+      --layout-section-padding-inline--md: 40px;
+      --layout-section-max-inline-size: 1420px; 
+
+
+      /* Text */
+      /* ========================= */
+      
+      /* Body Font Styles */
+      --element-text-font-family--body: {{ settings.type_base_font_family.family }};
+      --element-text-font-family-fallback--body: {{ settings.type_base_font_family.fallback_families }};
+      --element-text-font-weight--body: {{ settings.type_base_font_family.weight }};
+      --element-text-letter-spacing--body: {{ settings.type_base_spacing | default: '50' | divided_by: 1000.00 | append: 'em' }};
+      --element-text-text-transform--body: none;
+
+      /* Body Font Sizes */
+      --element-text-font-size--body: initial;
+      --element-text-font-size--body-xs: {{ settings.type_base_size | minus: 4 | default: 12 | append: 'px' }};
+      --element-text-font-size--body-sm: {{ settings.type_base_size | minus: 2 | default: 14 | append: 'px' }};
+      --element-text-font-size--body-md: {{ settings.type_base_size | default: 16 | append: 'px' }};
+      --element-text-font-size--body-lg: {{ settings.type_base_size | plus: 2 | default: 18 | append: 'px' }};
+      
+      /* Body Line Heights */
+      --element-text-line-height--body: {{ settings.type_base_line_height | default: 1.4 }};
+
+      /* Heading Font Styles */
+      --element-text-font-family--heading: {{ settings.type_header_font_family.family }};
+      --element-text-font-family-fallback--heading: {{ settings.type_header_font_family.fallback_families }};
+      --element-text-font-weight--heading: {{ settings.type_header_font_family.weight }};
+      --element-text-letter-spacing--heading: {{ settings.type_header_spacing | default: '25' | divided_by: 1000.00 | append: 'em' }};
+      
+      {% if settings.type_header_capitalize %}
+      --element-text-text-transform--heading: uppercase;
+      {% endif %} 
+      
+      
+      /* Heading Font Sizes */
+      --element-text-font-size--heading-2xl: {{ settings.type_header_base_size | plus: 16 | default: '48' | append: 'px' }};
+      --element-text-font-size--heading-xl: {{ settings.type_header_base_size | default: '32' | append: 'px' }};
+      --element-text-font-size--heading-lg: {{ settings.type_header_base_size | minus: 6 | default: '24' | append: 'px' }};
+      --element-text-font-size--heading-md: {{ settings.type_header_base_size | minus: 8 | default: '20' | append: 'px' }};
+      --element-text-font-size--heading-sm: {{ settings.type_header_base_size | minus: 14 | default: '18' | append: 'px' }};
+      --element-text-font-size--heading-xs: {{ settings.type_header_base_size | minus: 16 | default: '16' | append: 'px' }};
+      
+      /* Heading Line Heights */
+      --element-text-line-height--heading: {{ settings.type_header_line_height | default: 1.4 }};
+
+      /* Buttons */
+      /* ========================= */
+      {% if settings.button_style == 'round-slight' %}
+          --element-button-radius: 3px;
+      {% elsif settings.button_style == 'round' %}
+          --element-button-radius: 50px;
+      {% else %}
+          --element-button-radius: 0;
+      {% endif %}
+
+      --element-button-padding-block: 12px;
+      --element-button-text-transform: uppercase;
+      --element-button-font-weight: 800;
+      --element-button-font-size: max(calc(var(--typeBaseSize) - 4px), 13px);
+      --element-button-letter-spacing: .3em;
+
+      /* Base Color Variables */
+      --element-button-color-primary: {{ settings.color_button }};
+      --element-button-color-secondary: {{ settings.color_button_text }};
+      --element-button-shade-border: 100%;
+
+      /* Hover State Variables */
+      --element-button-shade-background--hover: 0%;
+      --element-button-shade-border--hover: 100%;
+
+      /* Focus State Variables */
+      --element-button-color-focus: var(--color-focus);
+
+      /* Inputs */
+      /* ========================= */
+      {% if settings.button_style == 'round-slight' %}
+          --element-icon-radius: 3px;
+      {% elsif settings.button_style == 'round' %}
+          --element-icon-radius: 50px;
+      {% else %}
+          --element-icon-radius: 0;
+      {% endif %}
+
+      --element-input-font-size: var(--element-text-font-size--body-sm);
+      --element-input-box-shadow-shade: 100%;
+
+      /* Hover State Variables */
+      --element-input-background-shade--hover: 0%;
+      --element-input-box-shadow-spread-radius--hover: 1px;
+    }
+
+    @media only screen and (max-width: 768px) {
+      :root {
+        --element-button-font-size: max(calc(var(--typeBaseSize) - 5px), 11px);
+      }
+    }
+
+    .element-radio {
+        &:has(input[type='radio']:checked) {
+          --element-button-color: var(--element-button-color-secondary);
+        }
+    }
+
+    /* ATC Button Overrides */
+    /* ========================= */
+
+    .element-button[type="submit"],
+    .element-button[type="submit"] .element-text,
+    .element-button--shopify-payment-wrapper button {
+      --element-button-padding-block: 13px;
+      --element-button-padding-inline: 20px;
+      --element-button-line-height: 1.42;
+      --_font-size--body-md: var(--element-button-font-size);
+
+      line-height: 1.42 !important;
+    }
+
+    /* When dynamic checkout is enabled */
+    product-form:has(.element-button--shopify-payment-wrapper) {
+      --element-button-color: {{ settings.color_body_text }};
+
+      .element-button[type="submit"],
+      .element-button--shopify-payment-wrapper button {
+        min-height: 50px !important;
+      }
+
+      .shopify-payment-button {
+        margin: 0;
+      }
+    }
+
+    /* Hover animation for non-angled buttons */
+    body:not([data-button_style='angled']) .element-button[type="submit"] {
+      position: relative;
+      overflow: hidden;
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 150%;
+        width: 200%;
+        height: 100%;
+        transform: skewX(-20deg);
+        background-image: linear-gradient(to right,transparent, rgba(255,255,255,.25),transparent);
+      }
+
+      &:hover:after {
+        animation: shine 0.75s cubic-bezier(0.01, 0.56, 1, 1);
+      }
+    }
+
+    /* ANGLED STYLE - ATC Button Overrides */
+    /* ========================= */
+    
+    [data-button_style='angled'] {
+      --element-button-shade-background--active: var(--element-button-shade-background);
+      --element-button-shade-border--active: var(--element-button-shade-border);
+
+      .element-button[type="submit"] {
+        --_box-shadow: none;
+
+        position: relative;
+        max-width: 94%;
+        border-top: 1px solid {{ settings.color_button }};
+        border-bottom: 1px solid {{ settings.color_button }};
+        
+        &:before,
+        &:after {
+          content: '';
+          position: absolute;
+          display: block;
+          top: -1px;
+          bottom: -1px;
+          width: 20px;
+          transform: skewX(-12deg);
+          background-color: {{ settings.color_button }};
+        }
+        
+        &:before {
+          left: -6px;
+        }
+        
+        &:after {
+          right: -6px;
+        }
+      }
+
+      /* When dynamic checkout is enabled */
+      product-form:has(.element-button--shopify-payment-wrapper) {
+        .element-button[type="submit"]:before,
+        .element-button[type="submit"]:after {
+          background-color: color-mix(in srgb,var(--_color-text) var(--_shade-background),var(--_color-background));
+          border-top: 1px solid {{ settings.color_button }};
+          border-bottom: 1px solid {{ settings.color_button }};
+        }
+
+        .element-button[type="submit"]:before {
+          border-left: 1px solid {{ settings.color_button }};
+        }
+        
+        .element-button[type="submit"]:after {
+          border-right: 1px solid {{ settings.color_button }};
+        }
+      }
+
+      .element-button--shopify-payment-wrapper {
+        --_color-background: {{ settings.color_button }};
+
+        button:hover,
+        button:before,
+        button:after {
+          background-color: color-mix(in srgb,var(--_color-text) var(--_shade-background),var(--_color-background)) !important;
+        }
+
+        button:not(button:focus-visible) {
+          box-shadow: none !important;
+        }
+      }
+    }
+  {% endstyle %}
+
+  <script src="{{ 'vendor-scripts-v11.js' | asset_url | split: '?' | first }}" defer="defer"></script>
+
+  {%- if shop.enabled_currencies.size > 1 -%}
+    <link rel="stylesheet" href="{{ 'country-flags.css' | asset_url | split: '?' | first }}">
+  {%- endif -%}
+
+  {% if template == 'collection' or template == 'search' %}
+    {{ 'atc-popup.css' | asset_url | stylesheet_tag }}
+    {{ 'atc-hover.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'atc-popup.js' |  asset_url }}" defer></script>
+    <script src="{{ 'atc-hover.js' |  asset_url }}" defer></script>
+  {% endif %}
+
+
+  <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+
+  {%- if request.page_type contains 'customers/' -%}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {% if request.design_mode %}
+    <script>theme.settings.email = {{ shop.email | json }}</script>
+    <script src="https://api.archetypethemes.co/design-mode.js" defer="defer"></script>
+  {% endif %}
+  {{ 'yt-app.css' | asset_url | stylesheet_tag }}
+<script type="text/javascript">if(typeof window.hulkappsWishlist === 'undefined') {
+      window.hulkappsWishlist = {};
+  }
+  window.hulkappsWishlist.baseURL = '/apps/advanced-wishlist/api';
+  window.hulkappsWishlist.hasAppBlockSupport = '1';
+  
+  var WLdrawers = document.querySelectorAll(".hulk-wishlist-drawer");
+
+  {% comment %} console.log("WLdrawers",WLdrawers); {% endcomment %}
+
+  if (WLdrawers.length && typeof HulkappWishlist !== 'undefined') {
+        WLdrawers.forEach(function(drawer) {
+        {% comment %} console.log("WLdrawers",WLdrawers); {% endcomment %}
+      HulkappWishlist._openMyWishlistDrawer(drawer);
+    });
+  }
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WTFPXXB');</script>
+<!-- End Google Tag Manager -->
+
+<!-- TBH Organization schema (added 2026-05-16) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "The Bear House",
+  "alternateName": "TBH",
+  "url": "https://thebearhouse.com",
+  "logo": "https://thebearhouse.com/cdn/shop/files/logo-tbh.svg",
+  "description": "The Bear House is a premium menswear brand in India offering precision-tailored fits, functional detailing, breathable fabrics and durable construction.",
+  "foundingDate": "2018",
+  "sameAs": [
+    "https://www.instagram.com/thebearhouse/",
+    "https://www.facebook.com/thebearhouseindia/",
+    "https://www.youtube.com/@thebearhouse",
+    "https://in.linkedin.com/company/the-bear-house"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "email": "support@thebearhouse.com",
+    "areaServed": "IN",
+    "availableLanguage": ["English", "Hindi"]
+  }
+}
+</script>
+
+<!-- TBH WebSite schema (added 2026-05-16) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "The Bear House",
+  "url": "https://thebearhouse.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://thebearhouse.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<!-- TBH BreadcrumbList schema (added 2026-05-16) -->
+{%- if template.name == 'product' and product != blank -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}/"}
+    {%- if collection != blank -%}
+    ,{"@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": "{{ shop.url }}{{ collection.url }}"}
+    ,{"@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}"}
+    {%- else -%}
+    ,{"@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}"}
+    {%- endif -%}
+  ]
+}
+</script>
+{%- elsif template.name == 'collection' and collection != blank -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}/"},
+    {"@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": "{{ shop.url }}{{ collection.url }}"}
+  ]
+}
+</script>
+{%- elsif template.name == 'article' and article != blank -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}/"},
+    {"@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": "{{ shop.url }}{{ blog.url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ article.title | json }}, "item": "{{ shop.url }}{{ article.url }}"}
+  ]
+}
+</script>
+{%- endif -%}
+<!-- TBH Article schema (added 2026-05-16) -->
+{%- if template.name == 'article' and article != blank -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ article.url }}"
+  },
+  "headline": {{ article.title | json }},
+  "url": "{{ shop.url }}{{ article.url }}",
+  {%- if article.image -%}
+  "image": "https:{{ article.image | img_url: '1200x' }}",
+  {%- endif -%}
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | json }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Bear House",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://thebearhouse.com/cdn/shop/files/Logo_BLACK.png"
+    }
+  },
+  "description": {{ article.excerpt_or_content | strip_html | truncate: 250 | json }}
+}
+</script>
+{%- endif -%}
+<!-- TBH FAQPage schema - Return Policy (added 2026-05-16) -->
+{%- if request.path contains '/pages/return-policy' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the return window at The Bear House?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We accept returns within 7 days of delivery."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are returns free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A return shipping fee of Rs 50 per order applies. This amount is deducted from your refund."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I exchange a product instead of returning it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, exchanges are completely free."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which items are non-returnable?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Accessories, innerwear, sunglasses, and socks are non-returnable for hygiene and safety reasons."
+      }
+    }
+  ]
+}
+</script>
+{%- endif -%}
+
+<!-- TBH FAQPage schema - Shipping Policy (added 2026-05-16) -->
+{%- if request.path contains '/pages/shipping-policy' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is shipping free across India?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Shipping is free on all prepaid orders. Cash on Delivery (COD) orders incur a Rs 50 shipping fee."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does delivery take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Orders are typically delivered within 4 to 5 business days from the date of dispatch."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I track my order?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, you will receive a tracking link via email and SMS as soon as your order is dispatched."
+      }
+    }
+  ]
+}
+</script>
+{%- endif -%}
+<script type='text/javascript' src='https://static-cdn.yutoads.com/0hgj0b9d2zy3o0kjpgrwezbk.js' async='true'></script>
+{% comment %} additional custom css start {% endcomment %}
+ <style>
+
+   .woot--bubble-holder {
+      display: none !important;
+    }
+
+    .yt-sticky-bar-dropdown-button {
+      color: #fff !important;
+    }
+
+    .yt-cart-drawer-content .yt-cart-product-recs-title {
+    margin-left: 8px !important;
+    padding: 8px !important;
+    }
+
+    #NavDrawer {
+    z-index: 99999999999999999999 !important;
+    }
+
+    @media screen and (max-width: 768px) {  
+      #product-nonrefundable-policy i{
+        font-size: 10px !important;
+       }
+    }
+
+    #shopify-section-template--21903790244091__faq_mDtr7p .page-width {
+    max-width: 80% !important;
+    }
+    .site-nav__link--underline:after {
+        border-bottom-color: #e92e30 !important;
+      }
+
+      .st-collection-scroll-top {
+        background: #e92e30 !important;
+        border: 60px !important;
+      }
+
+      .sewp-header{
+        background: #e92e30 !important;
+      }
+ </style>
+
+ 
+{% comment %} additional custom css end {% endcomment %}
+</head>
+
+    {% comment %} st-collection-hide class added by team Searchtap {% endcomment %}
+    <body
+      class="template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }} template-name-{{ template | replace: '.', ' ' }} {% if request.path == '/challenge' %} template-challange{% endif %} st-collection-hide"
+      data-center-text="{{ settings.type_body_align_text }}"
+      data-button_style="{{ settings.button_style }}"
+      data-type_header_capitalize="{{ settings.type_header_capitalize }}"
+      data-type_headers_align_text="{{ settings.type_headers_align_text }}"
+      data-type_product_capitalize="{{ settings.type_product_capitalize }}"
+      data-swatch_style="{{ settings.swatch_style }}"
+      {% if settings.disable_animations %}
+        data-disable-animations="true"
+      {% endif %}
+    >
+      <a class="in-page-link visually-hidden skip-link" href="#MainContent">
+        {{- 'general.accessibility.skip_to_content' | t -}}
+      </a>
+
+      <div id="PageContainer" class="page-container">
+        <div class="transition-body">
+          {%- sections 'header-group' -%}
+          {%- sections 'popup-group' -%}
+           {% render 'kwikpass-add-button' %}
+          <main class="main-content" id="MainContent">
+            {{ content_for_layout }}
+          </main>
+          {% comment %} script added by team searchtap {% endcomment %}
+
+          {%- sections 'footer-group' -%}
+        </div>
+      </div>
+
+      {%- liquid
+        render 'video-modal'
+        render 'photoswipe-template'
+        render 'tool-tip'
+      -%}
+
+  {% comment %} Image markup used when building product grid item via JS {% endcomment %}
+  <template id="naturalImageMarkup">
+    <div class="image-wrap" style="height: 0;">
+      <image-element data-aos="image-fade-in" data-aos-offset="150">
+        <img class="grid-product__image image-element" width height src srcset loading="lazy" alt>
+      </image-element>
+    </div>
+  </template>
+  <template id="fixedRatioImageMarkup">
+    <div class="grid__image-ratio">
+      <image-element data-aos="image-fade-in" data-aos-offset="150">
+        <img class="image-element" width height src srcset loading="lazy" alt>
+      </image-element>
+    </div>
+  </template>
+
+  {% render 'searchtap' %}
+  {% render 'st-collection-handles' %}
+
+
+  <script type="text/javascript">
+
+        function pwGetURLParameter(name) {
+
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+
+        }
+
+        function pwReadCookie(n){for(var t=n+"=",e=document.cookie.split(";"),r=0;r<e.length;r++){for(var i=e[r];" "==i.charAt(0);)i=i.substring(1,i.length);if(0==i.indexOf(t))return i.substring(t.length,i.length)}return null}
+
+
+
+        function dpCks(name) {
+
+          document.cookie = name + "=" + name + ";expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.thebearhouse.com;";
+
+        }
+
+        var srcTp="utm_source";
+
+        var srcTpVal="paisawapas";
+
+        var cookieValidForDays=30;
+
+        pwSessionId=pwGetURLParameter(srcTp)!=null ? pwGetURLParameter(srcTp) : '';
+
+      </script>
+
+      <script type="text/javascript">
+
+        if(pwSessionId == srcTpVal){PWOID="thebearhouse";PWlp=escape(window.parent.location.href);!function(){var a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src="https://track.paisawapas.in/tr/gtm?action=init-track&ckd="+cookieValidForDays+"&oid=" + PWOID + "&pwsvid="+pwGetURLParameter("pwsvid")+"&lp="+ PWlp;var b=document.getElementsByTagName("body")[0];if(b)b.appendChild(a,b);else{var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)}}();}else if (pwSessionId.toLowerCase() != srcTpVal && pwSessionId.toLowerCase() !=''){dpCks('_pwsrc');}
+
+      </script>
+
+      <!-- end PW Global Tracking -->
+
+      <!-- Google Tag Manager (noscript) -->
+
+      <noscript
+
+        ><iframe
+
+          src="https://www.googletagmanager.com/ns.html?id=GTM-WTFPXXB"
+
+          height="0"
+
+          width="0"
+
+          style="display:none;visibility:hidden"
+
+        ></iframe
+
+      ></noscript>
+
+      <!-- End Google Tag Manager (noscript) -->
+
+      <!-- Begin Shopify–payment-cart JavaScript -->
+
+      <script type="text/javascript">
+
+        var mid = '4261';
+
+      </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () {
+      var script = document.createElement("script");
+      script.src = "https://checkout-merchant.snapmint.com/js/v1/4261";
+      document.body.appendChild(script);
+    }, 100); // 0.1 seconds after DOM is ready
+  });
+</script>
+
+  {% comment %} <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.22/bundled/lenis.min.js"></script>
+  <script>
+    const lenis = new Lenis({
+      smoothWheel: true,
+      duration: 2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  </script> {% endcomment %}
+
+  <script>
+  document.addEventListener('submit', function (e) {
+    var form = e.target.closest('form[action*="/cart/add"]');
+    if (!form) return;
+    if (window.theme && theme.settings && theme.settings.cartType === 'page') return;
+    document.dispatchEvent(new CustomEvent('cart:open'));
+  }, true);
+</script>
+  {% render 'kwikpass' %}
+{% render 'tbh-sale-flag' %}
+<script>
+(function(d,t) {
+        var BASE_URL="https://app.limechat.ai";
+        var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src="https://s3.ap-south-1.amazonaws.com/cdn.limechat.ai/packs/js/LC_sdk/v1/sdk.js";
+        g.defer = true;
+        s.parentNode.insertBefore(g,s);
+        g.onload=function(){
+          window.chatwootSDK.run({
+            websiteToken: '2oTF4osnFEBwaon6K4wmuU7j',
+            baseUrl: BASE_URL
+          })
+        }
+      })(document,"script");
+</script>
+  
+</body>
+</html>

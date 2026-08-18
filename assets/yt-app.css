@@ -1,0 +1,110 @@
+.yt-cart-drawer {
+  border-radius: 10px 87!important;
+}
+.yt-cart-product-rec-card-container {
+  width: 220px !important;
+  padding: 10px 10px !important;
+  border: 1px solid #e2e2e2 !important;
+  border-radius: 4px !important;
+  margin-right: 4px !important;
+  background-color: #ffffff !important;
+}
+.sc-eQwNpu.hrFCZU,
+.sc-gvqKNf.fzFHtf,
+.sc-eVqvcJ.iNdBPe,
+.sc-kjwdDK.dTMCjI {
+  font-size: 11px !important;
+}
+/* Empty cart suggestions */
+.sc-gLaqbQ.eJwqBF{
+   width: 100% !important;
+    border-radius: 8px !important;
+}
+.sc-gLaqbQ.jvbdaR {
+  width: 90px !important;
+  border-radius: 8px !important;
+  
+}
+.sc-fhfEft.bVdGJD {
+  margin-left: 12px !important;
+}
+#yourtoken-product-rec-atc{
+    border-radius: 20px !important;
+}
+.yt-cart-product-recs-title{
+    text-align: left !important;
+    margin-left: 14px !important;
+
+}
+.yt-cart-drawer .fnZIjh + div[style*="display: list-item"], .sc-eYEAxu.hnXTUS {
+    display: none !important;
+}
+.yt-cart-drawer .yt-cart-drawer-content > div[style*="height: 12px"] {
+    display: none !important;
+}
+.yt-cart-footer-container{
+    box-shadow: none !important;
+}
+.yt-cart-checkout-summary{
+    background-color: rgb(231 231 231) !important;
+}
+/* .sc-eYEAxu.hnXTUS::after {
+ content: " items" !important;
+ font-size: 12px !important;
+ margin-left: 10px !important;
+ background-color: #d8d5d5 !important;
+    width: 58px !important;
+    border-radius: 10px !important;
+} */
+
+.gokwik-checkout button {
+  border-radius: 10px !important;
+}
+.yt-cart-multi-tier-reward-message, .cEyPA-d {
+background-color: #ffffff !important;
+color: #000000 !important;
+}
+.cEyPA-d, .yt-cart-progress-bar-tier-name-tag{
+font-size: 10px !important;
+}
+.yt-cart-variant-text {
+  padding: 1px 10px !important;
+}
+.sc-jkvfRO.lpoKYI svg {
+  height: 18px !important;
+  width: 18px !important;
+}
+.iwEglu svg {
+  color: red !important;
+}
+
+.bqCrZf {
+  font-weight: 700; 
+  background-color: #b9e0fe !important; 
+} 
+.hJPKVY { 
+  background-color: #ffffff !important; 
+}
+.sc-djcAKz {
+width: 220px !important;
+margin-left: -7px!important;
+}
+.sc-emMPjM {
+gap: 4px !important;
+}
+.eYxUft, .GIUcD > div {
+  width: 220px !important;
+}
+
+.yt-steal-deal-card {
+  width: 220px !important;
+}
+.yt-cart-progress-bar-tier-name-tag, .hoAJTI {
+border-radius: 0px !important;
+}
+
+.hoAJTI {
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: none !important;
+}

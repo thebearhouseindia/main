@@ -1,0 +1,108 @@
+.atc-hover_wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.atc-hover_wrapper .link {
+  width: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 88.17px;
+  z-index: 0;
+}
+
+product-card:hover .ds_variant-wrapper {
+  bottom: 0;
+  opacity: 1;
+}
+
+.ds_variant-wrapper {
+  position: absolute;
+  bottom: -88.17px;
+  right: 0;
+  left: 0;
+  z-index: 29;
+  opacity: 0;
+  transition: bottom 0.3s ease-in;
+}
+
+.ds_variant-wrapper .ds_variant-choose {
+  font-size: small;
+}
+
+.ds_variant-wrapper .ds_variant-item {
+  font-size: smaller;
+  padding: 2px 5px;
+  position: relative;
+}
+
+.ds_variant-wrapper .dots {
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #d35400;
+}
+
+.ds_variant-item.unavailable {
+  color: rgb(165, 164, 164);
+  cursor: default;
+}
+
+.ds_variant-input-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: white;
+  opacity: 0.8;
+  gap: 5px;
+  user-select: none;
+}
+.grid-product__link:after {
+    content: none;
+}
+.ds_variant-input-wrap .ds_variant-item.available:hover {
+  background-color: rgb(255, 255, 255);
+  cursor: pointer;
+  color:#000;
+}
+.ds_variant-input-wrap {
+    cursor: pointer;
+}
+.ds_variant-list {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+/* .ds_variant-list {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: black;
+    color: #FFF;
+    padding: 0px 20px;    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    transform: translateX(80px);
+        transition: 0.3s;    
+        z-index: 3;
+}
+.ds_variant-list.active {
+    transform: translate(0px);
+} */
+.ds_variant-item.available {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}

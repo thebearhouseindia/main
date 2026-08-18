@@ -1,0 +1,152 @@
+{%- comment -%}
+  Renders one store from a "store" metaobject.
+  Used by templates/metaobject.store.json (one auto URL per store entry).
+  Field keys expected on the metaobject definition:
+    name, address, working_hours, open_days, phone, whatsapp, map_link, image, city, state
+{%- endcomment -%}
+
+{%- liquid
+  assign accent = section.settings.accent_color | default: '#e92e30'
+  assign btn_bg = section.settings.button_bg | default: '#1e1e1e'
+  assign btn_fg = section.settings.button_text | default: '#ffffff'
+
+  assign s_name  = metaobject.name.value
+  assign s_addr  = metaobject.address.value
+  assign s_hours = metaobject.working_hours.value
+  assign s_days  = metaobject.open_days.value
+  assign s_phone = metaobject.phone.value | remove: 'tel:' | strip
+  assign s_wa    = metaobject.whatsapp.value | strip
+  assign s_map   = metaobject.map_link.value
+  assign s_img   = metaobject.image.value
+  assign s_city  = metaobject.city.value
+  assign s_state = metaobject.state.value
+  if s_name == blank
+    assign s_name = metaobject.system.handle | replace: '-', ' ' | capitalize
+  endif
+-%}
+
+{% style %}
+  #store-{{ section.id }} { --st-accent: {{ accent }}; --st-btn-bg: {{ btn_bg }}; --st-btn-fg: {{ btn_fg }}; }
+  #store-{{ section.id }} .tbh-store__hero { width: 100%; aspect-ratio: 1.6; background: #f2f2f2; }
+  #store-{{ section.id }} .tbh-store__hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #store-{{ section.id }} .tbh-store__body { max-width: 1200px; margin: 0 auto; padding: clamp(28px, 5vw, 56px) 20px; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 56px); align-items: start; }
+  #store-{{ section.id }} .tbh-store__name { margin: 0 0 20px; font-weight: 800; letter-spacing: -0.01em; font-size: clamp(24px, 3.4vw, 38px); text-transform: uppercase; line-height: 1.1; }
+  #store-{{ section.id }} .tbh-store__block { margin: 0 0 20px; }
+  #store-{{ section.id }} .tbh-store__label { margin: 0 0 4px; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--st-accent); }
+  #store-{{ section.id }} .tbh-store__text { margin: 0; font-size: 15px; line-height: 1.55; color: #333; }
+  #store-{{ section.id }} .tbh-store__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  #store-{{ section.id }} .tbh-store__btn { display: inline-flex; align-items: center; gap: 8px; background: var(--st-btn-bg); color: var(--st-btn-fg); font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; padding: 12px 22px; border-radius: 999px; transition: transform 0.2s ease; }
+  #store-{{ section.id }} .tbh-store__btn:hover { transform: translateY(-2px); }
+  #store-{{ section.id }} .tbh-store__btn--ghost { background: transparent; color: #1e1e1e; border: 1.5px solid #1e1e1e; }
+  #store-{{ section.id }} .tbh-store__btn svg { width: 16px; height: 16px; }
+  #store-{{ section.id }} .tbh-store__map { width: 100%; aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: #eee; }
+  #store-{{ section.id }} .tbh-store__map iframe { width: 100%; height: 100%; border: 0; display: block; }
+  @media (max-width: 768px) {
+    #store-{{ section.id }} .tbh-store__hero { aspect-ratio: 1; }
+    #store-{{ section.id }} .tbh-store__body { grid-template-columns: 1fr; padding: 24px 16px; }
+    #store-{{ section.id }} .tbh-store__map { order: -1; }
+  }
+{% endstyle %}
+
+<section id="store-{{ section.id }}" class="tbh-store">
+  {% if s_img != blank %}
+    <div class="tbh-store__hero">
+      {{ s_img | image_url: width: 1800 | image_tag: widths: '800, 1200, 1600, 1800', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: s_name }}
+    </div>
+  {% elsif section.settings.fallback_image != blank %}
+    <div class="tbh-store__hero">
+      {{ section.settings.fallback_image | image_url: width: 1800 | image_tag: widths: '800, 1200, 1600, 1800', sizes: '100vw', loading: 'eager', alt: s_name }}
+    </div>
+  {% endif %}
+
+  <div class="tbh-store__body">
+    <div class="tbh-store__info">
+      {% if s_name != blank %}<h1 class="tbh-store__name">{{ s_name }}</h1>{% endif %}
+
+      {% if s_addr != blank %}
+        <div class="tbh-store__block">
+          <p class="tbh-store__label">Address</p>
+          <p class="tbh-store__text">{{ s_addr }}</p>
+        </div>
+      {% endif %}
+
+      {% if s_hours != blank or s_days != blank %}
+        <div class="tbh-store__block">
+          <p class="tbh-store__label">Opening hours</p>
+          {% if s_hours != blank %}<p class="tbh-store__text">{{ s_hours }}</p>{% endif %}
+          {% if s_days != blank %}<p class="tbh-store__text">{{ s_days }}</p>{% endif %}
+        </div>
+      {% endif %}
+
+      <div class="tbh-store__actions">
+        {% if s_phone != blank %}
+          <a class="tbh-store__btn" href="tel:{{ s_phone | replace: ' ', '' }}">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.5.56 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .56 3.5 1 1 0 0 1-.24 1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            Call us
+          </a>
+        {% endif %}
+        {% if s_wa != blank %}
+          <a class="tbh-store__btn" href="https://wa.me/{{ s_wa | replace: ' ', '' | replace: '+', '' }}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.1.2-.3.3-.1.6.1.3.7 1.1 1.4 1.8.9.8 1.7 1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.2.1.7-.1 1.3Z"/></svg>
+            WhatsApp us
+          </a>
+        {% endif %}
+        {% if s_map != blank %}
+          <a class="tbh-store__btn tbh-store__btn--ghost" href="{{ s_map }}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>
+            Get directions
+          </a>
+        {% elsif s_addr != blank %}
+          <a class="tbh-store__btn tbh-store__btn--ghost" href="https://www.google.com/maps/search/?api=1&query={{ s_addr | strip | url_encode }}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>
+            Get directions
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if section.settings.show_map and s_addr != blank %}
+      <div class="tbh-store__map">
+        <iframe src="https://maps.google.com/maps?q={{ s_addr | strip | url_encode }}&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="{{ s_name | escape }} map"></iframe>
+      </div>
+    {% endif %}
+  </div>
+
+  {%- comment -%} LocalBusiness schema for store SEO {%- endcomment -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    "name": {{ s_name | json }},
+    "image": {% if s_img != blank %}{{ s_img | image_url: width: 1200 | prepend: 'https:' | json }}{% else %}""{% endif %},
+    "url": {{ request.origin | append: request.path | json }},
+    {% if s_phone != blank %}"telephone": {{ s_phone | json }},{% endif %}
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": {{ s_addr | json }},
+      "addressLocality": {{ s_city | json }},
+      "addressRegion": {{ s_state | json }},
+      "addressCountry": "IN"
+    },
+    "openingHours": {{ s_hours | default: '' | json }},
+    "brand": { "@type": "Brand", "name": "The Bear House" }
+  }
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Store (metaobject)",
+  "settings": [
+    { "type": "header", "content": "Map" },
+    { "type": "checkbox", "id": "show_map", "label": "Show embedded map", "default": true },
+    { "type": "header", "content": "Fallback photo" },
+    { "type": "paragraph", "content": "Used only if a store entry has no image field set." },
+    { "type": "image_picker", "id": "fallback_image", "label": "Fallback image" },
+    { "type": "header", "content": "Style" },
+    { "type": "color", "id": "accent_color", "label": "Accent (labels)", "default": "#e92e30" },
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#1e1e1e" },
+    { "type": "color", "id": "button_text", "label": "Button text", "default": "#ffffff" }
+  ]
+}
+{% endschema %}

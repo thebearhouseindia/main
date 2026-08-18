@@ -1,0 +1,195 @@
+
+<style>
+.blog-filter-wrapper {
+  width: 100%;
+    margin-bottom: 40px;
+    margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.blog-filter-container {
+  background: #E4E4E47A;
+  border-radius: 120px;
+  display: flex;
+   align-items: center;
+  padding: 0px 40px 0px 0px;
+}
+
+.blog-filter-btn {
+  background: transparent;
+  border: none;
+  padding: 12px 40px 15px;
+  border-radius: 120px;
+  cursor: pointer;
+  font-size: 18px;
+font-family: 'sf_pro_displayregular';
+font-weight: 400;
+line-height: 100%;
+letter-spacing: 0%;
+text-align: center;
+cursor:pointer;
+}
+
+.blog-filter-btn.active {
+  background: #c7d52a;
+
+  color: #000;
+  font-weight: 600;
+  font-family: 'sf_pro_displaymedium';
+}
+
+#next {
+  max-width: 164px;
+  margin: 40px auto 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 16px 32px;
+  border-radius: 330px;
+  border: 1px solid #11111199;
+
+  background: transparent;
+  color: #111111;
+
+  font-family: 'sf_pro_displaymedium';
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 100%;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  transition: color 0.35s ease;
+}
+
+#next::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #C8DA2E;
+  border-radius: inherit;
+
+  transform: scale(0);
+  transform-origin: center;
+  transition: transform 0.45s ease-out;
+  z-index: 0;
+}
+
+#next:hover::before {
+  transform: scale(1);
+}
+
+#next span,
+#next {
+  position: relative;
+  z-index: 1;
+}
+
+#next:hover {
+  color: #ffffff;
+}
+
+#next:active {
+  transform: scale(0.96);
+}
+
+@media(max-width:768px){
+.blog-filter-btn { padding: 9px 20px 12px;font-size: 14px;}
+.blog-filter-wrapper {padding:0px 0px 0px 16px; margin-bottom: 20px; margin-top: 0px;}
+  #next{margin: 24px auto 40px; padding: 12px 32px;max-width: 142px; font-size: 16px;
+}
+
+
+}
+</style>
+
+<div class="blog-filter-wrapper">
+  <div class="blog-filter-container">
+    <button class="blog-filter-btn active" data-tag="all">All Blogs</button>
+
+    {%- assign all_tags = "" -%}
+    {%- for article in blog.articles -%}
+      {%- for tag in article.tags -%}
+        {%- unless all_tags contains tag -%}
+          {%- assign all_tags = all_tags | append: tag | append: "," -%}
+        {%- endunless -%}
+      {%- endfor -%}
+    {%- endfor -%}
+
+    {%- assign tag_array = all_tags | split: "," -%}
+    {%- for tag in tag_array -%}
+      {% if tag != blank %}
+        <button class="blog-filter-btn" data-tag="{{ tag | handleize }}">{{ tag }}</button>
+      {% endif %}
+    {%- endfor -%}
+  </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+  const numToShow = 9;
+  let activeTag = "all";
+
+  const $posts = $(".new-article-card");
+  const $button = $("#next");
+
+  function applyFilter(reset = false) {
+
+    let $filtered = activeTag === "all"
+      ? $posts
+      : $posts.filter(function () {
+          return $(this).data("tags").includes(activeTag);
+        });
+
+    // hide all first
+    $posts.hide();
+
+    // show only first 9 of filtered
+    $filtered.slice(0, numToShow).show();
+
+    // button logic
+    if ($filtered.length > numToShow) {
+      $button.show();
+    } else {
+      $button.hide();
+    }
+  }
+
+  // initial load
+  applyFilter(true);
+
+  // load more click
+  $button.on("click", function () {
+    let $filtered = activeTag === "all"
+      ? $posts
+      : $posts.filter(function () {
+          return $(this).data("tags").includes(activeTag);
+        });
+
+    let visible = $filtered.filter(":visible").length;
+    $filtered.slice(visible, visible + numToShow).fadeIn();
+
+    if ($filtered.filter(":visible").length >= $filtered.length) {
+      $button.hide();
+    }
+  });
+
+  // tag filter click
+  $(".blog-filter-btn").on("click", function () {
+    $(".blog-filter-btn").removeClass("active");
+    $(this).addClass("active");
+
+    activeTag = $(this).data("tag");
+    applyFilter(true);
+  });
+
+});
+</script>

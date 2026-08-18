@@ -1,0 +1,35 @@
+{{ 'pdp-tlpc.css' | asset_url | stylesheet_tag: preload: true }}
+
+{% style %}
+  @media (min-width: 769px) {
+    /* Make the desktop quick view a compact, centred dialog that stays in view */
+    #QuickShopModal-{{ product.id }} .modal__inner {
+      padding: 5vh 20px;
+    }
+    #QuickShopModal-{{ product.id }} .modal__centered {
+      max-width: 920px;
+      width: 92%;
+      margin: 0 auto;
+    }
+    #QuickShopModal-{{ product.id }} .modal__centered-content {
+      max-height: 84vh;
+      overflow-y: auto;
+      border-radius: 12px;
+    }
+  }
+{% endstyle %}
+
+<div id="QuickShopModal-{{ product.id }}" class="modal modal--square modal--quick-shop" data-product-id="{{ product.id }}">
+  <div class="modal__inner">
+    <div class="modal__centered">
+      <div class="modal__centered-content">
+        <div id="QuickShopHolder-{{ product.handle }}"></div>
+      </div>
+
+      <button type="button" class="modal__close js-modal-close text-link">
+        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-close" viewBox="0 0 64 64"><title>icon-X</title><path d="m19 17.61 27.12 27.13m0-27.12L19 44.74"/></svg>
+        <span class="icon__fallback-text">{{ 'general.accessibility.close_modal' | t | json }}</span>
+      </button>
+    </div>
+  </div>
+</div>

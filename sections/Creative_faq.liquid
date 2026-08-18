@@ -1,0 +1,326 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+padding-top: {{ section.settings.padding_top }}px;
+padding-bottom: {{ section.settings.padding_bottom }}px;
+background-color: {{ section.settings.color_background }};
+color: {{ section.settings.color_text }};
+overflow: hidden;
+.fixed-container {
+    max-width: 1220px;
+    margin: auto;
+}
+}
+.fixed-container {
+    max-width: 1220px;
+    margin: auto;
+}
+
+.grid-faq {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.right-content-faq {
+    padding-left: 40px;
+    border-left: 1px solid #3F3F3F1A;
+}
+.accordian-detail {
+    display: none;
+}
+.detail-title,
+.accordian-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.faq-icon-wrp {
+    width: 14px;
+    height: 14px;
+}
+
+svg.plus-icon {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.detail-accrip,
+.accrip {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 140%;
+    letter-spacing: 0;
+    margin-top: 12px;
+    color: rgba(63, 63, 63, 0.8);
+}
+.faq-lft {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.faq-rgt {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+.faq-icon-wrp svg rect {
+    scale: 1;
+    transition: 0.3s;
+}
+rect.v1 {
+    transform-origin: center;
+}
+.detail-accrip strong {
+    padding: 16px;
+    display: block;
+    color: #3F3F3F;
+    font-weight: 400;
+    background: #FFFFFF;
+    font-size: 16px;
+    margin-top: 20px;
+}
+.accordian-title.open .faq-icon-wrp svg rect.v1 {
+    scale: 0;
+}
+.relative.ret-exch-wrap .grid-faq {
+    grid-template-columns: 1fr 1fr;
+}
+
+.relative.ret-exch-wrap .grid-faq .right-content-faq {
+    grid-column: 1;
+    grid-row: 1;
+    padding-right: 40px;
+    border-right: 1px solid #3F3F3F1A;
+    padding-left: 0;
+    border-left: none;
+}
+@media only screen and (max-width: 768px) {
+.relative.ret-exch-wrap .grid-faq .right-content-faq {
+    padding-right: 0px;
+    border-right: none;
+}
+.Faqssection .titleh1 {
+    font-size: 18px;
+    margin-bottom: 16px;
+}
+#shopify-section-{{ section.id }} {
+padding-top: {{ section.settings.mobile_padding_top }}px;
+padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+}.grid-faq {
+    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: 16px;
+    gap: 30px;
+}
+.detail-accrip strong {
+    font-size: 14px;
+}
+.right-content-faq {
+    padding: 0;
+    border: none;
+}
+
+.detail-accrip, .accrip {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.detail-title, .accordian-title {
+    font-size: 14px;
+}
+
+.faq-rgt {
+    gap: 24px;
+}
+
+.faq-lft {
+    gap: 30px;
+}
+
+.faq-icon-wrp {
+    width: 12px;
+    height: 12px;
+}
+
+}
+{% endstyle %}
+
+<div class="relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }} {% endif %}">
+    <div class="fixed-container">
+        {% if section.settings.title != blank %}
+            <h1 class="titleh1">{{ section.settings.title }}</h1>
+        {% endif %}
+        <div class="grid-faq">
+            <div class="left-content-section">
+                <div class="faq-lft">
+                    {% for block in section.blocks %}
+                       {% case block.type %}
+                        {% when 'FAQ_Block' %}
+                            <div class="accordian-block">
+                                <div class="accordian-title">
+                                    <div class="ac-ttle">
+                                        {{ block.settings.queation }}
+                                    </div>
+                                    <div class="faq-icon-wrp">
+                                        {% render 'Plus-icon' %}
+                                    </div>
+                                </div>
+                                <div class="accordian-detail">
+                                    <div class="accrip">
+                                        {{ block.settings.answer }}
+                                    </div>
+                                </div>
+                            </div>
+                    {% endcase %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="right-content-faq">
+                <div class="faq-rgt">
+                    {% for block in section.blocks %}
+                        {% case block.type %}
+                            {% when 'Detail_Block' %}
+                                <div class="detail-block">
+                                    <div class="detail-title">
+                                        {{ block.settings.queation }}
+                                    </div>
+                                    <div class="detail-accrip">
+                                        {{ block.settings.answer }}
+                                    </div>
+                                </div>
+                        {% endcase %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    $(function () {
+         $(".accordian-title").first() .addClass("open").next().show();
+        $(".accordian-title").click(function () {
+            $(".open").not(this).removeClass("open").next().slideUp(300)
+            $(this).toggleClass("open").next().slideToggle(300)
+        });
+    });
+});
+</script>
+
+{% schema %}
+{
+"name": "Faqs Section",
+"class": "index-section Faqssection",
+"settings": [
+{
+"type": "text",
+"id": "custom_class",
+"label": "Custom Class"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading"
+},
+{
+"type": "range",
+"id": "padding_top",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Top",
+"default": 36
+},
+{
+"type": "range",
+"id": "padding_bottom",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Bottom",
+"default": 36
+},
+{
+"type": "range",
+"id": "mobile_padding_top",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Top",
+"default": 20
+},
+{
+"type": "range",
+"id": "mobile_padding_bottom",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Bottom",
+"default": 20
+},
+{
+"type": "color",
+"id": "color_text",
+"label": "Text Color"
+},
+{
+"type": "color",
+"id": "color_background",
+"label": "Background Color"
+}
+],
+"blocks": [
+    {
+    "type": "FAQ_Block",
+    "name": "FAQ Block",
+        "settings": [
+            {
+                "type": "text",
+                "id": "queation",
+                "label": "Title"
+            },
+            {
+                "type": "richtext",
+                "id": "answer",
+                "label": "Text"
+            }
+        ]
+    },
+    {
+    "type": "Detail_Block",
+    "name": "Detail Block",
+        "settings": [
+            {
+                "type": "text",
+                "id": "queation",
+                "label": "Title"
+            },
+            {
+                "type": "richtext",
+                "id": "answer",
+                "label": "Text"
+            }
+        ]
+    }
+],
+"presets": [
+{
+"name": "Creative Faqs"
+}
+]
+}
+{% endschema %}

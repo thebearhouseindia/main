@@ -1,0 +1,32 @@
+<slider-carousel class="products-image_wrapper product__photos">
+  <div class="slider_wrapper">
+    {% comment %}
+      {% for image in product.images limit: 4 %}
+        {% if forloop.first %}
+        {% assign loading = 'lazy' %}
+        {% else %}
+        {% assign loading = 'lazy' %}
+        {% endif %}
+        {%- render 'image-element', img: image, loading: loading, widths: '360, 540, 720, 900, 1080, 1600' -%}
+      {% endfor %}
+    {% endcomment %}
+    {% for media in product.media limit: 4 %}
+      {% if forloop.first %}
+        {% assign loading = 'eager' %}
+      {% else %}
+        {% assign loading = 'lazy' %}
+      {% endif %}
+      {% assign featured_media = product.selected_or_first_available_variant.featured_media
+        | default: product.featured_media
+      %}
+      {%- render 'media',
+        section_id: section_id,
+        media: media,
+        featured_media: featured_media,
+        loopIndex0: forloop.index0,
+        loopIndex: forloop.index,
+        loading: loading
+      -%}
+    {% endfor %}
+  </div>
+</slider-carousel>

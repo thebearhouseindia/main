@@ -1,0 +1,116 @@
+<div class="page-width page-width--narrow page-content common-page-wrap">
+  {%- render 'breadcrumbs' -%}
+  <header class="section-header">
+    <h1 class="section-header__title">{{ page.title }}</h1>
+  </header>
+
+  <div class="page-section page-content rte rte--nomargin">
+    {{ page.content }}
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  let firstOpened = false;
+
+  document.querySelectorAll('.page-content p').forEach(function(p){
+
+    const strong = p.querySelector('strong');
+    if(!strong) return;
+
+    const ul = p.nextElementSibling;
+    if(!ul || ul.tagName !== 'UL') return;
+
+    p.classList.add('returns-toggle-row');   // add class to P
+
+    const btn = document.createElement('span');
+    btn.className = 'returns-toggle';
+    btn.innerText = '+';
+    p.appendChild(btn);
+    ul.style.display = 'none';
+    if(!firstOpened){
+      ul.style.display = 'block';
+      btn.innerText = '−';
+      p.classList.add('is-open');
+      firstOpened = true;
+    }
+    function toggle(){
+      if(ul.style.display === 'none'){
+          ul.style.display = 'block';
+          btn.innerText = '−';
+          p.classList.add('is-open');
+      }else{
+          ul.style.display = 'none';
+          btn.innerText = '+';
+          p.classList.remove('is-open');
+      }
+    }
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      toggle();
+    });
+    p.addEventListener('click', toggle);
+  });
+});
+</script>
+{% schema %}
+{
+  "name": "t:sections.main-page.name",
+  "tag": "section"
+}
+{% endschema %}
+
+<style>
+h1.section-header__title {
+    text-align: left;
+    font-family: 'Roboto';
+    font-size: 28px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+}
+.page-content  ul{ 
+   padding: 0;
+    margin: 0;}
+.page-content  ul li{
+font-family: 'Roboto';
+font-weight: 300;
+font-size: 16px;
+line-height: 140%;
+list-style: none;
+    
+}
+.page-content p{margin:24px 0px 12px 0px;}
+.page-content p strong{
+font-family: 'Roboto';
+font-weight: 400;
+font-style: 'Regular';
+font-size: 16px;
+line-height: 120%;
+text-transform: uppercase;
+}
+.page-content.rte.rte--nomargin {
+    padding: 0;
+    margin: 0;
+}
+{% comment %} --- {% endcomment %}
+.page-content p{
+    display:flex;
+    align-items:center;
+}
+.returns-toggle-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  padding:12px 0;
+}
+.returns-toggle{
+  font-size:22px;
+  font-weight:400;
+  line-height:1;
+  transition:0.3s;
+}
+.returns-toggle-row.is-open .returns-toggle{
+  transform:rotate(180deg);
+}
+</style>  

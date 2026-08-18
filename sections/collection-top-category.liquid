@@ -1,0 +1,294 @@
+
+<div class="collection_count">
+  <div class="collection-title">
+    {{ collection.title }}
+  </div>
+
+  <div class="collection_count_filter">
+    ({{ collection.products_count }} PRODUCTS)
+  </div>
+</div>
+
+<div class="custom-catrg spacing-style section-background color-{{ section.settings.color_scheme }}">
+  <div class="section">
+    <div class="custom-categories">
+      <div class="swiper catg-colls">
+        <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+                {% assign block_url = block.settings.url %}
+                {% assign block_path = block_url | split: shop.url | last %}
+                {% assign current_path = request.path %}
+            <div class="swiper-slide catg-col">
+                <a href="{{ block.settings.url }}" class="{% if current_path == block_path %}active{% endif %}">
+                    <div class="cate_image">
+                        <img class="catg-img" src="{{ block.settings.image | image_url }}">
+                    </div>
+                    <div class="catg-p-ic">
+                        <p class="catg-p">{{ block.settings.title }}</p>
+                        {% comment %}
+                        {% if block.settings.title != blank %}
+                            <img style="width:20px;" src="https://cdn.shopify.com/s/files/1/0705/1182/0938/files/Frame.png?v=1750075738">
+                        {% endif %}
+                        {% endcomment %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+      background-color: {{ section.settings.color_background }};
+      color: {{ section.settings.color_text }};
+      overflow: hidden;
+    }
+        .swiper-slide.catg-col {
+            flex: none;
+            width:80px;
+        }
+    .swiper.catg-colls.swiper-initialized{
+      .swiper-slide.catg-col {
+            flex: none;
+        }
+      }
+    .collection_count {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 0px 50px;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
+    .collection_count .collection-title {
+      font-family: Roboto;
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-transform: uppercase;
+      color: #3f3f3f;
+    }
+    .cst-ttl-head{
+        font-weight: 500;
+        letter-spacing: -0.5px;
+        text-align: center;
+        text-transform: uppercase;
+        color: #101010;
+        margin: 0;
+        margin-bottom: 30px;
+    }
+    .catg-col a.active .cate_image{
+        border: 1px solid #000000;
+    }
+    .catg-col a{
+        position: relative;
+        display: block;
+        overflow: hidden;
+    }
+    .cate_image {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+    .catg-col .catg-img { 
+        transition: transform 0.4s ease-in-out;    
+        width: 100%;
+      height: 100%;
+      object-fit: cover;
+      max-width: 100%;
+    }
+    .catg-col:hover .catg-img {
+      transform: scale(1.1);
+    }
+    .mb-hro{
+      display: none;
+    }
+    .active p.catg-p {
+      font-weight: 400;
+    }
+    p.catg-p {
+      font-family: Roboto;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 130%;
+      letter-spacing: 0%;
+      text-transform: uppercase;
+      color: #3F3F3F;
+      margin-top: 12px;
+      text-align: center;
+    }
+    .swiper-pagi-cst{
+        display: none;
+    }
+  .custom-categories {
+    padding: 0;
+    max-width: 41%;
+    width: 100%;
+    margin: auto;
+    padding: 0px 10px;
+  }
+  @media only screen and (max-width: 1551px) {
+    .custom-categories {
+      max-width: 90%;
+    }
+  }
+   @media only screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ section.settings.mobile_padding_top }}px;
+        padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+      }
+      .collection_count {
+        justify-content: space-between;
+        padding: 0px 16px;
+        margin-top: 16px;    
+        margin-bottom: 14px;
+        text-align: center;
+      }
+      .breadcrumb {
+          font-size: 12px;
+          gap: 4px;
+      }
+
+      .breadcrumb-separator svg {
+          width: 10px;
+          height: 10px;
+      }
+      .custom-categories {
+        padding: 0px 0px 0px 10px;
+        max-width: 100%;
+      }
+      .collection_count .collection-title {
+        font-size: 18px;
+      }
+      p.catg-p {
+        font-size: 12px;
+        margin-top: 8px;
+        text-align: center;
+      }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.catg-colls', {
+      slidesPerView: {{ section.settings.slide_show }},
+      slidesPerGroup: 1,
+      spaceBetween: 4,
+      loop: false,
+      pagination: {
+        el: ".swiper-pagination",
+        type: "progressbar",
+      },
+      navigation: {
+        nextEl: '.categori-next',
+        prevEl: '.categori-prev',
+      },
+      breakpoints: {
+          100: {
+            slidesPerView: 4.5,
+          },
+          768: {
+            slidesPerView: 5,
+          },
+          1279: {
+            slidesPerView: {{ section.settings.slide_show }}
+          },
+        },
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "collection-top-categories",
+  "settings": [
+    {
+      "type": "range",
+      "id": "slide_show",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "slide show",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Padding Bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 52,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 52,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Padding Bottom",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "Image",
+      "name": "image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "title"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Url"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "collection-top-categories"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,259 @@
+ {% style %}
+#shopify-section-{{ section.id }} {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: {{ section.settings.color_background }};
+  z-index: 9999;
+  border-top: 1px solid #e5e5e5;
+}
+
+.sticky-footer-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0px;
+}
+#shopify-section-{{ section.id }} {
+  transition: transform 0.3s ease;
+}
+
+#shopify-section-{{ section.id }}.hide-footer {
+  transform: translateY(100%);
+}
+.sticky-footer-item {
+  flex: 1;
+  text-align: center;
+}
+.sticky-footer-item a.active img {
+   filter: brightness(0) saturate(100%) invert(22%) sepia(99%) saturate(7483%) hue-rotate(357deg) brightness(99%) contrast(108%);
+}
+.sticky-footer-item a.active span {
+  font-weight: 700;
+    color: {{ section.settings.active_color }};
+}
+.sticky-footer-item a {
+  text-decoration: none;
+  color: {{ section.settings.color_text }};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+}
+div#shopify-block-AejgrcEFqSGVOcWZDQ__advanced_wishlist_header_icon_x8HbEM {
+    max-height: 20px;
+}
+.sticky-footer-item img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  margin-bottom: 7px;
+}
+.sticky-footer-item span {
+    font-weight: 400;
+     font-size: 11px;
+    line-height: 100%;
+    text-align: center;
+    vertical-align: middle;
+    color:#9F9F9F;
+
+}
+.sticky-footer-item .icon-wishlist-heart-empty:before{
+  color: #9F9F9F !important;
+}
+
+
+@media(min-width: 992px){
+  #shopify-section-{{ section.id }}{
+    display: none;
+  }
+  #NavDrawer.drawer--is-open ~ .sticky-footer-nav {
+  display: none;
+}
+}
+{% endstyle %}
+
+<div class="sticky-footer-nav">
+
+  {% for block in section.blocks %}
+
+    {% case block.type %}
+
+      {% when 'nav_item' %}
+        <div class="sticky-footer-item {{block.settings.label }}">
+              <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}
+                class="{% if request.path == block.settings.link %}active{% endif %}">
+                
+                {% if block.settings.icon %}
+                  <img src="{{ block.settings.icon | img_url: 'master' }}" width="20" height="20" alt="TBH Home icon">
+                {% endif %}
+                <span>{{ block.settings.label }}</span>              
+              </a>
+        </div>
+
+      {% when '@app' %}
+        <div class="sticky-footer-item">
+          {% render block %}
+        </div>
+
+    {% endcase %}
+
+  {% endfor %}
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const categoryLink = document.querySelector(".sticky-footer-item.Categories a");
+  const drawerButton = document.querySelector(".js-drawer-open-nav");
+  const navDrawer = document.getElementById("NavDrawer");
+
+  if (!categoryLink || !drawerButton || !navDrawer) return;
+
+  categoryLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation(); 
+    if (!navDrawer.classList.contains("drawer--is-open")) {
+      drawerButton.click();
+    }
+  });
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const items = document.querySelectorAll(".sticky-footer-item");
+  if (items.length >= 3) {
+    const thirdItem = items[2];
+    if (!thirdItem.querySelector(".wishlist-text")) {
+      const span = document.createElement("span");
+      span.classList.add("wishlist-text");
+      span.textContent = "Wishlist";
+      thirdItem.appendChild(span);
+    }
+  }
+
+});
+</script>
+
+
+ <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const footer = document.getElementById("shopify-section-{{ section.id }}");
+  if (!footer) return;
+
+  let lastScrollTop = 0;
+
+  window.addEventListener("scroll", function () {
+    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (currentScroll > lastScrollTop) {
+      // Scrolling DOWN → Hide footer
+      footer.classList.add("hide-footer");
+      document.body.classList.add("footer-hidden");
+    } else {
+      // Scrolling UP → Show footer
+      footer.classList.remove("hide-footer");
+      document.body.classList.remove("footer-hidden");
+    }
+
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+  });
+
+});
+</script> 
+
+
+{% schema %}
+{
+  "name": "Sticky Mobile Footer",
+  "settings": [
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text Color",
+      "default": "#888888"
+    },
+    {
+      "type": "color",
+      "id": "active_color",
+      "label": "Active Color",
+      "default": "#e00000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_item",
+      "name": "Navigation Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Text",
+          "default": "Home"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+       ]
+       
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "Sticky Mobile Footer"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const navDrawer = document.getElementById("NavDrawer");
+  const stickyFooter = document.querySelector(".sticky-footer-nav");
+
+  if (!navDrawer || !stickyFooter) return;
+
+  function checkDrawerState() {
+    if (navDrawer.classList.contains("drawer--is-open")) {
+      stickyFooter.style.display = "none";
+    } else {
+      stickyFooter.style.display = "";
+    }
+  }
+
+  // Initial check
+  checkDrawerState();
+
+  // Observe class changes
+  const observer = new MutationObserver(checkDrawerState);
+
+  observer.observe(navDrawer, {
+    attributes: true,
+    attributeFilter: ["class"]
+  });
+
+});
+</script> 

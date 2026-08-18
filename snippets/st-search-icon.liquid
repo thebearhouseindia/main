@@ -1,0 +1,201 @@
+<span class="st-search-icon desktop_searchIcn st-icon-search">
+  <div class="st-for-desktop">
+    <input type="text" name="st" placeholder="Search..." value="" autocapitalize="off" autocomplete="off" autocorrect="off">
+      {% comment %} <span class="st-search-icon-svg">
+      <svg data-icon="search" viewBox="0 0 512 512" width="19px" height="20px" fill="#fff">
+        <path d="M495,466.2L377.2,348.4c29.2-35.6,46.8-81.2,46.8-130.9C424,103.5,331.5,11,217.5,11C103.4,11,11,103.5,11,217.5   S103.4,424,217.5,424c49.7,0,95.2-17.5,130.8-46.7L466.1,495c8,8,20.9,8,28.9,0C503,487.1,503,474.1,495,466.2z M217.5,382.9   C126.2,382.9,52,308.7,52,217.5S126.2,52,217.5,52C308.7,52,383,126.3,383,217.5S308.7,382.9,217.5,382.9z"></path>
+      </svg>
+    </span> {% endcomment %}
+      <button type="submit" class="tbh-search-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10.5" cy="10.5" r="6" stroke="white" stroke-width="2.2"/>
+          <line x1="15" y1="15" x2="20.5" y2="20.5" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+  </div>
+  <svg width="24" height="24" viewBox="0 0 24 24" class="st-ipad-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <mask id="mask0_672_197" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="2" y="3" width="19" height="19">
+          <path d="M2 3H21V22H2V3Z" fill="white"></path>
+          </mask>
+          <g mask="url(#mask0_672_197)">
+          <path d="M20.1117 21.0247L13.2994 14.2995M9.01883 16.1338C10.6405 16.1338 12.1957 15.4896 13.3424 14.3429C14.4891 13.1962 15.1333 11.641 15.1333 10.0193C15.1333 8.3977 14.4891 6.84246 13.3424 5.69578C12.1957 4.54911 10.6405 3.90491 9.01883 3.90491C7.39728 3.90491 5.84215 4.54906 4.69555 5.69567C3.54894 6.84227 2.90479 8.3974 2.90479 10.0189C2.90479 11.6405 3.54894 13.1956 4.69555 14.3422C5.84215 15.4888 7.39728 16.1338 9.01883 16.1338Z" stroke="#3F3F3F" stroke-width="1.25"></path>
+          </g>
+        </svg>
+  {% comment %}SEARCH {% endcomment %}
+</span>
+
+<div id="search-mobile" class="st-search-icon-mobile hidden-desktop">
+  <span>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <mask id="mask0_672_197" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="2" y="3" width="19" height="19">
+          <path d="M2 3H21V22H2V3Z" fill="white"></path>
+          </mask>
+          <g mask="url(#mask0_672_197)">
+          <path d="M20.1117 21.0247L13.2994 14.2995M9.01883 16.1338C10.6405 16.1338 12.1957 15.4896 13.3424 14.3429C14.4891 13.1962 15.1333 11.641 15.1333 10.0193C15.1333 8.3977 14.4891 6.84246 13.3424 5.69578C12.1957 4.54911 10.6405 3.90491 9.01883 3.90491C7.39728 3.90491 5.84215 4.54906 4.69555 5.69567C3.54894 6.84227 2.90479 8.3974 2.90479 10.0189C2.90479 11.6405 3.54894 13.1956 4.69555 14.3422C5.84215 15.4888 7.39728 16.1338 9.01883 16.1338Z" stroke="#3F3F3F" stroke-width="1.25"></path>
+          </g>
+        </svg>
+  </span>
+</div>
+<style>
+   @media only screen and (max-width:769px){
+
+    svg.Icon.Icon--search {
+      height: 26px;
+      width: 20px;
+  }
+    .st-search-icon{
+     display:none !important;
+    }
+      }
+     @media only screen and (max-width:834px){
+
+       span.st-search-icon.hidden-desktop svg.icon.icon-search {
+        width: 25px;
+         height: 25px;
+       }
+      .site-header--opening span.st-search-icon.hidden-desktop {
+        display: block !important;
+        cursor: pointer;
+        width: 25px;
+        height: 25px;
+        padding: 0px 6px;
+        position: absolute;
+        margin-right: 36px;
+       }
+       svg.Icon.Icon--search {
+        height: 26px;
+        width: 20px;
+      }
+      .st-search-icon.hidden-desktop{
+       display:none !important;
+      }
+    }
+
+  span.st-search-icon.desktop_searchIcn.st-icon-search {
+    cursor: pointer;
+    padding-right: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    font-size: 14px;
+    height: 100% !important;
+  }
+  span.st-search-icon.desktop_searchIcn.st-icon-search svg.icon.icon-search {
+      height: 28px;
+      width: 28px;
+  }
+  .desktop_searchIcn .st-search-icon-svg{
+    position: absolute;
+    width: 40px;
+    background: #e92e30;
+    border-radius: 0 5px 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    right: 0;
+  }
+  .desktop_searchIcn input {
+    color: #303030;
+    font-size: 16px;
+    padding: 8px 15px;
+    width: -webkit-fill-available;
+    border: none;
+    margin-bottom: 0;
+    box-shadow: none;
+    height: 42px;
+    border-radius: 5px;
+    width: 200px;
+    background-color: #e6e6e6;
+  }
+  .desktop_searchIcn .st-for-desktop {
+    pointer-events: none;
+    position: relative;
+    padding: 0px;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+  }
+  @media only screen and (min-width: 1121px){
+    .desktop_searchIcn .st-ipad-icon{
+      display: none !important;
+    }
+  }
+  @media only screen and (max-width: 1120px){
+    .desktop_searchIcn .st-for-desktop{
+      display: none !important;
+    }
+  }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", ()=>{
+    function dynamicPlaceholder() {
+      const isMobile = window.matchMedia("(max-width: 1120px)").matches;
+      if(isMobile) return;
+      let searchInputBoxSelector = isMobile? document.querySelectorAll("") :document.querySelectorAll(".desktop_searchIcn .st-for-desktop input[type=text]");
+
+      searchInputBoxSelector.forEach((searchInputBox) => {
+        if (searchInputBox) {
+          searchInputBox.setAttribute("placeholder", "");
+          const placeHolderPhrases = [
+            "Search For Shirts",
+            "Search For Trackpants",
+            "Search For Shorts"
+          ];
+
+          let index = 0;
+          let typingTimer;
+          const updatePlaceHolder = function () {
+            const phrase = placeHolderPhrases[index];
+            const length = phrase.length;
+            let queryIndex = 0;
+            typingTimer = setInterval(function () {
+              if (queryIndex === length) {
+                setTimeout(erasePlaceHolder, 1000);
+
+                clearInterval(typingTimer);
+              } else {
+                const currentPlaceholderValue =
+                    searchInputBox.getAttribute("placeholder");
+
+                searchInputBox.setAttribute(
+                    "placeholder",
+                    currentPlaceholderValue + phrase.charAt(queryIndex)
+                );
+
+                queryIndex++;
+              }
+            }, 100);
+          };
+
+          const erasePlaceHolder = function () {
+            const currentPlaceholderValue =
+                searchInputBox.getAttribute("placeholder");
+            const length = currentPlaceholderValue.length;
+            let queryIndex = length - 1;
+            typingTimer = setInterval(function () {
+              if (queryIndex === -1) {
+                clearInterval(typingTimer);
+                index++;
+                if (index === placeHolderPhrases.length) {
+                  index = 0;
+                }
+                setTimeout(updatePlaceHolder, 1000);
+              } else {
+                const newPlaceholderValue = currentPlaceholderValue.slice(
+                    0,
+                    queryIndex
+                );
+                searchInputBox.setAttribute("placeholder", newPlaceholderValue);
+                queryIndex--;
+              }
+            }, 50);
+          };
+          updatePlaceHolder();
+        }
+      });
+    }
+    dynamicPlaceholder();
+  });
+</script>

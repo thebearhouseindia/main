@@ -1,0 +1,197 @@
+<style>
+#shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.color_background }};
+    color: {{ section.settings.color_text }};
+    {% if section.settings.check == true %}
+        border-bottom: 1px solid #0000000D;
+    {% endif %}
+}
+.breadcrumb-wrapper {
+    padding: 0px 50px;
+}
+.breadcrumb {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0px;
+}
+.breadcrumb-separator svg {
+    width: 12px;
+    height: 12px;
+    transform: rotate(-90deg);
+}
+.breadcrumb a {
+  color: #333;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  color: #999;
+}
+
+.breadcrumb-current {
+  color: #000;
+  font-weight: 400;
+}
+nav.breadcrumb span {
+    text-transform: uppercase;
+}
+span.breadcrumb-separator {
+    display: flex;
+    align-items: center;
+}
+a.breadcrumb-link {
+    text-transform: uppercase;
+}
+@media (max-width: 768px) {
+  .breadcrumb-section {
+    padding-top: {{ section.settings.padding_top_mobile }}px !important;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px !important;
+  }
+nav.breadcrumb {
+    overflow: auto;
+    font-size: 12px;
+}
+nav.breadcrumb::-webkit-scrollbar {
+    display: none;
+}
+span.breadcrumb-current {
+    flex: none;
+}
+  .breadcrumb-wrapper {
+      padding: 0px 16px;
+  }
+}
+</style>
+<section class="breadcrumb-section"
+    style="
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="breadcrumb-wrapper">
+    <nav class="breadcrumb">
+    <a href="{{ routes.root_url }}" class="breadcrumb-link">Home</a>
+
+  {% if template contains 'product' %}
+
+    {% if collection %}
+        <span class="breadcrumb-separator"> 
+        <svg aria-hidden="true" focusable="false" role="presentation" class="" viewBox="0 0 28 16"><path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"></path></svg>
+      </span>
+      <a href="{{ collection.url }}" class="breadcrumb-link">{{ collection.title }}</a>
+    {% endif %}
+
+      <span class="breadcrumb-separator"> 
+        <svg aria-hidden="true" focusable="false" role="presentation" class="" viewBox="0 0 28 16"><path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"></path></svg>
+      </span>
+    <span class="breadcrumb-current">{{ product.title }}</span>
+
+  {% elsif template contains 'collection' %}
+
+      <span class="breadcrumb-separator"> 
+        <svg aria-hidden="true" focusable="false" role="presentation" class="" viewBox="0 0 28 16"><path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"></path></svg>
+      </span>
+    <span class="breadcrumb-current">{{ collection.title }}</span>
+    {% elsif template contains 'blog' %}
+      <span class="breadcrumb-separator"> 
+        <svg aria-hidden="true" focusable="false" role="presentation" class="" viewBox="0 0 28 16"><path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"></path></svg>
+      </span>
+    <span class="breadcrumb-current">{{ blog.title }}</span>
+  {% elsif template contains 'article' %}
+
+      <span class="breadcrumb-separator"> 
+        <svg aria-hidden="true" focusable="false" role="presentation" class="" viewBox="0 0 28 16"><path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"></path></svg>
+      </span>
+    <a href="{{ blog.url }}" class="breadcrumb-link">{{ blog.title }}</a>
+      <span class="breadcrumb-separator"> 
+        <svg aria-hidden="true" focusable="false" role="presentation" class="" viewBox="0 0 28 16"><path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"></path></svg>
+      </span>
+    <span class="breadcrumb-current">{{ article.title }}</span>
+
+  {% elsif template contains 'page' %}
+
+      <span class="breadcrumb-separator"> 
+        <svg aria-hidden="true" focusable="false" role="presentation" class="" viewBox="0 0 28 16"><path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"></path></svg>
+      </span>
+    <span class="breadcrumb-current">{{ page.title }}</span>
+
+  {% endif %}
+</nav>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Breadcrumb Common",
+  "settings": [
+    {
+    "type": "color",
+    "id": "color_text",
+    "label": "Text Color"
+    },
+    {
+    "type": "color",
+    "id": "color_background",
+    "label": "Background Color"
+    },
+    {
+    "type": "checkbox",
+    "id": "check",
+    "label": "Border Bottom",
+    "default":true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top (desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom (desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top (mobile)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom (mobile)",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Breadcrumb Common"
+    }
+  ]
+}
+{% endschema %}

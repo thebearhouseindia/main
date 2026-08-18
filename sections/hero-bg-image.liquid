@@ -1,0 +1,182 @@
+<div class="hero-main-sec">
+  <div class="hero-bg-section" style="background-image: url({{ section.settings.desktop_bg | image_url }});" >
+    <div class="hero-bg-inner">
+      <div class="hero-bg-content">
+        {% if section.settings.heading != blank %}
+          <h2>{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <p>{{ section.settings.description }}</p>
+        {% endif %}
+
+        {% if section.settings.button_text != blank %}
+          <a href="{{ section.settings.button_link }}" class="hero-bg-btn">
+            {{ section.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+    {% if section.settings.button_link != blank %}
+      <a href="{{ section.settings.button_link }}" class="bg-link" aria-label="{{ section.settings.heading | default: section.settings.button_text | default: 'Shop now' | escape }}"></a>
+    {% endif %}
+  </div>
+</div>
+
+{% if section.settings.mobile_bg != blank %}
+  <style>
+    @media (max-width: 768px) {
+      .hero-main-sec .hero-bg-section {
+        background-image: url({{ section.settings.mobile_bg | image_url }});
+      }
+    }
+  </style>
+{% endif %}
+
+{% style %}
+  .hero-main-sec {
+      padding: 0px 30px;
+  }
+  .hero-main-sec .hero-bg-section {
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 160px 20px;
+    border-radius: 10px;
+    position: relative;
+
+    .bg-link {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      opacity: 0;
+    }
+  }
+
+  .hero-main-sec .hero-bg-content {
+    max-width: 500px;
+    color: #ffffff;
+    width: 100%;
+    margin-left: 140px;
+  }
+
+  .hero-main-sec .hero-bg-content h2 {
+      font-size: 48px;
+      line-height: 130%;
+      margin-bottom: 40px;
+      font-weight: 500;
+      color: #ffffff;
+  }
+
+  .hero-main-sec .hero-bg-content p {
+      font-style: italic;
+      color: rgba(255, 255, 255, 1);
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      font-weight: 400;
+      font-size: 20px;
+  }
+
+  .hero-main-sec .hero-bg-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: #ffffff;
+      color: #3F3F3F;
+      text-decoration: none;
+      font-size: 16px;
+      text-transform: uppercase;
+      font-weight: 400;
+      transition: all 0.3s ease-in-out;
+      border-radius: 25px;
+  }
+  .hero-main-sec .hero-bg-btn:hover {
+      background: #3F3F3F;
+      color: #ffffff;
+  }
+  @media (max-width: 1551px) {
+    .hero-main-sec {
+      padding: 0px 20px;
+    }
+    .hero-main-sec .hero-bg-content {
+      margin-left: 60px;
+    }
+  }
+  @media (max-width: 768px) {
+    .hero-main-sec .hero-bg-content {
+      max-width: 180px;
+      margin-left: 0px;
+    }
+    .hero-main-sec .hero-bg-content h2 {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+    .hero-main-sec .hero-bg-btn {
+      font-size: 10px;
+    }
+    .hero-main-sec .hero-bg-btn {
+      display: inline-block;
+      padding: 7px 13px;
+      font-size: 10px;
+    }
+    .hero-main-sec {
+      padding: 0px;
+    }
+    .hero-main-sec .hero-bg-section {
+      padding: 30px 20px;
+      border-radius: 0px;
+    }
+    .hero-main-sec .hero-bg-content p {
+      font-size: 10px;
+      margin-bottom: 10px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Hero Banner BG",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "desktop_bg",
+      "label": "Desktop Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_bg",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "YOUR SHIRT DESERVES BETTER JEANS"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "SIZES MOVE FAST. DON’T WAIT."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "SHOP DENIM"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero image banner"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,45 @@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+$(document).ready(function () {
+  var cards = $(".new-article-card");
+  var button = $("#next");
+  var showCount = 11;
+  var total = cards.length;
+  cards.hide();
+  cards.slice(0, showCount).show();
+  if (total > showCount) {
+    button.show();
+  } else {
+    button.hide();
+  }
+  button.on("click", function () {
+    var visible = cards.filter(":visible").length;
+    cards.slice(visible, visible + showCount).fadeIn(400);
+    if (cards.filter(":visible").length >= total) {
+      button.fadeOut();
+    }
+  });
+});
+</script>
+
+<style>
+.loading-btn {
+    width: 100%;
+    margin: 40px auto 0px;
+}
+button#next span{
+font-family: 'Roboto';
+font-weight: 400;
+font-size: 14px;
+line-height: 100%;
+text-align: center;
+text-transform: uppercase;
+text-decoration: underline;
+text-decoration-style: solid;
+text-decoration-thickness: 0%;
+text-decoration-skip-ink: auto;
+color:#3F3F3F;
+}
+
+</style>  

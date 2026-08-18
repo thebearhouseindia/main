@@ -1,0 +1,189 @@
+<section class="about-split-section">
+  <div class="container">
+    <div class="about-wrapper">
+
+      <div class="about-left">
+        <h2 class="about-heading">
+          {{ section.settings.left_text }}
+        </h2>
+      </div>
+
+      <div class="about-center">
+        {% if section.settings.center_image %}
+          <img 
+            src="{{ section.settings.center_image | image_url }}"
+            alt="Icon"
+            class="about-icon about-icon-desk" width="" height=""
+          >
+        {% endif %}
+        {% if section.settings.center_image1 %}
+          <img 
+            src="{{ section.settings.center_image1 | image_url }}"
+            alt="Icon"
+            class="about-icon about-icon-mobile" width="" height=""
+          >
+        {% endif %}
+      </div>
+
+      <div class="about-right">
+        <p class="about-description">
+          {{ section.settings.right_text }}
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.about-split-section {
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+}
+.about-split-section .about-icon-mobile {
+  display: none;
+}
+.about-split-section .about-wrapper {
+  display: flex;
+  gap: 80px;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 10px;
+}
+
+.about-split-section .about-heading {
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 140%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  color: #3F3F3F;
+}
+.about-split-section .about-left {
+  max-width: 273px;
+  width: 100%;
+}
+.about-split-section .about-right {
+  max-width: 870px;
+  width: 100%;
+}
+.about-split-section .about-icon {
+  max-width: 45px;
+  height: auto;
+}
+
+.about-split-section .about-description {
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 140%;
+  letter-spacing: 0%;
+  color: rgba(63, 63, 63, 0.8);
+  margin: 0px;
+}
+
+@media(max-width: 768px) {
+.about-split-section .about-icon-mobile {
+  display: block;
+  max-width: 100%;
+}
+.about-split-section .about-icon-desk {
+  display: none;
+}
+  .about-split-section {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .about-split-section .about-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .about-split-section .about-description {
+    font-size: 14px;
+    text-align: center;
+    max-width: 90%;
+    width: 100%;
+    margin: auto;
+  }
+  .about-split-section .about-left {
+    max-width: 100%;
+    width: 100%;
+  }
+  .about-split-section .about-heading {
+    font-size: 18px;
+    text-align: center;
+    font-weight: 500;
+    max-width: 80%;
+    width: 100%;
+    margin: auto;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "About Split Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "left_text",
+      "label": "Left Heading Text",
+      "default": "WE DON’T DO FAST FASHION. WE DO FOREVER PIECES"
+    },
+    {
+      "type": "image_picker",
+      "id": "center_image",
+      "label": "Center Image Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "center_image1",
+      "label": "Center Image Mobile"
+    },
+    {
+      "type": "textarea",
+      "id": "right_text",
+      "label": "Right Description Text",
+      "default": "Our clothes don’t follow trends, but moments. The man with messy buns, 2AM playlists..."
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding Desktop",
+      "min": 20,
+      "max": 100,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding Desktop",
+      "min": 20,
+      "max": 100,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top Padding Mobile",
+      "min": 20,
+      "max": 100,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom Padding Mobile",
+      "min": 20,
+      "max": 100,
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Split Section"
+    }
+  ]
+}
+{% endschema %}

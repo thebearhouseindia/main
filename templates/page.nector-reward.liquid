@@ -1,0 +1,57 @@
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script async src="https://cdn.nector.io/nector-static/no-cache/reward-widget/mainloader.min.js"
+	data-op="reward"
+	data-api_key="83a86c0971b95a9cf59fddd686d9ad8a7589e4d92b98017e58e3ca297debe19c"
+	data-customer_id="{{customer.id}}"
+	data-platform="shopify"
+	data-target_currency="{{ localization.country.currency.iso_code }}"
+></script>
+
+<script>
+(function () {
+  var SERIF = "'Playfair Display',Georgia,serif";
+  var isMobile = function () { return window.innerWidth <= 767; };
+
+  // Styling only. No text is changed, so Nector's dynamic copy
+  // (signed-in vs signed-out) is preserved.
+  var CSS =
+    "*{font-family:" + SERIF + "!important}" +
+    "div.nector-banner div.nector-banner-content{justify-content:flex-start!important;align-items:center!important;text-align:left!important; margin-top: 50px !important;}" +
+    "div.nector-banner div.nector-banner-content div.nector-banner-content-btns{justify-content:flex-start!important}" +
+    "div.nector-banner div.nector-banner-content span.nector-subtitle.nector-banner-description{font-size:16px!important; width: 90% !important;}";
+
+  function applyMobile(sr) {
+    if (!isMobile()) return;
+    var st = sr.getElementById("tbhF");
+    if (!st) { st = document.createElement("style"); st.id = "tbhF"; sr.appendChild(st); }
+    if (st.textContent !== CSS) st.textContent = CSS;
+    if (sr.lastElementChild !== st) sr.appendChild(st);
+    sr.querySelectorAll('[style*="font-family"]').forEach(function (e) {
+      e.style.setProperty("font-family", SERIF, "important");
+    });
+  }
+
+  function tweaks(sr) {
+    var overlay = sr.querySelector(".nector-banner .nector-banner-overlay");
+    if (overlay) overlay.style.setProperty("display", "none", "important");
+  }
+
+  var n = 0;
+  var t = setInterval(function () {
+    var host = document.querySelector("#nector-reward-page-container");
+    if (host && host.shadowRoot) {
+      var sr = host.shadowRoot;
+      applyMobile(sr);
+      tweaks(sr);
+      if (!sr.__tbhObs && window.MutationObserver) {
+        sr.__tbhObs = new MutationObserver(function () { applyMobile(sr); tweaks(sr); });
+        sr.__tbhObs.observe(sr, { childList: true, subtree: true });
+      }
+      clearInterval(t);
+    } else if (++n > 60) {
+      clearInterval(t);
+    }
+  }, 200);
+})();
+</script>

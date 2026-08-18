@@ -1,0 +1,21 @@
+  
+  Follow us on
+  {%- if block.settings.show_footer_title -%}
+    <h2 class="h4 footer__title small--hide">{{ block.settings.title }}</h2>
+  {%- endif -%}
+
+  <div
+    {% if block.settings.show_footer_title %}
+      id="Footer-{{ block.id }}"
+      class="collapsible-content collapsible-content--small"
+    {% endif %}
+  >
+
+
+
+Follow us on
+{% render 'social-icons', additional_classes: 'footer__social' %}
+
+
+</div>
+

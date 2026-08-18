@@ -1,0 +1,235 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+padding-top: {{ section.settings.padding_top }}px;
+padding-bottom: {{ section.settings.padding_bottom }}px;
+background-color: {{ section.settings.color_background }};
+color: {{ section.settings.color_text }};
+overflow:hidden;
+position:relative;
+}
+.grid-block-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 50px;
+}
+.grife-container {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+.grid-block-tab {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 130%;
+    letter-spacing: 0;
+    text-transform: uppercase; 
+    cursor: pointer;
+}
+.grid-block-tab.active {
+    border-bottom: 1px solid;
+}
+@media only screen and (max-width: 768px) {
+#shopify-section-{{ section.id }} {
+padding-top: {{ section.settings.mobile_padding_top }}px;
+padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+}
+.grife-container {
+  padding: 0px 16px;
+  display: flex;
+  overflow: auto;
+}
+
+button.filter-link {
+    flex: none;
+    font-size: 13px;
+}
+.grife-container::-webkit-scrollbar {
+    display: none;
+}
+}
+{% endstyle %}
+<div class="grife-relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }} {% endif %}">
+    <div class="grife-container">
+        {%- if section.blocks.size > 0 -%}
+        <div class="grid-block-wrap">
+            {% for block in section.blocks %}
+                <div data-id="{%- assign tags = block.settings.tab | split: ','-%}{%- for tag in tags -%}{{ tag | strip | handleize }}{% unless forloop.last %},{% endunless %} {%- endfor -%}" class="grid-block-tab"> 
+                    {{ block.settings.title1 }}
+                  </div>
+            {% endfor %}
+        </div>
+        {%- endif -%}
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  let activeTags = [];
+
+  function normalize(tag) {
+    return tag
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-");
+  }
+
+  function getProducts() {
+    return document.querySelectorAll(
+      ".st-product-wrap.drill[data-id], product-card[data-id]"
+    );
+  }
+
+  function filterProducts() {
+    const products = getProducts();
+
+    products.forEach(el => {
+
+      const productTags = (el.getAttribute("data-id") || "")
+        .split(",")
+        .map(normalize)
+        .filter(Boolean);
+
+      const match =
+        activeTags.includes("all") ||
+        activeTags.every(tag => productTags.includes(tag));
+
+      el.style.setProperty(
+        "display",
+        match ? "" : "none",
+        "important"
+      );
+    });
+  }
+
+  // TAB CLICK
+  document.addEventListener("click", e => {
+
+    const tab = e.target.closest(".grid-block-tab");
+    if (!tab) return;
+
+    const tagAttr = tab.getAttribute("data-id");
+    if (!tagAttr) return;
+
+    activeTags = tagAttr
+      .split(",")
+      .map(normalize)
+      .filter(Boolean);
+
+    {% comment %} console.log("clicked tags:", activeTags); {% endcomment %}
+
+    document
+      .querySelectorAll(".grid-block-tab")
+      .forEach(t => t.classList.remove("active"));
+
+    tab.classList.add("active");
+
+    filterProducts();
+  });
+
+  // VUE / SHOPIFY AJAX SAFE
+  const grid = document.querySelector("#main-collection-product-grid");
+
+  if (grid) {
+    const observer = new MutationObserver(() => {
+      if (activeTags.length) filterProducts();
+    });
+
+    observer.observe(grid, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+});
+</script>
+
+
+
+{% schema %}
+{
+"name": "Collection Category",
+"class": "collection-category",
+"settings": [
+{
+"type": "text",
+"id": "custom_class",
+"label": "Custom Class"
+},
+{
+"type": "range",
+"id": "padding_top",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Top",
+"default": 36
+},
+{
+"type": "range",
+"id": "padding_bottom",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Bottom",
+"default": 36
+},
+{
+"type": "range",
+"id": "mobile_padding_top",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Top",
+"default": 20
+},
+{
+"type": "range",
+"id": "mobile_padding_bottom",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Bottom",
+"default": 20
+},
+{
+"type": "color",
+"id": "color_text",
+"label": "Text Color"
+},
+{
+"type": "color",
+"id": "color_background",
+"label": "Background Color"
+}
+],
+"blocks": [
+{
+"type": "block",
+"name": "Block",
+"settings": [
+{
+"type": "text",
+"id": "title1",
+"label": "title"
+},
+{
+"type": "text",
+"id": "tab",
+"label": "data-id"
+},
+]
+}
+],
+"presets": [
+{
+"name": "Collection Category",
+}
+]
+}
+{% endschema %}

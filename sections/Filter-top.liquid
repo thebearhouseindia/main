@@ -1,0 +1,227 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+padding-top: {{ section.settings.padding_top }}px;
+padding-bottom: {{ section.settings.padding_bottom }}px;
+background-color: {{ section.settings.color_background }};
+color: {{ section.settings.color_text }};
+overflow:hidden;
+position:relative;
+border-top: 1px solid rgba(63, 63, 63, 0.1);
+border-bottom: 1px solid rgba(63, 63, 63, 0.1);
+}
+button.filter-link.active {
+    border: 1px solid rgba(63, 63, 63, 0.5);
+    font-weight:500;
+    pointer-events: none;
+    background: #DDDDDD;
+}
+.grife-container {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+button.filter-link {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 130%;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 10px 14px;
+    background: #ffffff;
+    color: #3f3f3f;
+    border: 1px solid rgba(63, 63, 63, 0.08);
+    border-radius: 25px;
+}
+@media only screen and (max-width: 768px) {
+#shopify-section-{{ section.id }} {
+padding-top: {{ section.settings.mobile_padding_top }}px;
+padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+}
+.grife-container {
+    padding: 0px 16px;
+    display: flex;
+    overflow: auto;
+    border-bottom: 1px solid #3F3F3F1A;
+}
+button.filter-link {
+    flex: none;
+    padding: 0px 15px 4px;
+    font-size: 13px;
+}
+.grife-container::-webkit-scrollbar {
+    display: none;
+}
+}
+{% endstyle %}
+<div class="grife-relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }} {% endif %}">
+  <div class="grife-container">
+    {% for block in section.blocks %}
+      {% assign title_downcase = block.settings.title | downcase %}
+      <button class="filter-link{% if title_downcase == 'all' %} active{% endif %}" data-value="{{  block.settings.title }}" disabled>{{  block.settings.title }}</button>
+    {% endfor %}
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.querySelectorAll('.filter-link[disabled]').forEach(btn => {
+    btn.disabled = false;
+  });
+
+  let lastActiveButton = null;
+
+  /* click matching label */
+  function clickMatchingLabel(value) {
+    if (!value) return;
+
+    const targetValue = value.toLowerCase();
+    if (targetValue === 'all') return;
+
+    let matchedLabel = null;
+
+    document
+      .querySelectorAll(".st-filter-label-container .filter-label span")
+      .forEach((span) => {
+        if (span.textContent.trim().toLowerCase() === targetValue) {
+          matchedLabel = span.closest("label");
+        }
+      });
+
+    if (matchedLabel) {
+      matchedLabel.click();
+    }
+  }
+
+  /* NEW — Filter product-card blocks */
+  function filterProductCards(activeValue) {
+    const target = activeValue.toLowerCase().trim();
+
+    document.querySelectorAll("product-card").forEach(card => {
+      const ids = card.dataset.id.toLowerCase().split(",");
+
+      if (target === "all") {
+        card.style.display = "block";
+        return;
+      }
+
+      if (ids.includes(target)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+
+  /* Button click handler */
+  document.querySelectorAll(".filter-link").forEach((link, index) => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const currentBtn = this;
+      const value = currentBtn.dataset.value?.trim();
+      const isActive = currentBtn.classList.contains("active");
+
+      /* remove active from all */
+      document.querySelectorAll(".filter-link")
+        .forEach(btn => btn.classList.remove("active"));
+
+      /* add active to current */
+      if (!isActive) currentBtn.classList.add("active");
+
+      /* click label */
+      clickMatchingLabel(value);
+
+      /* NEW — filter products */
+      filterProductCards(value);
+
+      lastActiveButton = currentBtn;
+    });
+  });
+
+});
+</script>
+
+
+{% schema %}
+{
+"name": "Filter Top",
+"class": "Filter-Top",
+"settings": [
+{
+"type": "text",
+"id": "custom_class",
+"label": "Custom Class"
+},
+{
+"type": "range",
+"id": "padding_top",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Top",
+"default": 36
+},
+{
+"type": "range",
+"id": "padding_bottom",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Bottom",
+"default": 36
+},
+{
+"type": "range",
+"id": "mobile_padding_top",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Top",
+"default": 20
+},
+{
+"type": "range",
+"id": "mobile_padding_bottom",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Bottom",
+"default": 20
+},
+{
+"type": "color",
+"id": "color_text",
+"label": "Text Color"
+},
+{
+"type": "color",
+"id": "color_background",
+"label": "Background Color"
+}
+],
+"blocks": [
+{
+"type": "block",
+"name": "Block",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Title"
+},
+]
+}
+],
+"presets": [
+{
+"name": "Filter Top",
+}
+]
+}
+{% endschema %}

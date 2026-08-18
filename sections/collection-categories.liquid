@@ -1,0 +1,722 @@
+
+
+
+{% style %}
+#shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.color_background }};
+    color: {{ section.settings.color_text }};
+    position:relative;
+    overflow:hidden;
+}
+.container-here {
+width:100%;
+}
+.product-col-title{
+font-weight: 500;
+font-size: 28px;
+line-height: 100%;
+letter-spacing: 0;
+text-transform: uppercase;
+}
+
+@media only screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+        padding-top: {{ section.settings.mobile_padding_top }}px;
+        padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+    } 
+    .product-col-title{
+      font-size:16px;
+      text-align:left;
+    }
+}
+
+#shopify-section-{{ section.id }} { border-top: 1px solid #2A2A2A1A; }
+
+{% endstyle %}
+{% comment %} 
+<div class="container-here">
+<div class="collection_title">{{ section.settings.title_text}}
+<div class="product-col-title"></div>
+</div>
+
+    <div class="content-wrapper">
+          <div class="collection-tabs">
+        {% for block in section.blocks %}
+          <button
+            type="button"
+            class="collection-tab{% if forloop.first %} active{% endif %}"
+            data-tab="{{ block.id }}"
+          >
+            {% if block.settings.image %}
+              <div class="img-here">
+              <img src="{{ block.settings.image | image_url: width: 300 }}" alt="">
+              </div>
+            {% endif %}
+            <span>{{ block.settings.title }}</span>
+          </button>
+        {% endfor %}
+      </div>
+
+        <div class="collection-categories relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
+        {% for block in section.blocks %}
+          {% assign menu = linklists[block.settings.menu] %}
+          <div
+            class="category-menu{% if forloop.first %} active{% endif %}"
+            data-menu="{{ block.id }}"
+          >
+            {% if menu != blank and menu.links.size > 0 %}
+              <ul>
+                {% for link in menu.links %}
+                  <li class="{% if forloop.first and forloop.parentloop.first %}active{% endif %}">
+                    <a href="{{ link.url }}">{{ link.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+  </div>
+</div> {% endcomment %}
+
+
+<div class="container-here">
+  <div class="collection_title">
+    {{ section.settings.title_text }}
+    <div class="product-col-title"></div>
+  </div>
+  <div class="content-wrapper">
+    <div class="collection-tabs">
+      {% for block in section.blocks %}
+
+        {% assign menu = linklists[block.settings.menu] %}
+        {% assign has_menu = false %}
+        {% if menu != blank and menu.links.size > 0 %}
+          {% assign has_menu = true %}
+        {% endif %}
+
+       <button
+          type="button"
+          class="collection-tab{% if forloop.first %} active{% endif %}"
+          data-tab="{{ block.id }}"
+          data-collection-url="{{ block.settings.collection_url }}"
+          data-has-menu="{% if has_menu %}true{% else %}false{% endif %}"
+        > 
+
+          {% if block.settings.image %}
+            <div class="img-here">
+              <img src="{{ block.settings.image | image_url }}" alt="" width="" height="" loading="lazy">
+            </div>
+          {% endif %}
+          <span>{{ block.settings.title }}</span>
+        </button>
+
+      {% endfor %}
+    </div>
+    <div class="collection-categories relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
+      {% for block in section.blocks %}
+
+        {% assign menu = linklists[block.settings.menu] %}
+        {% assign has_menu = false %}
+        {% if menu != blank and menu.links.size > 0 %}
+          {% assign has_menu = true %}
+        {% endif %}
+
+        {% if has_menu %}
+          <div
+            class="category-menu{% if forloop.first %} active{% endif %}"
+            data-menu="{{ block.id }}"
+          >
+            <ul>
+              {% for link in menu.links %}
+                <li class="{% if forloop.first and forloop.parentloop.first %}active{% endif %}">
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<style>
+.collection-menu-tabs {
+  padding: 20px 0;
+}
+button.collection-tab.active span {
+    font-weight: 500;
+}
+.img-here {
+    overflow: hidden;
+    border-radius:10px;
+}
+.product-col-title {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.collection-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+}
+.collection-categories ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.collection-categories li {
+  list-style: none;
+font-family: Helvetica;
+font-weight: 400;
+font-size: 16px;
+line-height: 100%;
+text-align: center;
+}
+.collection-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.collection-tab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  max-width: 150px;
+  width: 100%;
+}
+
+.collection-tab.active {
+  opacity: 1;
+
+}
+.collection-tab.active .img-here{
+ border: 1px solid #3F3F3F;
+}
+
+.collection-tab img {
+    height: auto;
+    display: block;
+}
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.collection-tab span {
+font-weight: 300;
+font-size: 16px;
+line-height: 130%;
+letter-spacing: 0;
+text-align: center;
+text-transform: uppercase;
+margin-top:16px;
+display: block;
+}
+.category-menu li a {
+font-family: Helvetica;
+font-weight: 400;
+font-size: 16px;
+line-height: 100%;
+text-align: center;
+}
+.collection-categories {
+  margin-top: 30px;
+    border-bottom: 1px solid #3F3F3F1A;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #3F3F3F1A;
+    padding: 16px 0px;
+}
+.category-menu.active li {
+    padding: 10px 14px;
+    border-radius: 60px;
+    border: 1px solid #e92e3014;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.collection-tab {
+  position: relative;
+  overflow: hidden;        
+  padding: 0;
+}
+.collection-tab img {
+   width:100%; 
+  object-fit: cover;       
+  transition: transform 0.4s ease;
+  display: block;
+}
+.collection-tab:hover img {
+  transform: scale(1.1);
+}
+
+.category-menu {
+  display: none;
+}
+
+.category-menu.active {
+  display:flex;
+  width:100%;
+  padding:0px 0px 0px 10px;
+  justify-content:center;
+}
+
+.category-menu ul {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.category-menu ul::-webkit-scrollbar {
+  display: none;
+}
+
+.category-menu li a {
+  text-decoration: none;
+  color: #2A2A2ACC;
+  display: inline-block;
+  text-transform:capitalize;
+
+}
+.category-menu li.active a {
+  color: #fff;
+}
+.category-menu.active li.active {
+    border: 0.8px solid #e92e3080;
+    background: #e92e30;
+}
+
+.category-menu.active li.active:hover a {
+  color: #2A2A2ACC !important;
+}
+
+.category-menu.active li.active a:hover {
+  color: #2A2A2ACC;
+}
+
+.category-menu.active li:hover {
+    background-color: #e92e3010;
+}
+
+@media (max-width: 768px) { 
+  .collection-tab {
+    max-width: fit-content;
+  }
+  .collection-tab img { width: 90px; }
+  .collection-tabs { gap: 2px;padding-left: 10px; }
+  .img-here {
+    height: unset;
+    width: unset;
+    overflow: hidden;
+}
+.collection-tab span {
+        margin-top: 8px;
+        text-align: center;
+        max-width: 85px;
+        font-size:11px;
+}
+.category-menu li a { 
+  font-size:11px;
+}
+button.collection-tab {
+    flex: none;
+    height: 100%;
+}
+.collection_title{
+    padding-left:10px;
+}
+.product-col-title {
+    text-align:left;
+    margin-bottom:10px;
+}
+.collection-categories {
+    margin-top: 6px;
+    padding: 10px 0px 10px;
+}
+
+.category-menu ul {
+gap: 2px;
+overflow-x: auto;
+-ms-overflow-style: none;  
+scrollbar-width: none;   
+}
+.category-menu ul::-webkit-scrollbar {
+  display: none;          
+}
+
+.category-menu.active li {
+    font-size: 11px;
+    padding: 8px 13px;
+    flex:none;
+}
+
+}
+
+</style>
+
+{% schema %}
+{
+"settings": [
+{
+"type": "text",
+"id": "custom_class",
+"label": "Custom Class"
+},
+{
+"type": "text",
+"id": "title_text",
+"default":"Shop All",
+"label": "Tiltle"
+},
+
+{
+"type": "range",
+"id": "padding_top",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Top",
+"default": 36
+},
+{
+"type": "range",
+"id": "padding_bottom",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Bottom",
+"default": 36
+},
+{
+"type": "range",
+"id": "mobile_padding_top",
+"min": 0,
+"max": 100,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Top",
+"default": 20
+},
+{
+"type": "range",
+"id": "mobile_padding_bottom",
+"min": 0,
+"max": 100,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Bottom",
+"default": 20
+},
+{
+"type": "color",
+"id": "color_text",
+"label": "Text Color"
+},
+{
+"type": "color",
+"id": "color_background",
+"label": "Background Color"
+},
+],
+  "blocks": [
+    {
+      "type": "collection_tab",
+      "name": "Collection Tab",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Collection Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Collection Title",
+          "default": "Topwear"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Category Menu"
+        },
+        {
+        "type": "url",
+        "id": "collection_url",
+        "label": "Collection Select",
+        "info": "Select Collection which do not have Ctegoreis"
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection with  Menu"
+    }
+  ]
+}
+{% endschema %}
+
+{% comment %} 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tabs = document.querySelectorAll('.collection-tab');
+  const menus = document.querySelectorAll('.category-menu');
+  const currentPath = window.location.pathname;
+  const titleBox = document.querySelector('.product-col-title');
+
+  function resetAll() {
+    tabs.forEach(t => t.classList.remove('active'));
+    menus.forEach(m => {
+      m.classList.remove('active');
+      m.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+    });
+  }
+
+  function updateActiveTitle() {
+    const activeTab = document.querySelector('.collection-tab.active span');
+    if (activeTab && titleBox) {
+      titleBox.textContent = activeTab.textContent;
+    }
+  }
+
+  let restored = false;
+
+
+  tabs.forEach(tab => {
+    const hasMenu = tab.dataset.hasMenu === "true";
+    const collectionUrl = tab.dataset.collectionUrl;
+
+    if (!hasMenu && collectionUrl) {
+      const urlPath = new URL(collectionUrl, window.location.origin).pathname;
+      if (urlPath === currentPath) {
+        resetAll();
+        tab.classList.add('active');
+        restored = true;
+        updateActiveTitle();
+      }
+    }
+  });
+
+  menus.forEach(menu => {
+    menu.querySelectorAll('a').forEach(link => {
+      if (link.pathname === currentPath) {
+        const id = menu.dataset.menu;
+
+        resetAll();
+
+        document
+          .querySelector(`.collection-tab[data-tab="${id}"]`)
+          ?.classList.add('active');
+
+        menu.classList.add('active');
+        link.closest('li').classList.add('active');
+
+        restored = true;
+        updateActiveTitle();
+      }
+    });
+  });
+
+  if (!restored) {
+    resetAll();
+
+    tabs.forEach(t => t.classList.remove('active'));
+    menus.forEach(m => {
+      m.classList.remove('active');
+      m.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+    });
+    if (titleBox) titleBox.textContent = '';
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', e => {
+      e.preventDefault();
+
+      const id = tab.dataset.tab;
+      const hasMenu = tab.dataset.hasMenu === "true";
+      const collectionUrl = tab.dataset.collectionUrl;
+      const menu = document.querySelector(`[data-menu="${id}"]`);
+
+      resetAll();
+      tab.classList.add('active');
+      updateActiveTitle();
+
+      if (hasMenu && menu) {
+        menu.classList.add('active');
+        const firstLink = menu.querySelector('a');
+        menu.querySelector('li')?.classList.add('active');
+
+        if (firstLink && firstLink.pathname !== currentPath) {
+          window.location.href = firstLink.href;
+        }
+      } else if (!hasMenu && collectionUrl) {
+        const urlPath = new URL(collectionUrl, window.location.origin).pathname;
+        if (urlPath !== currentPath) {
+          window.location.href = collectionUrl;
+        }
+      }
+    });
+  });
+
+
+  menus.forEach(menu => {
+    menu.querySelectorAll('li').forEach(li => {
+      li.addEventListener('click', () => {
+        menu.querySelectorAll('li').forEach(i => i.classList.remove('active'));
+        li.classList.add('active');
+        updateActiveTitle();
+      });
+    });
+  });
+
+});
+</script> {% endcomment %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const tabs = document.querySelectorAll('.collection-tab');
+    const menus = document.querySelectorAll('.category-menu');
+    const currentPath = window.location.pathname;
+    const titleBox = document.querySelector('.product-col-title');
+    const categoryBox = document.querySelector('.collection-categories');
+
+    /* ============================= */
+    function resetAll() {
+      tabs.forEach(t => t.classList.remove('active'));
+      menus.forEach(m => {
+        m.classList.remove('active');
+        m.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+      });
+    }
+
+    function updateActiveTitle() {
+      const activeTab = document.querySelector('.collection-tab.active span');
+      if (activeTab && titleBox) {
+        titleBox.textContent = activeTab.textContent;
+      }
+    }
+
+    function updateCategoryBorder(hasMenu) {
+      if (!categoryBox) return;
+
+      if (hasMenu) {
+        categoryBox.style.borderTop = "";
+        categoryBox.style.borderBottom = "";
+        categoryBox.style.display = "";
+      } else {
+        categoryBox.style.display = "none";
+        categoryBox.style.borderTop = "none";
+        categoryBox.style.borderBottom = "none";
+      }
+    }
+
+    /* ============================= */
+    let restored = false;
+
+    /* ===== Restore for collection URL without menu ===== */
+    tabs.forEach(tab => {
+      const hasMenu = tab.dataset.hasMenu === "true";
+      const collectionUrl = tab.dataset.collectionUrl;
+
+      if (!hasMenu && collectionUrl) {
+        const urlPath = new URL(collectionUrl, window.location.origin).pathname;
+        if (urlPath === currentPath) {
+          resetAll();
+          tab.classList.add('active');
+          updateActiveTitle();
+          updateCategoryBorder(false);
+          restored = true;
+        }
+      }
+    });
+
+    /* ===== Restore for category menu links ===== */
+    menus.forEach(menu => {
+      menu.querySelectorAll('a').forEach(link => {
+        if (link.pathname === currentPath) {
+          const id = menu.dataset.menu;
+          const tab = document.querySelector(`.collection-tab[data-tab="${id}"]`);
+          const hasMenu = tab?.dataset.hasMenu === "true";
+
+          resetAll();
+
+          tab?.classList.add('active');
+          menu.classList.add('active');
+          link.closest('li').classList.add('active');
+
+          updateActiveTitle();
+          updateCategoryBorder(hasMenu);
+          restored = true;
+        }
+      });
+    });
+
+    /* ===== If nothing matched ===== */
+    if (!restored) {
+      resetAll();
+      if (titleBox) titleBox.textContent = "";
+      updateCategoryBorder(false);
+    }
+
+    /* ============================= */
+    /* ===== TAB CLICK ===== */
+    tabs.forEach(tab => {
+      tab.addEventListener('click', e => {
+        e.preventDefault();
+
+        const id = tab.dataset.tab;
+        const hasMenu = tab.dataset.hasMenu === "true";
+        const collectionUrl = tab.dataset.collectionUrl;
+        const menu = document.querySelector(`[data-menu="${id}"]`);
+
+        resetAll();
+        tab.classList.add('active');
+        updateActiveTitle();
+        updateCategoryBorder(hasMenu);
+
+        if (hasMenu && menu) {
+          menu.classList.add('active');
+          const firstLink = menu.querySelector('a');
+          menu.querySelector('li')?.classList.add('active');
+
+          if (firstLink && firstLink.pathname !== currentPath) {
+            window.location.href = firstLink.href;
+          }
+
+        } else if (!hasMenu && collectionUrl) {
+          const urlPath = new URL(collectionUrl, window.location.origin).pathname;
+          if (urlPath !== currentPath) {
+            window.location.href = collectionUrl;
+          }
+        }
+      });
+    });
+
+    /* ============================= */
+    /* ===== MENU CLICK ===== */
+    menus.forEach(menu => {
+      menu.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', () => {
+          menu.querySelectorAll('li').forEach(i => i.classList.remove('active'));
+          li.classList.add('active');
+        });
+      });
+    });
+
+  });
+</script>

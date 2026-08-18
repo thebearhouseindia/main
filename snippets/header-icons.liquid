@@ -1,0 +1,157 @@
+<div class="site-nav">
+  <div class="site-nav__icons">
+    {% comment %} ----------- Added by team searchtap --------------- {% endcomment %}
+    {% render 'st-search-icon' %}
+    {%- if settings.search_enable -%}
+      {% comment %}
+          --------------------------by team searchtap-------------------------
+        <a
+          href="{{ routes.search_url }}"
+          class="site-nav__link site-nav__link--icon js-search-header{% if section.settings.main_menu_alignment == 'center' or section.settings.main_menu_alignment == 'center-split' %} medium-up--hide{% endif %}"
+            id="search-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <mask id="mask0_672_197" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="2" y="3" width="19" height="19">
+            <path d="M2 3H21V22H2V3Z" fill="white"/>
+            </mask>
+            <g mask="url(#mask0_672_197)">
+            <path d="M20.1117 21.0247L13.2994 14.2995M9.01883 16.1338C10.6405 16.1338 12.1957 15.4896 13.3424 14.3429C14.4891 13.1962 15.1333 11.641 15.1333 10.0193C15.1333 8.3977 14.4891 6.84246 13.3424 5.69578C12.1957 4.54911 10.6405 3.90491 9.01883 3.90491C7.39728 3.90491 5.84215 4.54906 4.69555 5.69567C3.54894 6.84227 2.90479 8.3974 2.90479 10.0189C2.90479 11.6405 3.54894 13.1956 4.69555 14.3422C5.84215 15.4888 7.39728 16.1338 9.01883 16.1338Z" stroke="#3F3F3F" stroke-width="1.25"/>
+            </g>
+          </svg>
+
+          <span class="icon__fallback-text">{{ 'general.search.title' | t }}</span>
+        </a>
+      {% endcomment %}
+    {%- endif -%}
+
+    <div class="shopify-block shopify-app-block">
+      <!-- BEGIN app snippet: header-icon -->
+      <style>
+        .site-header{
+          .hulkapps-wl-wishlist-icon {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              padding: 0 2px 0 0 !important;
+              height: 24px !important;
+              width: 24px !important;
+              .hulk-wl-header-icon {
+                  z-index: 1;
+                  text-decoration: none;
+                  position: relative;
+                  .icon-wishlist-heart-empty {
+                      vertical-align: sub;
+                      color: #000;
+                      font-size: 18px !important;
+                      font-weight: 500;
+                      display: flex;
+                  }
+                  .hulk-wl-header-count {
+                      background-color: #000;
+                      color: #ffffff;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      position: absolute;
+                      top: -.8em;
+                      left: auto;
+                      font-weight: 700;
+                      border-radius: 50%;
+                      width: 1.4em;
+                      height: 1.4em;
+                      font-size: .6875em;
+                      bottom: 0;
+                      right: -.8em;
+                  }
+              }
+              .icon-wishlist-heart-empty[data-fill=true]:before {
+                  content: "k";
+              }
+          }
+        }
+
+        @media (max-width:769px) {
+          {% comment %} .site-header{
+            .hulkapps-wl-wishlist-icon {
+              display: none;
+            }
+          } {% endcomment %}
+        }
+      </style>
+
+
+      <a href="/apps/wishlist" class="header__icon h-wishlist-icon wishlist-page-widget"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" overflow="unset" class="icon"><path d="M12.4869 22C12.2364 21.9968 11.9918 21.9232 11.7804 21.7875C8.18822 19.57 5.48518 17.3766 3.2783 14.8705C2.01853 13.5287 1.04215 11.942 0.408559 10.207C-0.730606 6.84675 0.5832 2.9211 3.46882 1.07256C4.78425 0.221399 6.35422 -0.134962 7.90363 0.0659208C9.45304 0.266804 10.8831 1.01212 11.9431 2.17126C12.1376 2.37977 12.3162 2.60031 12.4869 2.81685C12.7194 2.51694 12.97 2.2317 13.2371 1.96275C13.8816 1.32075 14.6473 0.816306 15.4888 0.479444C16.3303 0.142583 17.2302 -0.0198119 18.1351 0.00192686C19.0214 0.0266866 19.8936 0.23235 20.6992 0.606539C21.5048 0.980728 22.2271 1.51571 22.8227 2.17928C25.0693 4.63732 25.6012 7.62065 24.3072 10.8045C23.6255 12.404 22.6611 13.8647 21.4613 15.1151C19.3548 17.3836 16.9713 19.3724 14.3683 21.0336C14.019 21.2662 13.6578 21.4907 13.3006 21.7113L13.1934 21.7795C12.9825 21.9174 12.738 21.9937 12.4869 22Z" stroke="currentColor"></path></svg><span class="wishlist-h-count wishlist-total-count" data-total="0">0</span></a>
+      {% comment %} <div class="hulkapps-wl-wishlist-icon">
+        <a href="javascript:void(0)" class="hulk-wl-header-icon hulk-wishlist-drawer">
+          <i class="icon-wishlist-heart-empty"></i>
+        </a>
+      </div> {% endcomment %}
+      <!-- END app snippet -->
+    </div>
+
+    <a
+      href="{{ routes.cart_url }}"
+      class="site-nav__link site-nav__link--icon js-drawer-open-cart"
+      aria-controls="CartDrawer"
+      data-icon="{{ settings.cart_icon }}"
+    >
+      <span class="cart-link">
+        {%- if settings.cart_icon == 'cart' -%}
+          <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-cart" viewBox="0 0 64 64">
+            <path style="stroke-miterlimit:10" d="M14 17.44h46.79l-7.94 25.61H20.96l-9.65-35.1H3"/><circle cx="27" cy="53" r="2"/><circle cx="47" cy="53" r="2"/>
+          </svg>
+        {%- elsif settings.cart_icon == 'bag-minimal' -%}
+          {% comment %}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18.1097 6.79742H5.5V20.2478H18.1097V6.79742Z" stroke="#3F3F3F" stroke-width="1.25"/>
+              <path d="M8.86279 4H14.7473" stroke="#3F3F3F" stroke-width="1.25"/>
+            </svg>
+          {% endcomment %}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 10.5C15 11.2956 14.6839 12.0587 14.1213 12.6213C13.5587 13.1839 12.7956 13.5 12 13.5C11.2044 13.5 10.4413 13.1839 9.87868 12.6213C9.31607 12.0587 9 11.2956 9 10.5" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.32812 7.52539H18.6736" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.55 7.10025C5.35527 7.35989 5.25 7.67569 5.25 8.00025V18C5.25 18.3978 5.40804 18.7794 5.68934 19.0607C5.97064 19.342 6.35218 19.5 6.75 19.5H17.25C17.6478 19.5 18.0294 19.342 18.3107 19.0607C18.592 18.7794 18.75 18.3978 18.75 18V8.00025C18.75 7.67569 18.6447 7.35989 18.45 7.10025L16.95 5.1C16.8103 4.91371 16.6291 4.7625 16.4208 4.65836C16.2125 4.55422 15.9829 4.5 15.75 4.5H8.25C8.01713 4.5 7.78746 4.55422 7.57918 4.65836C7.3709 4.7625 7.18972 4.91371 7.05 5.1L5.55 7.10025Z" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+        {%- else -%}
+          <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-bag" viewBox="0 0 64 64">
+            <g fill="none" stroke="#000" stroke-width="2"><path d="M25 26c0-15.79 3.57-20 8-20s8 4.21 8 20"/><path d="M14.74 18h36.51l3.59 36.73h-43.7z"/></g>
+          </svg>
+        {%- endif -%}
+        <span class="icon__fallback-text">{{ 'layout.cart.title' | t }}</span>
+        <span class="cart-link__bubble{% if cart.item_count > 0 %} cart-link__bubble--visible{% endif %}"></span>
+      </span>
+    </a>
+
+    {%- if shop.customer_accounts_enabled -%}
+      <a class="site-nav__link site-nav__link--icon small--hide" href="{{ routes.account_url }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.21289 19.2109C4.96696 16.18 8.24513 14.1406 12 14.1406C15.7549 14.1406 19.033 16.18 20.7871 19.2109" stroke="#3F3F3F" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.0703 9.07031C17.0703 6.27008 14.8003 4 12 4C9.19977 4 6.92969 6.27008 6.92969 9.07031C6.92969 11.8705 9.19977 14.1406 12 14.1406C14.8003 14.1406 17.0703 11.8705 17.0703 9.07031Z" stroke="#3F3F3F" stroke-width="1.25" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        <span class="icon__fallback-text">
+          {%- if customer -%}
+            {{ 'layout.customer.account' | t }}
+          {%- else -%}
+            {{ 'layout.customer.log_in' | t }}
+          {%- endif -%}
+        </span>
+      </a>
+    {%- endif -%}
+
+    {%- if section.settings.main_menu_alignment == 'left-center'
+      or section.settings.main_menu_alignment == 'left-drawer'
+    -%}
+      <button
+        type="button"
+        class="site-nav__link site-nav__link--icon js-drawer-open-nav{% if section.settings.main_menu_alignment == 'left' or section.settings.main_menu_alignment == 'left-center' %} medium-up--hide{% endif %}"
+        aria-controls="NavDrawer"
+      >
+        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-hamburger" viewBox="0 0 64 64">
+          <title>icon-hamburger</title><path d="M7 15h51M7 32h43M7 49h51"/>
+        </svg>
+        <span class="icon__fallback-text">{{ 'general.drawers.navigation' | t }}</span>
+      </button>
+    {%- endif -%}
+  </div>
+</div>

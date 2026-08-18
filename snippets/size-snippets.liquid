@@ -1,0 +1,313 @@
+{% comment %} {% assign inches_chart = product.metafields.custom.top_wear_chart.value %}
+{% assign cm_chart = product.metafields.custom.top_wear_chart_cm.value %}
+{% assign measure = product.metafields.custom.top_wear_measure.value %}
+{% if inches_chart or cm_chart %}
+<div class="size-chart-wrapper">
+
+  <!-- Tabs -->
+  <div class="size-chart-tabs">
+    <div class="btn-tabs">
+    {% if inches_chart %}
+      <button class="size-tab active" data-tab="inches">
+        {{ inches_chart.inches }}
+      </button>
+    {% endif %}
+
+    {% if cm_chart %}
+      <button class="size-tab" data-tab="cm">
+        {{ cm_chart.cm_text }}
+      </button>
+    {% endif %}
+   </div>
+   <div class="measurement-text-here">
+    {% if measure.measure_text != blank %}
+      <h3 class="measure-heading">
+        {{ measure.measure_text }}
+      </h3>
+    {% endif %}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_1877_10826)">
+        <path d="M6.9974 12.8332C10.2191 12.8332 12.8307 10.2215 12.8307 6.99984C12.8307 3.77818 10.2191 1.1665 6.9974 1.1665C3.77573 1.1665 1.16406 3.77818 1.16406 6.99984C1.16406 10.2215 3.77573 12.8332 6.9974 12.8332Z" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5.30469 5.24984C5.44183 4.85998 5.71253 4.53124 6.06883 4.32184C6.42513 4.11244 6.84404 4.03589 7.25137 4.10576C7.6587 4.17563 8.02816 4.3874 8.29432 4.70357C8.56047 5.01974 8.70614 5.4199 8.70552 5.83318C8.70552 6.99984 6.95552 7.58318 6.95552 7.58318" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 9.9165H7.00652" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <defs>
+        <clipPath id="clip0_1877_10826">
+        <rect width="14" height="14" fill="white"/>
+        </clipPath>
+        </defs>
+        </svg>
+   </div>    
+  </div>
+
+  <!-- Chart Images -->
+  <div class="size-chart-content">
+
+    {% if inches_chart %}
+    <div class="chart-panel active" data-content="inches">
+      <picture>
+        <source media="(max-width:768px)" 
+          srcset="{{ inches_chart.mobile_inches_image |  img_url:'master' }}">
+        <img 
+          src="{{ inches_chart.desktop_inches_image |  img_url:'master' }}" 
+          alt="Size Chart Inches" width="" height="">
+      </picture>
+    </div>
+    {% endif %}
+
+    {% if cm_chart %}
+    <div class="chart-panel" data-content="cm">
+      <picture>
+        <source media="(max-width:768px)" 
+          srcset="{{ cm_chart.cm_mobile_image | img_url:'master'}}">
+        <img 
+          src="{{ cm_chart.cm_desktop_image | img_url:'master' }}" 
+          alt="Size Chart CM" width="" height="">
+      </picture>
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+{% endif %} {% endcomment %}
+
+
+{% if section.blocks.size > 0 %}
+<div class="size-chart-wrapper">
+
+  <!-- Tabs -->
+  <div class="size-chart-tabs">
+    <div class="btn-tabs">
+
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'content' %}
+
+            <button 
+              class="size-tab {% if forloop.first %}active{% endif %}" 
+              data-tab="tab-{{ forloop.index }}">
+              {{ block.settings.btn_text }}
+            </button>
+
+        {% endcase %}
+      {% endfor %}
+
+    </div>
+
+    <div class="measurement-text-here">
+      {% if section.settings.measure_text != blank %}
+        <h3 class="measure-heading">
+          {{ section.settings.measure_text }}
+        </h3>
+      {% endif %}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_1877_10826)">
+        <path d="M6.9974 12.8332C10.2191 12.8332 12.8307 10.2215 12.8307 6.99984C12.8307 3.77818 10.2191 1.1665 6.9974 1.1665C3.77573 1.1665 1.16406 3.77818 1.16406 6.99984C1.16406 10.2215 3.77573 12.8332 6.9974 12.8332Z" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5.30469 5.24984C5.44183 4.85998 5.71253 4.53124 6.06883 4.32184C6.42513 4.11244 6.84404 4.03589 7.25137 4.10576C7.6587 4.17563 8.02816 4.3874 8.29432 4.70357C8.56047 5.01974 8.70614 5.4199 8.70552 5.83318C8.70552 6.99984 6.95552 7.58318 6.95552 7.58318" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 9.9165H7.00652" stroke="#3F3F3F" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <defs>
+        <clipPath id="clip0_1877_10826">
+        <rect width="14" height="14" fill="white"/>
+        </clipPath>
+        </defs>
+        </svg>
+    </div>
+
+  </div>
+
+  <!-- Chart Images -->
+  <div class="size-chart-content">
+
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'content' %}
+
+          <div class="chart-panel {% if forloop.first %}active{% endif %}" 
+               data-content="tab-{{ forloop.index }}">
+
+            <picture>
+              {% if block.settings.mobile-image != blank %}
+                <source media="(max-width:768px)"
+                  srcset="{{ block.settings.mobile-image | image_url: width: 800 }}">
+              {% endif %}
+
+              {% if block.settings.dsktop-image != blank %}
+                <img 
+                  src="{{ block.settings.dsktop-image | image_url: width: 1400 }}" 
+                  alt="{{ block.settings.btn_text }}"
+                  width=""
+                  height="">
+              {% endif %}
+            </picture>
+
+          </div>
+
+      {% endcase %}
+    {% endfor %}
+
+  </div>
+
+</div>
+{% endif %}
+
+
+<style>
+.size-chart-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.size-chart-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding-top: 30px;
+}
+.popup-chart-text {
+   font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 100%;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-align: left;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #3F3F3F1A;
+}
+
+.size-tab {
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid #3F3F3F1A;
+  background: #FFFFFF;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s ease;
+ font-family: 'Roboto';
+font-weight: 300;
+font-size: 15px;
+line-height: 120%;
+letter-spacing: 0;
+text-transform: uppercase;
+}
+
+.size-tab.active {
+  background: #DDDDDD;
+  font-weight: 400;
+}
+
+.chart-panel {
+  display: none;
+}
+
+.chart-panel.active {
+  display: block;
+}
+
+.chart-panel img {
+  width: 100%;
+  border-radius: 12px;
+}
+.measurement-text-here {
+    display: none;
+}
+.chart-panel {
+  display: none;
+}
+
+.chart-panel.active {
+  display: block;
+}
+
+.size-tab.active {
+  font-weight: 600;
+}
+@media(max-width:768px){
+.size-chart-tabs {
+    display: flex;
+    align-items: center;
+    align-content: space-between;
+    justify-content: space-between;
+}
+
+.btn-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:4px;
+}
+
+.measurement-text-here {
+    display: flex;
+    align-items: center;
+}
+  .size-chart-wrapper {
+    position: relative;
+    z-index: 1;
+  }
+
+  .measure-wrapper {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 9999;
+    transition: right 0.4s ease;
+    overflow-y: auto;
+    padding: 20px;
+    margin-top: 0;
+  }
+
+  .measure-wrapper.active {
+    right: 0;
+    margin: unset;
+  }
+
+}
+
+</style>    
+
+{% comment %} <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const tabs = document.querySelectorAll(".size-tab");
+  const panels = document.querySelectorAll(".chart-panel");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", function () {
+
+      const target = this.dataset.tab;
+
+      tabs.forEach(t => t.classList.remove("active"));
+      panels.forEach(p => p.classList.remove("active"));
+
+      this.classList.add("active");
+      document.querySelector(`[data-content="${target}"]`).classList.add("active");
+
+    });
+  });
+
+});
+</script> {% endcomment %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function(){
+
+  $(".size-tab").click(function(){
+
+    var target = $(this).data("tab");
+
+    $(".size-tab").removeClass("active");
+    $(".chart-panel").removeClass("active");
+
+    $(this).addClass("active");
+    $('.chart-panel[data-content="'+target+'"]').addClass("active");
+
+  });
+
+});
+</script>

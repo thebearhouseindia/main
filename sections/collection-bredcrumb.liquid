@@ -1,0 +1,118 @@
+<section
+  class="breadcrumb-section"
+  style="
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="breadcrumb-wrapper">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span class="breadcrumb-separator"> 
+        <svg aria-hidden="true" focusable="false" role="presentation" class="" viewBox="0 0 28 16"><path d="m1.57 1.59 12.76 12.77L27.1 1.59" stroke-width="2" stroke="#000" fill="none"></path></svg>
+      </span>
+      <span class="breadcrumb-current">{{ collection.title }}</span>
+    </nav>
+  </div>
+</section>
+
+<style>
+.breadcrumb-wrapper {
+    padding: 0px 50px;
+}
+.breadcrumb {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0px;
+}
+.breadcrumb-separator svg {
+    width: 12px;
+    height: 12px;
+    transform: rotate(-90deg);
+}
+.breadcrumb a {
+  color: #333;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  color: #999;
+}
+
+.breadcrumb-current {
+  color: #000;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .breadcrumb-section {
+    padding-top: {{ section.settings.padding_top_mobile }}px !important;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px !important;
+    border-bottom: 1px solid #0000000D;
+  }
+
+  .breadcrumb-wrapper {
+      padding: 0px 16px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Breadcrumb",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top (desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom (desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top (mobile)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom (mobile)",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Breadcrumb"
+    }
+  ]
+}
+{% endschema %}

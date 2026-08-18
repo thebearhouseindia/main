@@ -1,0 +1,59 @@
+{% comment %}
+<span class="st-grid-changer st-hidden-lg st-hidden-md">
+  
+  <!-- <button class="st-one-grid" onclick="toggleProductGrid(1)" data-grid-layout-columns="1">
+    <svg focusable="false" class="icon icon--list " viewBox="0 0 18 18" role="presentation">
+      <path d="M8 1.030067h9c.5522847 0 1 .44771525 1 1s-.4477153 1-1 1H8c-.55228475 0-1-.44771525-1-1s.44771525-1 1-1zm0 7h9c.5522847 0 1 .44771525 1 1s-.4477153 1-1 1H8c-.55228475 0-1-.44771525-1-1s.44771525-1 1-1zm0 7h9c.5522847 0 1 .4477153 1 1s-.4477153 1-1 1H8c-.55228475 0-1-.4477153-1-1s.44771525-1 1-1zm-7-15h2c.55228475 0 1 .44771525 1 1v2c0 .55228475-.44771525 1-1 1H1c-.55228475 0-1-.44771525-1-1v-2c0-.55228475.44771525-1 1-1zm0 7h2c.55228475 0 1 .44771525 1 1v2c0 .5522847-.44771525 1-1 1H1c-.55228475 0-1-.4477153-1-1v-2c0-.55228475.44771525-1 1-1zm0 7h2c.55228475 0 1 .4477153 1 1v2c0 .5522847-.44771525 1-1 1H1c-.55228475 0-1-.4477153-1-1v-2c0-.5522847.44771525-1 1-1z" fill="currentColor" fill-rule="evenodd"></path>
+    </svg>
+  </button> -->
+  <span class="list">
+  <button class="st-two-grid list-view__item" onclick="toggleProductGrid(2)" data-grid-layout-columns="2">
+    <span>
+                        <svg width="24" height="24" class="Icon_icon-content-1__kPDLF" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 24 24"><title>Show few items</title><path d="M21 21H3V3h18zM4 20h16V4H4z"></path></svg>
+                      
+                      </span>
+  </button>
+  </span>
+  <span class="list">
+  <button class="st-four-grid list-view__item active" onclick="toggleProductGrid(4)" data-grid-layout-columns="4">
+    <span>
+                        <svg width="24" height="24" class="Icon_icon-content-1__kPDLF" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 24 24"><title>Show more items</title><path fill-rule="evenodd" d="M12.5 4H20v16h-7.5zm-1-1H21v18H3V3zm0 17H4V4h7.5z" clip-rule="evenodd"></path></svg>
+                      
+                      </span>
+  </button> 
+  </span>
+  <span class="list">
+  <button class="st-six-grid list-view__item" onclick="toggleProductGrid(6)" data-grid-layout-columns="6">
+    <span>
+                        <svg width="24" height="24" class="Icon_icon-content-1__kPDLF" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 24 24"><title>Show maximum items</title><path d="M3 3v18h18V3zm17 1v7.5h-7.5V4zm-8.5 0v7.5H4V4zM4 20v-7.5h7.5V20zm8.5 0v-7.5H20V20z"></path></svg>
+                      
+                      </span>
+  </button> 
+  </span>
+</span>
+{% endcomment %}
+
+<style>
+  
+.st-grid-changer {
+    align-items: center !important;
+    justify-content: center;
+}
+  
+  img.cart-icon-image-popup{
+  width:auto;
+  }
+
+  .icon.icon--filter {
+    fill: #000 !important;
+}
+</style>
+
+
+ <span class="st-grid-changer st-flex st-gap-[0px] st-w-[96px] sm:st-w-[208px]">
+  <input type="range" id="gridToggleSlider" min="1" max="3" step="1" value="2"
+         oninput="toggleGridClass(this.value)" />
+</span>
+
+
+

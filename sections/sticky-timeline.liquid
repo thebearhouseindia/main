@@ -1,0 +1,346 @@
+<div class="journey-section">
+  <div class="journey-wrapper">
+    <div class="journey-left">
+      {% if section.settings.left_image %}
+        <img src="{{ section.settings.left_image | image_url }}" alt="" width="" height="" class="image-left1">
+      {% endif %}
+      {% if section.settings.left_image1 %}
+        <img src="{{ section.settings.left_image1 | image_url }}" alt="" width="" height="" class="image-left2">
+      {% endif %}
+    </div>
+
+    <div class="journey-right">
+      <h2 class="journey-heading">{{ section.settings.heading }}</h2>
+
+      <div class="timeline">
+
+        <div class="timeline-base-line"></div>
+
+        <div class="timeline-progress"></div>
+
+        {% if section.settings.small_image %}
+          <img class="moving-icon"
+            src="{{ section.settings.small_image | image_url }}"
+            alt="" width="" height="" >
+        {% endif %}
+
+        {% for block in section.blocks %}
+          <div class="timeline-item" {{ block.shopify_attributes }}>
+            <h3 class="year">{{ block.settings.year }}</h3>
+            <p class="desc">{{ block.settings.description }}</p>
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<style>
+.journey-section {
+  width: 100%;
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  position: relative;
+  overflow: visible !important;
+}
+
+.journey-wrapper {
+  max-width: 1230px;
+  padding: 0px 10px;
+  margin: auto;
+  display: flex;
+  gap: 90px;
+  align-items: flex-start;
+  position: relative;
+  z-index: 2;
+}
+
+.journey-left {
+  width: 100%;
+  max-width: 660px;
+  position: relative;
+  z-index: 3;
+}
+.journey-left img {
+  width: 100%;
+  border-radius: 14px;
+}
+
+.journey-right {
+  flex: 1;
+}
+.journey-heading {
+  text-transform: uppercase;
+  margin: 10px 0px 40px 0px;
+}
+.journey-section .timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.journey-section .timeline-base-line {
+  position: absolute;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: rgba(63,63,63,0.1);
+}
+
+.journey-section .timeline-progress {
+  position: absolute;
+  left: 0;
+  width: 2px;
+  height: 0;
+  background: #3f3f3f;
+}
+
+.journey-section .moving-icon {
+  position: absolute;
+  left: -33px;
+  width: 33px;
+  top: -33px;
+  z-index: 5;
+}
+
+.journey-section .timeline-item {
+  margin-bottom: 40px;
+}
+
+.journey-section .year {
+  font-size: 24px;
+  transition: 0.3s;
+}
+
+.timeline-item.active .year {
+  font-size: 60px;
+}
+
+.journey-section .desc {
+  display: none;
+}
+
+.timeline-item.active .desc {
+  display: block;
+  margin-top: 20px;
+  font-size: 18px;
+}
+.journey-section .image-left2 {
+  display: none;
+}
+@media only screen and (max-width: 768px) {
+  .journey-section .image-left2 {
+    display: block;
+  }
+  .journey-section .image-left1 {
+    display: none;
+  }
+  .journey-section {
+    padding-top: {{ section.settings.mobile_padding_top }}px;
+    padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  }
+  .journey-wrapper {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .journey-heading {
+    margin: 0px 0px 18px 0px;
+  }
+  .journey-left img {
+    border-radius: 6px;
+  }
+  .journey-section .moving-icon {
+    left: -22px;
+    width: 22px;
+    top: -8px;
+  }
+  .journey-right {
+    flex: 1;
+    margin-left: 25px;
+  }
+  .journey-section .timeline {
+    padding-left: 25px;
+  }
+  .journey-section .timeline-item {
+    margin-bottom: 20px;
+  }
+  .timeline-item.active .year {
+    font-size: 20px;
+  }
+  .journey-section .year {
+    font-size: 14px;
+  }
+  .timeline-item.active .desc {
+    margin-top: 5px;
+    font-size: 14px;
+  }
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const section = document.querySelector(".journey-section");
+  const timeline = section.querySelector(".timeline");
+  const items = section.querySelectorAll(".timeline-item");
+  const progressLine = section.querySelector(".timeline-progress");
+  const icon = section.querySelector(".moving-icon");
+
+  if (!section || !timeline || !items.length) return;
+
+  const totalItems = items.length;
+
+  function setActiveItem(progress) {
+    let index = Math.floor(progress * totalItems);
+    if (index >= totalItems) index = totalItems - 1;
+
+    items.forEach((item, i) => {
+      if (i === index) {
+        item.classList.add("active");
+      } else {
+        item.classList.remove("active");
+      }
+    });
+  }
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: "top top",
+      end: () => "+=" + (timeline.offsetHeight * 3),
+      pin: true,
+      pinSpacing: true,
+      scrub: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        setActiveItem(self.progress);
+      }
+    }
+  });
+
+  tl.fromTo(progressLine,
+    { height: 0 },
+    {
+      height: () => timeline.offsetHeight,
+      ease: "none"
+    }
+  );
+
+  if (icon) {
+    tl.fromTo(icon,
+      { y: 0 },
+      {
+        y: () => timeline.offsetHeight,
+        ease: "none"
+      },
+      0
+    );
+  }
+
+  window.addEventListener("resize", () => {
+    ScrollTrigger.refresh();
+  });
+
+});
+</script>
+
+
+
+{% schema %}
+{
+  "name": "Sticky Journey Pro",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "THE JOURNEY SO FAR"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Left Image Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image1",
+      "label": "Left Image Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "small_image",
+      "label": "Active Small Icon"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop Padding Bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Padding Bottom",
+      "default": 20
+    },
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Timeline Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "label": "Year"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky Journey Pro"
+    }
+  ]
+}
+{% endschema %}

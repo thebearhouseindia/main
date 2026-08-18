@@ -1,0 +1,256 @@
+<div
+  class="st-search-autocomplete-desktop site-nav__link st-search-bar-container st-desktop-searchbox st-hidden-sm"
+  style="display: none;"
+>
+  <div class="st-search-bar st-for-desktop" id="search-desktop">
+    <span class="st-icon-search">
+      <svg data-icon="search" viewBox="0 0 512 512" width="14px" height="20px">
+        <path d="M495,466.2L377.2,348.4c29.2-35.6,46.8-81.2,46.8-130.9C424,103.5,331.5,11,217.5,11C103.4,11,11,103.5,11,217.5   S103.4,424,217.5,424c49.7,0,95.2-17.5,130.8-46.7L466.1,495c8,8,20.9,8,28.9,0C503,487.1,503,474.1,495,466.2z M217.5,382.9   C126.2,382.9,52,308.7,52,217.5S126.2,52,217.5,52C308.7,52,383,126.3,383,217.5S308.7,382.9,217.5,382.9z"></path>
+      </svg>
+    </span>
+    <span class="close_search st-search-close-icon">
+      <svg
+        height="12px"
+        style="enable-background:new 0 0 512.001 512.001;"
+        viewBox="0 0 512.001 512.001"
+        width="12px"
+        x="0px"
+        xml:space="preserve"
+        y="0px"
+      >
+        <path class="active-path" d="M284.286,256.002L506.143,34.144c7.811-7.811,7.811-20.475,0-28.285c-7.811-7.81-20.475-7.811-28.285,0L256,227.717 L34.143,5.859c-7.811-7.811-20.475-7.811-28.285,0c-7.81,7.811-7.811,20.475,0,28.285l221.857,221.857L5.858,477.859 c-7.811,7.811-7.811,20.475,0,28.285c3.905,3.905,9.024,5.857,14.143,5.857c5.119,0,10.237-1.952,14.143-5.857L256,284.287 l221.857,221.857c3.905,3.905,9.024,5.857,14.143,5.857s10.237-1.952,14.143-5.857c7.811-7.811,7.811-20.475,0-28.285 L284.286,256.002z" data-old_color="#000000" data-original="#000000" fill="#4E3830"></path>
+      </svg>
+    </span>
+    <input
+      type="text"
+      name="st"
+      placeholder="Search for products"
+      aria-label="Search"
+      value=""
+      autocapitalize="off"
+      autocomplete="off"
+      autocorrect="off"
+    >
+    <span class="st-input-close-btn st-cross">Clear</span>
+  </div>
+</div>
+<style>
+  body.st-no-scroll .essential_annoucement_bar_wrapper {
+      display: none !important;
+  }
+  .st-search-autocomplete-desktop.active-search {
+    display: flex !important;
+  }
+
+      .st-for-desktop span.close_search {
+        z-index: 1 !important;
+        position: absolute;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-41%);
+        cursor: pointer;
+      }
+    div#search-mobile {
+        padding: 0 8px;
+      position: relative;
+  }
+
+      .st-desktop-searchbox .st-search-bar {
+        position: relative;
+        padding: 0 40px;
+        height: 100%;
+        border-bottom: 1px solid #e6332d;
+        width: 100%;
+    }
+     .st-search-bar-container .st-search-bar input {
+        width: 100%;
+        border: none;
+        height: 100% !important;
+        padding: 0 100px 0 50px;
+        color: #000;
+        background-color: #fff !important;
+    }
+
+    .st-search-autocomplete-desktop.site-nav__link span.st-input-close-btn {
+      position: absolute;
+      right: 75px !IMPORTANT;
+      top: 50%;
+      cursor: pointer;
+      display: none;
+      transform: translateY(-41%);
+  }
+      .st-search-bar span.st-icon-search {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-41%);
+        margin-top: 0px !important;
+        margin-left: 0px;
+    }
+    .st-search-bar span.st-icon-search svg {
+      width: 28px;
+      height: 28px;
+  }
+    .st-for-desktop span.close_search svg {
+      width: 30px;
+      height: 15px;
+  }
+    .st-for-desktop span.close_search svg path {
+      stroke: #000;
+      stroke-width: 20px;
+      fill: #000;
+  }
+      @media (max-width: 760px) {
+        .st-search-autocomplete-desktop {display:none !important;}
+        .st-search-box-desktop {
+          display: none !important;
+        }
+      }
+
+      .st-search-box-desktop {
+        position: relative;
+    }
+      .st-search-box-desktop input.st-search-input {
+        width: 100%;
+        /* border: 1px solid #999; */
+        height: 40px;
+        padding: 0 22px;
+        /*     padding-right: 20px;
+        padding-left: 10px; */
+      }
+      .st-search-box-desktop span.st-icon-search {
+        position: absolute;
+        margin-top: 10px;
+        margin-left: 4px;
+      }
+      .st-search-box-desktop span.st-input-close-btn {
+        position: absolute;
+        right: 10px;
+        /*top: 150px;*/
+        cursor: pointer;
+        margin-top: -28px;
+        display: none;
+      }
+      .st-search-box-desktop span.st-input-close-btn svg {
+        width: 10px;
+        height: 10px;
+      }
+
+      .header-layout--left-center .header-item--icons {
+        flex: unset;
+    }
+      .st-search-autocomplete-desktop.site-nav__link {
+      padding: 0;
+      display: inline-flex;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 99;
+      background: #fff;
+      height: 100%;
+  }
+      #HeaderSearchForm .site-header__search-input {
+        font-size: 16px !important;
+        font-weight: 100 !important;
+        text-transform: capitalize !important;
+      }
+  .st-search-bar input:focus-visible {
+      outline: none;
+  }
+
+      @media (max-width: 1200px) {
+
+        .st-search-box-desktop input.st-search-input {
+          padding: 0 26px 0 26px;
+          margin-right: 10px;
+        }
+      }
+
+      .st-search-autocomplete span.st-input-close-btn {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        display: none;
+    }
+      @media (max-width: 991px) {
+        .header-item--logo {
+          flex: 0 0 auto !important;
+        }
+      }
+
+      @media (min-width:769px) {
+        div#search-mobile {
+        display: none !important;
+    }
+      }
+</style>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    let searchInputBoxSelector = document.querySelectorAll('.st-search-bar input');
+
+    searchInputBoxSelector.forEach((searchInputBox) => {
+      if (searchInputBox) {
+        searchInputBox.setAttribute('placeholder', '');
+        const placeHolderPhrases = ['Search For Shirts', 'Search For Trackpants', 'Search For Shorts'];
+
+        let index = 0;
+        let typingTimer;
+        const updatePlaceHolder = function () {
+          const phrase = placeHolderPhrases[index];
+          const length = phrase.length;
+          let queryIndex = 0;
+          typingTimer = setInterval(function () {
+            if (queryIndex === length) {
+              setTimeout(erasePlaceHolder, 1000);
+
+              clearInterval(typingTimer);
+            } else {
+              const currentPlaceholderValue = searchInputBox.getAttribute('placeholder');
+
+              searchInputBox.setAttribute('placeholder', currentPlaceholderValue + phrase.charAt(queryIndex));
+
+              queryIndex++;
+            }
+          }, 100);
+        };
+
+        const erasePlaceHolder = function () {
+          const currentPlaceholderValue = searchInputBox.getAttribute('placeholder');
+          const length = currentPlaceholderValue.length;
+          let queryIndex = length - 1;
+          typingTimer = setInterval(function () {
+            if (queryIndex === -1) {
+              clearInterval(typingTimer);
+              index++;
+              if (index === placeHolderPhrases.length) {
+                index = 0;
+              }
+              setTimeout(updatePlaceHolder, 1000);
+            } else {
+              const newPlaceholderValue = currentPlaceholderValue.slice(0, queryIndex);
+              searchInputBox.setAttribute('placeholder', newPlaceholderValue);
+              queryIndex--;
+            }
+          }, 50);
+        };
+        updatePlaceHolder();
+      }
+    });
+
+    const searchBtn = document.getElementById('search-btn');
+    const searchBox = document.querySelector('.st-search-autocomplete-desktop');
+    const closeBtn = document.querySelector('.close_search');
+
+    if (searchBtn && searchBox) {
+      searchBtn.addEventListener('click', function () {
+        searchBox.classList.add('active-search');
+      });
+    }
+
+    if (closeBtn && searchBox) {
+      closeBtn.addEventListener('click', function () {
+        searchBox.classList.remove('active-search');
+      });
+    }
+  });
+</script>

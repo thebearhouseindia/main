@@ -1,0 +1,198 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+      background-color: {{ section.settings.color_background }};
+      color: {{ section.settings.color_text }};
+      position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .banner-desktop {
+      display: block;
+      width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .banner-mobile {
+      display: none;
+      width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .banner-picture {
+      display: block;
+      width: 100%;
+      /* Reserve space before the image loads to stop layout shift (CLS). Mobile ratio by default. */
+      aspect-ratio: {{ section.settings.mobile_banner.aspect_ratio | default: section.settings.desktop_banner.aspect_ratio | default: 1 }};
+  }
+  #shopify-section-{{ section.id }} .banner-picture img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+  }
+  @media only screen and (min-width: 769px) {
+      #shopify-section-{{ section.id }} .banner-picture {
+          aspect-ratio: {{ section.settings.desktop_banner.aspect_ratio | default: 2.4 }};
+      }
+  }
+
+  @media only screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} {
+          padding-top: {{ section.settings.mobile_padding_top }}px;
+          padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+      }
+
+      #shopify-section-{{ section.id }} .banner-desktop {
+          display: none;
+      }
+
+      #shopify-section-{{ section.id }} .banner-mobile {
+          display: block;
+      }
+  }
+{% endstyle %}
+
+<div class="relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
+  <div class="banner-here">
+    {% if section.settings.banner_link != blank %}
+      <a href="{{ section.settings.banner_link }}">
+    {% endif %}
+
+    {%- comment -%} Desktop Banner (LCP Image) {%- endcomment -%}
+    <picture class="banner-picture">
+      {% if section.settings.desktop_banner != blank %}
+        <source
+            media="(min-width: 769px)"
+            srcset="{{ section.settings.desktop_banner | image_url: width: 1000 }} 1000w,
+                    {{ section.settings.desktop_banner | image_url: width: 1400 }} 1400w,
+                    {{ section.settings.desktop_banner | image_url: width: 1800 }} 1800w,
+                    {{ section.settings.desktop_banner | image_url: width: 2000 }} 2000w"
+            sizes="100vw">
+      {% endif %}
+      {% assign _m = section.settings.mobile_banner | default: section.settings.desktop_banner %}
+      {% if _m != blank %}
+        {{
+          _m
+          | image_url: width: 800
+          | image_tag:
+            widths: '500, 800, 1000',
+            sizes: '100vw',
+            loading: 'eager',
+            fetchpriority: 'high',
+            alt: section.settings.banner_alt
+        }}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </picture>
+    {% if section.settings.banner_link != blank %}
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Banner Section",
+  "class": "index-section banner-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom Class"
+    },
+    {
+      "type": "header",
+      "content": "Banner Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_banner",
+      "label": "Desktop Banner Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_banner",
+      "label": "Mobile Banner Image",
+      "info": "If not set, desktop image will be used on mobile"
+    },
+    {
+      "type": "text",
+      "id": "banner_alt",
+      "label": "Banner Alt Text"
+    },
+    {
+      "type": "url",
+      "id": "banner_link",
+      "label": "Banner Link",
+      "info": "Optional: make the banner clickable"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Padding Bottom",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Mobile Spacing"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Padding Bottom",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text Color"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "Background Color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner Section"
+    }
+  ]
+}
+{% endschema %}

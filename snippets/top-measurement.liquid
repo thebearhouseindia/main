@@ -1,0 +1,228 @@
+{% comment %} {% assign measure = product.metafields.custom.top_wear_measure.value %}
+
+{% if measure != blank %}
+<div class="measure-wrapper">
+
+<div class="how-measure none-desktop">
+    <div class="arrow-btn">
+    <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5.46899 3.6482L0.497167 8.62002M0.497167 8.62002L5.469 13.5919M0.497167 8.62002L17.737 8.61964" stroke="#1E1E1E" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    </div> <div class="text-how">HOW TO MEASURE</div>  <span class="popup-close">✕</span> 
+</div>
+    <div class="contentent-here">
+  <div class="measure-image">
+    {% if measure.shirt_image != blank %}
+      <img 
+        src="{{ measure.shirt_image | img_url:'master' }}" 
+        alt="Measure Shirt" width="" height=""> 
+    {% endif %}
+  </div>
+
+  <div class="measure-content">
+    {% if measure.measure_text != blank %}
+      <h3 class="measure-heading">
+        {{ measure.measure_text }}
+      </h3>
+    {% endif %}
+
+        {% assign list_items = measure.assign_text.value %}
+        {% if list_items != blank %}
+        <ul class="measure-list">
+            {% for item in list_items %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+  </div>
+</div>
+
+</div>
+{% endif %} {% endcomment %}
+
+<div class="measure-wrapper">
+
+  <!-- Mobile Header -->
+  <div class="how-measure none-desktop">
+    <div class="arrow-btn">
+      <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.46899 3.6482L0.497167 8.62002M0.497167 8.62002L5.469 13.5919M0.497167 8.62002L17.737 8.61964" stroke="#1E1E1E" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="text-how">HOW TO MEASURE</div>
+    <span class="popup-close">✕</span>
+  </div>
+
+  <div class="contentent-here">
+
+    <!-- LEFT IMAGE FROM SECTION SETTINGS -->
+    <div class="measure-image">
+      {% if section.settings.measure_image != blank %}
+        <img 
+          src="{{ section.settings.measure_image | image_url: width: 1000 }}" 
+          alt="Measure Image"
+          width=""
+          height="">
+      {% endif %}
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="measure-content">
+
+      {% if section.settings.measure_text != blank %}
+        <h3 class="measure-heading">
+          {{ section.settings.measure_text }}
+        </h3>
+      {% endif %}
+
+      <ul class="measure-list">
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+
+            {% when 'text-nuber' %}
+              {% if block.settings.text-number != blank %}
+                <li>{{ block.settings.text-number }}</li>
+              {% endif %}
+
+          {% endcase %}
+        {% endfor %}
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<style>
+.measure-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  margin-top: 48px;
+}
+
+.measure-image {
+  width: 45%;
+}
+.none-desktop{display:none;}
+.measure-image img {
+  width: 100%;
+  height: auto;
+}
+
+.measure-content {
+  width: 50%;
+}
+
+.measure-heading {
+font-family: 'Roboto';
+font-weight: 500;
+font-size: 18px;
+line-height: 100%;
+text-align: center;
+text-transform: uppercase;
+text-align: left;
+margin-bottom: 24px;
+
+}
+
+.measure-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.measure-list li {
+font-family: 'Roboto';
+font-weight: 500;
+font-size: 16px;
+line-height: 160%;
+}
+.contentent-here {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 48px;
+}
+
+
+@media (max-width: 768px) {
+  .measure-wrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+    justify-content: unset;
+  }
+
+  .measure-image,
+  .measure-content {
+    width: 100%;
+  }
+
+{% comment %} .measure-wrapper{display:none;} {% endcomment %}
+
+
+.measure-heading {
+    margin: unset;
+  font-family: 'Roboto';
+font-weight: 400;
+font-size: 12px;
+line-height: 120%;
+text-align: center;
+text-transform: uppercase;
+text-decoration: underline;
+text-decoration-style: solid;
+text-decoration-thickness: 0%;
+text-decoration-skip-ink: auto;
+}
+.none-desktop {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        border-bottom: 1px solid #3F3F3F1A;
+        padding-bottom: 16px;
+        padding: 16px 12px;
+        align-items: center;
+}
+.text-how {
+  font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+.measure-wrapper span.popup-close {
+    position: unset;
+}
+.measure-wrapper {
+    padding: unset;
+}
+
+.contentent-here {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 23px;
+    padding: 0px 20px;
+}
+
+.measure-content .measure-heading {
+    display: none;
+}
+
+.measure-list li {
+    text-align: left;
+    font-size: 14px;
+}
+
+
+}
+</style>   

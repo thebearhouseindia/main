@@ -1,0 +1,502 @@
+{% assign locations = page.metafields.custom.store_locator_locations.value %}
+{%- comment -%} LocalBusiness schema - auto-generated from store_locator_locations metafield (added 20 Jun 2026) {%- endcomment -%}
+{%- if locations and locations.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {%- for store in locations -%}
+      {%- assign phone = store.call_link | default: '' | replace: 'tel:', '' | strip -%}
+      {%- assign slug = store.title | downcase | replace: ' ', '-' | replace: '/', '-' | replace: ',', '' | replace: '.', '' | replace: '--', '-' -%}
+      {
+        "@type": "ClothingStore",
+        "@id": "{{ shop.url }}/pages/our-store#{{ slug }}",
+        "name": {{ store.title | json }},
+        "image": "https://thebearhouse.com/cdn/shop/files/logo-tbh.svg",
+        "url": "{{ shop.url }}/pages/our-store",
+        {%- if phone != blank -%}
+        "telephone": {{ phone | json }},
+        {%- else -%}
+        "telephone": "+91-8884477728",
+        {%- endif -%}
+        "priceRange": "Rs 1000-5000",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": {{ store.address | json }},
+          {%- if store.city != blank -%}
+          "addressLocality": {{ store.city | json }},
+          {%- endif -%}
+          {%- if store.state != blank -%}
+          "addressRegion": {{ store.state | json }},
+          {%- endif -%}
+          "addressCountry": "IN"
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+          "opens": "10:00",
+          "closes": "22:00"
+        },
+        "parentOrganization": {
+          "@type": "Organization",
+          "name": "The Bear House",
+          "url": "{{ shop.url }}"
+        }
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+<div class="store-locator">
+  <h2>LOCATE THE NEAREST STORES</h2>
+
+  <div class="filters">
+    <ul>
+      <li>
+    <span>State<sup>*</sup></span>
+    <select id="stateSelect">
+      <option value="">Select State</option>
+    </select>
+    </li>
+    <li>
+    <span>City<sup>*</sup></span>
+    <select id="citySelect" disabled>
+      <option value="">Select City</option>
+    </select>
+    </li>
+    <li>
+    <span>Locality<sup>*</sup></span>
+    <select id="localitySelect" disabled>
+      <option value="">Select Locality</option>
+    </select>
+    </li>
+    <button id="searchStores">SEARCH</button>
+    </ul>
+  </div>
+
+  <h3 class="heading-store-near-you">The bear house stores Near You</h3>
+
+  <div id="storeResults" class="store-grid"></div>
+  <div id="paginationContainer" class="pagination-container"></div>
+</div>
+
+<script>
+  const storeDataRaw = {{ locations | json }};
+
+  let storeData = storeDataRaw;
+  if (typeof storeDataRaw === 'string') {
+    try {
+      storeData = JSON.parse(storeDataRaw);
+    } catch (e) {
+      console.error("Failed to parse store data:", e);
+      storeData = [];
+    }
+  }
+
+  // Map each store title to its Shopify page handle (exact handleize match),
+  // so cards can link to /pages/store/{handle}.
+  const storeSlugs = {
+    {%- for store in locations -%}
+      {{ store.title | json }}: {{ store.title | handleize | json }}{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  };
+
+  const stateSelect = document.getElementById('stateSelect');
+  const citySelect = document.getElementById('citySelect');
+  const localitySelect = document.getElementById('localitySelect');
+  const resultsContainer = document.getElementById('storeResults');
+  const paginationContainer = document.getElementById('paginationContainer');
+
+  let currentPage = 1;
+  const perPage = 6;
+  let activeStores = storeData;
+  let isLoading = false;
+  let allLoaded = false;
+
+  // ---------- CREATE SPINNER ----------
+  const spinner = document.createElement('div');
+  spinner.classList.add('spinner');
+  spinner.style.display = 'none';
+  paginationContainer.appendChild(spinner);
+
+  // ---------- RENDER STORE CARD ----------
+  function createStoreCard(store) {
+    const slug = storeSlugs[store.title] || '';
+    const storeUrl = slug ? '/pages/store/' + slug : '';
+    const titleHtml = storeUrl
+      ? `<a href="${storeUrl}" style="color:inherit;text-decoration:none;">${store.title || 'Store'}</a>`
+      : (store.title || 'Store');
+    const viewBtn = storeUrl ? `<a href="${storeUrl}">VIEW STORE</a>` : '';
+    return `
+      <div class="store-card">
+        <div class="inner-store-details">
+          <h3>${titleHtml}</h3>
+          <p>${store.address || 'Address not available'}</p>
+          <p><strong>Working Hours:</strong> ${store.working_hours || 'N/A'}</p>
+        </div>
+        <div class="buttons">
+          ${viewBtn}
+          <a href="${store.map_link || '#'}" target="_blank">MAP</a>
+          <a href="${store.call_link || '#'}">CALL</a>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---------- CHECK IF NEAR BOTTOM ----------
+  function isNearBottom() {
+    const threshold = 200;
+    return (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - threshold);
+  }
+
+  // ---------- LOAD NEXT BATCH ----------
+  function loadMoreStores() {
+    if (isLoading || allLoaded) return;
+
+    const start = (currentPage - 1) * perPage;
+    const end = start + perPage;
+    const nextBatch = activeStores.slice(start, end);
+
+    if (nextBatch.length === 0) {
+      allLoaded = true;
+      spinner.style.display = 'none';
+      return;
+    }
+
+    isLoading = true;
+
+    // Show spinner only after first batch (not on initial page load)
+    if (currentPage > 1) {
+      spinner.style.display = 'block';
+    }
+
+    const delay = currentPage === 1 ? 0 : 600;
+
+    setTimeout(() => {
+      nextBatch.forEach(store => {
+        resultsContainer.innerHTML += createStoreCard(store);
+      });
+
+      currentPage++;
+      isLoading = false;
+      spinner.style.display = 'none';
+
+      if ((currentPage - 1) * perPage >= activeStores.length) {
+        allLoaded = true;
+      }
+
+      // After loading, check if page is still not scrollable -> load more
+      checkAndLoadIfNotScrollable();
+
+    }, delay);
+  }
+
+  // ---------- IF PAGE NOT SCROLLABLE, KEEP LOADING ----------
+  function checkAndLoadIfNotScrollable() {
+    if (!allLoaded && document.body.scrollHeight <= window.innerHeight) {
+      loadMoreStores();
+    }
+  }
+
+  // ---------- SCROLL EVENT ----------
+  window.addEventListener('scroll', () => {
+    if (!allLoaded && isNearBottom()) {
+      loadMoreStores();
+    }
+  });
+
+  // ---------- RESET AND RE-RENDER ----------
+  function renderStores() {
+    resultsContainer.innerHTML = "";
+    currentPage = 1;
+    isLoading = false;
+    allLoaded = false;
+    spinner.style.display = 'none';
+
+    if (activeStores.length === 0) {
+      resultsContainer.innerHTML = "<p>No stores found for selected filters</p>";
+      return;
+    }
+
+    loadMoreStores();
+  }
+
+  // ---------- INITIAL LOAD ----------
+  renderStores();
+
+  // ---------- DROPDOWN LOGIC ----------
+  if (!storeData || !Array.isArray(storeData) || storeData.length === 0) {
+    console.error("No store data available or data is not an array");
+    resultsContainer.innerHTML = "<p>No stores found. Please check console for errors.</p>";
+  } else {
+    const states = [...new Set(storeData.map(s => s.state).filter(Boolean))];
+    states.forEach(st => {
+      let opt = document.createElement("option");
+      opt.value = st;
+      opt.textContent = st;
+      stateSelect.appendChild(opt);
+    });
+  }
+
+  stateSelect.addEventListener('change', () => {
+    citySelect.innerHTML = '<option value="">Select City</option>';
+    localitySelect.innerHTML = '<option value="">Select Locality</option>';
+    localitySelect.disabled = true;
+
+    const filteredCities = [...new Set(
+      storeData.filter(s => s.state === stateSelect.value).map(s => s.city)
+    )];
+
+    filteredCities.forEach(city => {
+      let opt = document.createElement("option");
+      opt.value = city;
+      opt.textContent = city;
+      citySelect.appendChild(opt);
+    });
+
+    citySelect.disabled = false;
+  });
+
+  citySelect.addEventListener('change', () => {
+    localitySelect.innerHTML = '<option value="">Select Locality</option>';
+
+    const filteredLocalities = [...new Set(
+      storeData.filter(s =>
+        s.state === stateSelect.value && s.city === citySelect.value
+      ).map(s => s.locality)
+    )];
+
+    filteredLocalities.forEach(loc => {
+      let opt = document.createElement("option");
+      opt.value = loc;
+      opt.textContent = loc;
+      localitySelect.appendChild(opt);
+    });
+
+    localitySelect.disabled = false;
+  });
+
+  document.getElementById("searchStores").addEventListener("click", () => {
+    const state = stateSelect.value;
+    const city = citySelect.value;
+    const locality = localitySelect.value;
+
+    if (!state || !city) {
+      alert("Please select at least State and City");
+      return;
+    }
+
+    activeStores = storeData.filter(s =>
+      s.state === state &&
+      s.city === city &&
+      (locality ? s.locality === locality : true)
+    );
+
+    renderStores();
+  });
+</script>
+
+<style>
+  /* Loading Spinner */
+  #scroll-sentinel {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 20px 0;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #e6332d;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .filters select, .filters button { padding: 12px; margin-right: 10px; }
+  .store-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .store-card { border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+   }
+
+  .pagination-container {
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .pagination-container .pagination {
+    margin: 0;
+    padding: 10px 0;
+  }
+
+  .buttons a { padding: 13px 25px;
+    border: 1px solid black;
+    margin-right: 10px;
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+    font-size: 15px;
+   }
+
+  .store-locator {
+    padding: 26px;
+    background: #fff;
+    margin-top: 30px;
+    border-radius: 0;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, .1215686275);
+    width: 90%;
+    margin: 0 auto;
+}
+
+.store-card .buttons {
+    margin-top: 40px;
+}
+
+.store-card p {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 5px 0px;
+}
+
+.store-card h3 {
+    font-size: 20px;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 12px;
+}
+
+h3.heading-store-near-you {
+    font-size: 26px;
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+sup {
+    color: red;
+    font-size: 14px;
+    top: 4px;
+    position: relative
+}
+
+.store-locator .filters ul {
+    display: flex;
+    align-items: end;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    align-items: flex-end;
+    padding-bottom: 10px;
+}
+
+.store-locator .filters ul li  {
+    flex-basis: 50%;
+    padding-right: 35px;
+    list-style: none;
+}
+
+.store-locator .filters ul li span{
+font-size: 16px;
+    margin-bottom: 6px;
+    display: block;
+    color: #000;
+}
+
+.store-locator .filters input, .store-locator .filters select {
+    display: block;
+    width: 100%;
+    padding: .575rem .45rem;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 5px;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c5c5c5;
+    transition: border-color .15s
+ease-in-out, box-shadow .15s
+ease-in-out;
+    height: 40px;
+}
+button#searchStores {
+    background: rgb(230, 51, 45);
+    color: #fff;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    width: 18%;
+    border-radius: 0;
+    text-transform: uppercase;
+}
+
+@media(max-width:749px){
+.store-grid {
+    display: block;
+  }
+  .store-locator h2 {
+    font-size: 19px;
+    margin-bottom: 18px;
+}
+.store-locator .filters ul{
+ display:grid;
+}
+
+.store-locator .filters ul li{
+padding-right:0px;
+    margin-bottom: 20px;
+}
+
+button#searchStores{
+    width: 50%;
+    margin:0 auto;
+}
+
+h3.heading-store-near-you{
+width:100%;
+font-size:22px;
+line-height:26px;
+}
+
+.store-card{
+ margin-bottom:10px;
+}
+
+.store-locator{
+ padding:15px;
+}
+
+}
+</style>
+
+{% schema %}
+{
+  "name": "Store-locator",
+  "class": "index-section",
+  "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Heading"
+        }
+    ],
+    "presets": [
+    {
+      "name": "Store-locator"
+    }
+]
+}
+{% endschema %}

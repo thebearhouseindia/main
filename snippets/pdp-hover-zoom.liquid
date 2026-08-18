@@ -1,0 +1,61 @@
+{%- comment -%}
+  Desktop hover-to-zoom for PDP product images.
+  Runs only on fine-pointer + hover devices (mouse desktops/laptops); touch is untouched.
+  Targets both the main photo slideshow and the thumbnail grid (this theme shows the
+  thumbnail grid large on desktop). A size gate skips genuinely small thumbnails.
+{%- endcomment -%}
+<style>
+  @media (hover: hover) and (pointer: fine) {
+    [data-product-images] .product__thumb .image-wrap,
+    [data-product-images] .product__main-photos .image-wrap { overflow: hidden; }
+    [data-product-images] .image-wrap.pz-on { cursor: zoom-in; }
+    [data-product-images] .image-wrap.pz-bound img { transition: transform 0.12s ease-out; }
+  }
+</style>
+<script>
+  (function () {
+    var mq = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!mq || !mq.matches) return;
+    var SCALE = 2.2;
+    var MIN_W = 250; // only zoom images at least this wide (skips small thumbs)
+
+    function bind(wrap) {
+      if (wrap.dataset.pz) return;
+      var img = wrap.querySelector('img');
+      if (!img || wrap.querySelector('video')) return;
+      wrap.dataset.pz = '1';
+      wrap.classList.add('pz-bound');
+
+      wrap.addEventListener('mouseenter', function () {
+        if (wrap.getBoundingClientRect().width < MIN_W) return;
+        wrap.classList.add('pz-on');
+        img.style.transform = 'scale(' + SCALE + ')';
+      });
+      wrap.addEventListener('mousemove', function (e) {
+        var r = wrap.getBoundingClientRect();
+        if (r.width < MIN_W) return;
+        var x = ((e.clientX - r.left) / r.width) * 100;
+        var y = ((e.clientY - r.top) / r.height) * 100;
+        img.style.transformOrigin = x + '% ' + y + '%';
+      });
+      wrap.addEventListener('mouseleave', function () {
+        wrap.classList.remove('pz-on');
+        img.style.transform = '';
+        img.style.transformOrigin = 'center center';
+      });
+    }
+
+    function scan() {
+      document.querySelectorAll(
+        '[data-product-images] .product__thumb .image-wrap,' +
+        '[data-product-images] .product__main-photos .image-wrap'
+      ).forEach(bind);
+    }
+
+    if (document.readyState !== 'loading') { scan(); } else { document.addEventListener('DOMContentLoaded', scan); }
+    document.addEventListener('shopify:section:load', scan);
+    var host = document.querySelector('[data-product-images]');
+    if (host && window.MutationObserver) { new MutationObserver(scan).observe(host, { childList: true, subtree: true }); }
+    setTimeout(scan, 1200);
+  })();
+</script>

@@ -1,0 +1,413 @@
+{%- if section.settings.divider -%}<div class="section--divider">{%- endif -%}
+
+<div class="page-width page-width--narrow Faqs" id="FaqSection-{{ section.id }}">
+  {%- if section.settings.title != blank -%}
+    <header class="section-header">
+      <h2 class="section-header__title">
+        {{ section.settings.title | escape }}
+      </h2>
+    </header>
+  {%- endif -%}
+
+  {%- comment -%} SEO: FAQPage schema from every question block (visible or hidden) {%- endcomment -%}
+  {%- if section.blocks.size > 0 -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {%- assign faq_items = section.blocks | where: "type", "question" -%}
+          {%- for block in faq_items -%}
+            {
+              "@type": "Question",
+              "name": {{ block.settings.title | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ block.settings.text | json }}
+              }
+            }{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- endif -%}
+
+  {%- comment -%} ===================== GROUPED MODE ===================== {%- endcomment -%}
+  {%- if section.settings.enable_groups -%}
+    {%- assign visible = section.settings.questions_visible | default: 3 -%}
+    {%- assign group_open = false -%}
+    {%- assign q_in_group = 0 -%}
+
+    <div class="faq-groups" data-faq-groups data-cols="{{ section.settings.desktop_columns }}">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+
+          {%- when 'category' -%}
+            {%- if group_open -%}
+                </div>
+                {%- if q_in_group > visible -%}
+                  <button type="button" class="faq-group__toggle" data-faq-toggle aria-expanded="false">
+                    {{ 'View all' }} ({{ q_in_group }})
+                  </button>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+            {%- assign q_in_group = 0 -%}
+            {%- assign group_open = true -%}
+            <div class="faq-group" data-faq-group {{ block.shopify_attributes }}>
+              {%- if block.settings.title != blank -%}
+                <h3 class="faq-group__title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+              <div class="faq-group__items">
+
+          {%- when 'question' -%}
+            {%- unless group_open -%}
+              {%- assign group_open = true -%}
+              {%- assign q_in_group = 0 -%}
+              <div class="faq-group" data-faq-group>
+                <div class="faq-group__items">
+            {%- endunless -%}
+            {%- assign q_in_group = q_in_group | plus: 1 -%}
+            {%- assign extra = '' -%}
+            {%- if q_in_group > visible -%}{%- assign extra = ' faq-q--extra' -%}{%- endif -%}
+            <div class="faq-q{{ extra }}" data-faq-q {{ block.shopify_attributes }}>
+              <button
+                type="button"
+                class="collapsible-trigger collapsible-trigger--inline collapsible--auto-height text-left"
+                aria-controls="FAQ-content-{{ block.id }}"
+                aria-expanded="false"
+              >
+                <span class="collapsible-trigger__icon collapsible-trigger__icon--circle" role="presentation">
+                  <svg class="icon-plus" aria-hidden="true" viewBox="0 0 20 20">
+                    <path d="M10 2v16M2 10h16" stroke="#000" stroke-width="2" fill="none"/>
+                  </svg>
+                  <svg class="icon-minus" aria-hidden="true" viewBox="0 0 20 20">
+                    <path d="M2 10h16" stroke="#000" stroke-width="2" fill="none"/>
+                  </svg>
+                </span>
+                <span>{{ block.settings.title }}</span>
+              </button>
+              <div id="FAQ-content-{{ block.id }}" class="collapsible-content collapsible-content--all">
+                <div class="collapsible-content__inner collapsible-content__inner--faq rte">
+                  {{ block.settings.text }}
+                </div>
+              </div>
+            </div>
+
+          {%- when 'rich-text' -%}
+            <div class="index-section index-section--faq" {{ block.shopify_attributes }}>
+              <div class="text-{{ block.settings.align_text }}">
+                {%- if block.settings.title != blank -%}
+                  <p class="h2">{{ block.settings.title | escape }}</p>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="rte">
+                    {%- if block.settings.enlarge_text %}<div class="enlarge-text">{% endif -%}
+                    {{ block.settings.text }}
+                    {%- if block.settings.enlarge_text %}</div>{% endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+
+      {%- comment -%} close the final open group {%- endcomment -%}
+      {%- if group_open -%}
+          </div>
+          {%- if q_in_group > visible -%}
+            <button type="button" class="faq-group__toggle" data-faq-toggle aria-expanded="false">
+              {{ 'View all' }} ({{ q_in_group }})
+            </button>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  {%- comment -%} ===================== FLAT MODE (original behaviour) ===================== {%- endcomment -%}
+  {%- else -%}
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        <div {{ block.shopify_attributes }}>
+          {% case block.type %}
+            {% when 'rich-text' %}
+              <div class="index-section index-section--faq">
+                <div class="text-{{ block.settings.align_text }}">
+                  {%- if block.settings.title != blank -%}
+                    <p class="h2">{{ block.settings.title | escape }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="rte">
+                      {%- if block.settings.enlarge_text %}<div class="enlarge-text">{% endif -%}
+                      {{ block.settings.text }}
+                      {%- if block.settings.enlarge_text %}</div>{% endif -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+
+            {% when 'category' %}
+              <div class="index-section index-section--faq">
+                <div class="text-left">
+                  {%- if block.settings.title != blank -%}
+                    <p class="h2">{{ block.settings.title | escape }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+
+            {% when 'question' %}
+              <div>
+                <button
+                  type="button"
+                  class="collapsible-trigger collapsible-trigger--inline collapsible--auto-height text-left"
+                  aria-controls="FAQ-content-{{ block.id }}"
+                  aria-expanded="false"
+                >
+                  <span class="collapsible-trigger__icon collapsible-trigger__icon--circle" role="presentation">
+                    <svg class="icon-plus" aria-hidden="true" viewBox="0 0 20 20">
+                      <path d="M10 2v16M2 10h16" stroke="#000" stroke-width="2" fill="none"/>
+                    </svg>
+                    <svg class="icon-minus" aria-hidden="true" viewBox="0 0 20 20">
+                      <path d="M2 10h16" stroke="#000" stroke-width="2" fill="none"/>
+                    </svg>
+                  </span>
+                  <span>{{ block.settings.title }}</span>
+                </button>
+                <div id="FAQ-content-{{ block.id }}" class="collapsible-content collapsible-content--all">
+                  <div class="collapsible-content__inner collapsible-content__inner--faq rte">
+                    {{ block.settings.text }}
+                  </div>
+                </div>
+              </div>
+          {% endcase %}
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if section.blocks.size == 0 -%}
+    <div class="placeholder-noblocks">
+      {{ 'home_page.onboarding.no_content' | t }}
+    </div>
+  {%- endif -%}
+</div>
+
+{%- if section.settings.divider -%}</div>{%- endif -%}
+
+{%- comment -%} Styles scoped to the FAQ grouping. No edits to global CSS files needed. {%- endcomment -%}
+{%- if section.settings.enable_groups -%}
+<style>
+  #FaqSection-{{ section.id }} .faq-groups[data-cols="2"]{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:128px;
+    row-gap:64px;
+    align-items:start;
+  }
+  @media (max-width:749px){
+    #FaqSection-{{ section.id }} .faq-groups[data-cols="2"]{
+      grid-template-columns:1fr;
+      row-gap:0;
+    }
+  }
+
+  #FaqSection-{{ section.id }} .faq-group{
+    border-top:1px solid #e6e6e6;
+    padding-top:24px;
+    margin-top:24px;
+  }
+  #FaqSection-{{ section.id }} .faq-group:first-child{ border-top:0; padding-top:0; margin-top:0; }
+  /* 2-column grid: same divider above every group so both rows line up */
+  #FaqSection-{{ section.id }} .faq-groups[data-cols="2"] .faq-group,
+  #FaqSection-{{ section.id }} .faq-groups[data-cols="2"] .faq-group:first-child{
+    border-top:1px solid #e6e6e6;
+    padding-top:24px;
+    margin-top:0;
+  }
+
+  #FaqSection-{{ section.id }} .faq-group__title{
+    font-size:18px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#1e1e1e;
+    margin:0;
+    padding-bottom:14px;
+    border-bottom:1px solid #efefef;
+  }
+
+  #FaqSection-{{ section.id }} .faq-group__items{ margin-top:4px; }
+  #FaqSection-{{ section.id }} .faq-q .collapsible-trigger{
+    padding-top:17px;
+    padding-bottom:17px;
+    line-height:1.45;
+    gap: 10px;
+  }
+  #FaqSection-{{ section.id }} .faq-q .collapsible-content__inner--faq{ padding-bottom:20px; }
+
+  #FaqSection-{{ section.id }} .faq-group[data-faq-group]:not(.is-expanded) .faq-q--extra{ display:none; }
+
+  #FaqSection-{{ section.id }} .faq-group__toggle{
+    background:none;
+    border:0;
+    padding:16px 0 4px;
+    margin:0;
+    cursor:pointer;
+    color:#E92E30;
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:.02em;
+  }
+  #FaqSection-{{ section.id }} .faq-group__toggle:hover{ text-decoration:underline; }
+</style>
+
+<script>
+  (function(){
+    function bindToggles(scope){
+      (scope || document).querySelectorAll('[data-faq-toggle]').forEach(function(btn){
+        if (btn.dataset.faqBound) return;
+        btn.dataset.faqBound = '1';
+        var allLabel = btn.textContent.trim();
+        btn.addEventListener('click', function(){
+          var group = btn.closest('[data-faq-group]');
+          if (!group) return;
+          var open = group.classList.toggle('is-expanded');
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          btn.textContent = open ? 'View less' : allLabel;
+        });
+      });
+    }
+    if (document.readyState !== 'loading') { bindToggles(); }
+    else { document.addEventListener('DOMContentLoaded', function(){ bindToggles(); }); }
+    document.addEventListener('shopify:section:load', function(e){ bindToggles(e.target); });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.faq.name",
+  "class": "index-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.faq.settings.title.label",
+      "default": "FAQs"
+    },
+    {
+      "type": "header",
+      "content": "Grouped layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_groups",
+      "label": "Enable grouped layout (Category blocks + View all)",
+      "info": "When off, this section behaves exactly like before. Turn on to group questions under Category blocks and show a View all button.",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "questions_visible",
+      "label": "Questions visible per group before View all",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "default": "2",
+      "options": [
+        { "value": "1", "label": "1 column (stacked accordion)" },
+        { "value": "2", "label": "2 columns (grid of groups)" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category (group)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Group name",
+          "default": "New category"
+        }
+      ]
+    },
+    {
+      "type": "rich-text",
+      "name": "t:sections.faq.blocks.rich_text.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.faq.blocks.rich_text.settings.title.label",
+          "default": "Rich text"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.faq.blocks.rich_text.settings.text.label",
+          "default": "<p>Use this section for any descriptive text you need to fill out your pages or to add introductory headings between other blocks.</p>"
+        },
+        {
+          "type": "select",
+          "id": "align_text",
+          "label": "t:sections.faq.blocks.rich_text.settings.align_text.label",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "t:sections.faq.blocks.rich_text.settings.align_text.options.left.label" },
+            { "value": "center", "label": "t:sections.faq.blocks.rich_text.settings.align_text.options.center.label" },
+            { "value": "right", "label": "t:sections.faq.blocks.rich_text.settings.align_text.options.right.label" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "t:sections.faq.blocks.question.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.faq.blocks.question.settings.title.label",
+          "default": "Frequently asked question"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.faq.blocks.question.settings.text.label",
+          "default": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.faq.presets.faq.name",
+      "settings": {
+        "title": "Frequently Asked Questions",
+        "enable_groups": true,
+        "questions_visible": 3,
+        "desktop_columns": "2"
+      },
+      "blocks": [
+        { "type": "category", "settings": { "title": "Category name" } },
+        { "type": "question" },
+        { "type": "question" },
+        { "type": "question" },
+        { "type": "question" }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["footer", "header", "custom.popups"]
+  }
+}
+{% endschema %}

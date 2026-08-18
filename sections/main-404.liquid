@@ -1,0 +1,171 @@
+<div id="err404-{{ section.id }}" class="err404">
+  <div class="err404__inner">
+    <div class="err404__bg" aria-hidden="true">404</div>
+    <div class="err404__content">
+      <h1 class="err404__title">
+      {%- if section.settings.heading != blank -%}{{ section.settings.heading | escape }}{%- else -%}{{ 'general.404.title' | t }}{%- endif -%}
+    </h1>
+
+    <div class="rte err404__text">
+      {%- if section.settings.subtext != blank -%}
+        {{ section.settings.subtext }}
+      {%- else -%}
+        {{ 'general.404.subtext_html' | t: url: routes.root_url }}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_search -%}
+      <form action="{{ routes.search_url }}" method="get" role="search" class="err404__search">
+        <input type="search" name="q" value="{{ search.terms | escape }}"
+               placeholder="{{ section.settings.search_placeholder | escape }}"
+               aria-label="{{ section.settings.search_placeholder | escape }}">
+        <input type="hidden" name="type" value="product">
+        <button type="submit" class="btn">Search</button>
+      </form>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank or section.settings.button2_label != blank -%}
+      <div class="err404__btns">
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link | default: routes.root_url }}" class="btn">{{ section.settings.button_label | escape }}</a>
+        {%- endif -%}
+        {%- if section.settings.button2_label != blank -%}
+          <a href="{{ section.settings.button2_link | default: routes.root_url }}" class="btn btn--secondary">{{ section.settings.button2_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    </div>
+  </div>
+
+  {%- assign coll = collections[section.settings.collection] -%}
+  {%- if section.settings.collection == blank or coll.products_count == 0 -%}
+    {%- assign coll = collections.all -%}
+  {%- endif -%}
+  {%- if coll.products_count > 0 -%}
+    <div class="err404__products page-width">
+      {%- if section.settings.products_heading != blank -%}
+        <p class="err404__eyebrow">{{ section.settings.products_heading | escape }}</p>
+      {%- endif -%}
+      <div class="err404__grid" style="--cols:{{ section.settings.per_row }};">
+        {%- for product in coll.products limit: section.settings.products_count -%}
+          <a class="err404__card" href="{{ product.url }}">
+            <div class="err404__card-media">
+              {%- if product.featured_image -%}
+                <img src="{{ product.featured_image | image_url: width: 600 }}"
+                     srcset="{{ product.featured_image | image_url: width: 300 }} 300w, {{ product.featured_image | image_url: width: 600 }} 600w"
+                     sizes="(min-width:990px) 22vw, (min-width:750px) 30vw, 45vw"
+                     alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                     loading="lazy" width="600" height="800">
+              {%- endif -%}
+            </div>
+            <div class="err404__card-title">{{ product.title | escape }}</div>
+            <div class="err404__card-price">
+              {%- if product.compare_at_price > product.price -%}
+                <span class="err404__price-sale">{{ product.price | money }}</span>
+                <s class="err404__price-was">{{ product.compare_at_price | money }}</s>
+              {%- else -%}
+                {{ product.price | money }}
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+      <div class="err404__shopmore">
+        <a href="{{ coll.url }}" class="btn">{{ section.settings.shop_more_label | default: 'Shop more' | escape }}</a>
+      </div>
+    </div>
+  {%- endif -%}
+
+</div>
+
+<style>
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+
+  #err404-{{ section.id }}{ position:relative; overflow:hidden; text-align:center; padding:64px 0 72px; }
+  #err404-{{ section.id }} .err404__inner{ position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px; }
+  #err404-{{ section.id }} .err404__bg{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    font-family:{{ section.settings.heading_font.family }}, sans-serif;
+    font-weight:900; font-size:clamp(9rem,34vw,22rem); line-height:1; white-space:nowrap;
+    color:{{ section.settings.accent }}; opacity:.07; pointer-events:none; z-index:0;
+  }
+  #err404-{{ section.id }} .err404__content{ position:relative; z-index:1; }
+  #err404-{{ section.id }} .err404__title{
+    font-family:{{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    font-weight:{{ section.settings.heading_font.weight }};
+    font-size:clamp(2rem,6vw,3.6rem); line-height:1.06; letter-spacing:.01em; margin:0 0 14px;
+  }
+  #err404-{{ section.id }} .err404__text{ color:#666; font-size:clamp(.95rem,2.4vw,1.05rem); line-height:1.55; margin:0 auto 26px; max-width:520px; }
+  #err404-{{ section.id }} .err404__search{ max-width:460px; margin:0 auto 24px; display:flex; align-items:stretch; background:#fff; border:1px solid #dcdcdc; border-radius:999px; overflow:hidden; }
+  #err404-{{ section.id }} .err404__search input[type=search]{ flex:1; min-width:0; border:0; background:transparent; padding:14px 20px; font-size:15px; outline:none; }
+  #err404-{{ section.id }} .err404__btns{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+  #err404-{{ section.id }} .err404__search:focus-within{ border-color:#E92E30; }
+  #err404-{{ section.id }} .err404__search .btn{ background:#E92E30; border:0; border-radius:0; color:#fff; padding:0 28px; white-space:nowrap; }
+  #err404-{{ section.id }} .err404__search .btn:hover{ background:#c81f21; }
+
+  #err404-{{ section.id }} .err404__btns .btn,
+  #err404-{{ section.id }} .err404__shopmore .btn{
+    background:#E92E30; border:2px solid #E92E30; color:#fff; border-radius:6px;
+    padding:13px 30px; transition:background .2s ease, color .2s ease;
+  }
+  #err404-{{ section.id }} .err404__btns .btn:hover,
+  #err404-{{ section.id }} .err404__shopmore .btn:hover{ background:#fff; color:#E92E30; }
+
+  #err404-{{ section.id }} .err404__btns .btn--secondary{ background:#fff; color:#E92E30; }
+  #err404-{{ section.id }} .err404__btns .btn--secondary:hover{ background:#E92E30; color:#fff; }
+  #err404-{{ section.id }} .err404__products{ position:relative; z-index:1; margin-top:56px; }
+  #err404-{{ section.id }} .err404__eyebrow{ font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:#999; margin:0 0 20px; }
+  #err404-{{ section.id }} .err404__shopmore{ text-align:center; margin-top:28px; }
+
+  #err404-{{ section.id }} .err404__grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:22px 16px; text-align:left;
+  }
+  @media (min-width:750px) and (max-width:989px){
+    #err404-{{ section.id }} .err404__grid{ grid-template-columns:repeat(3,1fr); }
+  }
+  @media (min-width:990px){
+    #err404-{{ section.id }} .err404__grid{ grid-template-columns:repeat(var(--cols,4),1fr); }
+  }
+  #err404-{{ section.id }} .err404__card{ display:block; text-decoration:none; color:inherit; }
+  #err404-{{ section.id }} .err404__card-media{ aspect-ratio:3/4; overflow:hidden; background:#f2f2f2; border-radius:6px; }
+  #err404-{{ section.id }} .err404__card-media img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .45s ease; }
+  #err404-{{ section.id }} .err404__card:hover .err404__card-media img{ transform:scale(1.04); }
+  #err404-{{ section.id }} .err404__card-title{ font-size:14px; line-height:1.35; margin:10px 0 4px; }
+  #err404-{{ section.id }} .err404__card-price{ font-size:14px; color:#333; }
+  #err404-{{ section.id }} .err404__price-was{ color:#999; margin-left:6px; font-size:13px; }
+  #err404-{{ section.id }} .err404__price-sale{ color:#E92E30; }
+
+  @media (max-width:600px){
+    #err404-{{ section.id }}{ padding:44px 0 52px; }
+    #err404-{{ section.id }} .err404__btns{ flex-direction:column; }
+    #err404-{{ section.id }} .err404__btns .btn{ width:100%; }
+    #err404-{{ section.id }} .err404__products{ margin-top:40px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "t:sections.main-404.name",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Well, this is awkward" },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n9", "info": "Try Archivo, Anton, or Abril Fatface for more character" },
+    { "type": "color", "id": "accent", "label": "Big 404 backdrop color", "default": "#E92E30" },
+    { "type": "richtext", "id": "subtext", "label": "Message", "default": "<p>The page you wanted does not exist, but your next favourite shirt definitely does. Let us get you to it.</p>" },
+    { "type": "header", "content": "Search" },
+    { "type": "checkbox", "id": "show_search", "label": "Show search bar", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search for products" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary button label", "default": "Shop new arrivals" },
+    { "type": "url", "id": "button_link", "label": "Primary button link" },
+    { "type": "text", "id": "button2_label", "label": "Secondary button label", "default": "Back to safety" },
+    { "type": "url", "id": "button2_link", "label": "Secondary button link" },
+    { "type": "header", "content": "Product showcase" },
+    { "type": "text", "id": "products_heading", "label": "Showcase heading", "default": "While you're here" },
+    { "type": "collection", "id": "collection", "label": "Collection to show", "info": "Products shown here, and the Shop more button, both point to this collection" },
+    { "type": "range", "id": "products_count", "label": "Products to show", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "range", "id": "per_row", "label": "Products per row (desktop)", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "text", "id": "shop_more_label", "label": "Shop more button label", "default": "Shop more" }
+  ]
+}
+{% endschema %}

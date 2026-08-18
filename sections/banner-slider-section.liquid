@@ -1,0 +1,353 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+      background-color: {{ section.settings.color_background }};
+      color: {{ section.settings.color_text }};
+      position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .banner-desktop {
+      display: block;
+      width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .banner-mobile {
+      display: none;
+      width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .banner-picture,
+  #shopify-section-{{ section.id }} .banner-picture img {
+      width: 100%;
+      height: auto;
+      display: block;
+  }
+
+  @media only screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} {
+          padding-top: {{ section.settings.mobile_padding_top }}px;
+          padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+      }
+
+      #shopify-section-{{ section.id }} .banner-desktop {
+          display: none;
+      }
+
+      #shopify-section-{{ section.id }} .banner-mobile {
+          display: block;
+      }
+  }
+
+  /* changes for pagination  */
+  #shopify-section-{{ section.id }} .swiper-pagination {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 5;
+  }
+  #shopify-section-{{ section.id }} .swiper-pagination-bullet {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    opacity: 1;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .swiper-pagination-bullet-active {
+    background: #ffffff;
+  }
+
+  /* arrow navigation - bare white chevron, visible on light and dark */
+  #shopify-section-{{ section.id }} .banner-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 6;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .banner-nav:hover {
+    opacity: 0.7;
+  }
+  #shopify-section-{{ section.id }} .banner-nav:active {
+    transform: translateY(-50%) scale(0.9);
+  }
+  #shopify-section-{{ section.id }} .banner-nav:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  #shopify-section-{{ section.id }} .banner-nav svg {
+    width: 30px;
+    height: 30px;
+    display: block;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.55)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+  }
+  #shopify-section-{{ section.id }} .banner-nav-prev {
+    left: 18px;
+  }
+  #shopify-section-{{ section.id }} .banner-nav-next {
+    right: 18px;
+  }
+  #shopify-section-{{ section.id }} .banner-nav.swiper-button-disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+  @media only screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} .banner-nav {
+      width: 40px;
+      height: 40px;
+    }
+    #shopify-section-{{ section.id }} .banner-nav svg {
+      width: 24px;
+      height: 24px;
+    }
+    #shopify-section-{{ section.id }} .banner-nav-prev {
+      left: 8px;
+    }
+    #shopify-section-{{ section.id }} .banner-nav-next {
+      right: 8px;
+    }
+  }
+{% endstyle %}
+
+<div class="relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
+  <div class="swiper banner-swiper">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+        <div class="swiper-slide banner-here">
+         {%- assign banner_name = block.settings.banner_alt -%}
+{%- if banner_name == blank -%}{%- assign banner_name = block.settings.banner_link | split: '/collections/' | last | replace: '-', ' ' | strip | capitalize -%}{%- endif -%}
+{%- if banner_name == blank -%}{%- assign banner_name = 'The Bear House - banner' -%}{%- endif -%}
+<a href="{{ block.settings.banner_link }}" aria-label="{{ banner_name | escape }}">
+            {% comment %}
+              <div class="banner-desktop">
+                {% if block.settings.desktop_banner != blank %}
+                  {{ block.settings.desktop_banner
+                    | image_url: width: 2000
+                    | image_tag:
+                        loading: 'eager',
+                        fetchpriority: 'high',
+                        alt: block.settings.banner_alt
+                  }}
+                {% else %}
+                  {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+              </div>
+
+              <div class="banner-mobile">
+                {% if block.settings.mobile_banner != blank %}
+                  {{ block.settings.mobile_banner
+                    | image_url: width: 800
+                    | image_tag:
+                        loading: 'eager',
+                        fetchpriority: 'high',
+                        alt: block.settings.banner_alt
+                  }}
+                {% else %}
+                  {% if block.settings.desktop_banner != blank %}
+                    {{ block.settings.desktop_banner
+                      | image_url: width: 800
+                      | image_tag:
+                          loading: 'eager',
+                          fetchpriority: 'high',
+                          alt: block.settings.banner_alt
+                    }}
+                  {% else %}
+                    {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endcomment %}
+
+            <picture class="banner-picture">
+              {% if block.settings.desktop_banner != blank %}
+                <source
+                  media="(min-width: 769px)"
+                  srcset="
+                    {{ block.settings.desktop_banner | image_url: width: 1000 }} 1000w,
+                    {{ block.settings.desktop_banner | image_url: width: 1400 }} 1400w,
+                    {{ block.settings.desktop_banner | image_url: width: 1800 }} 1800w,
+                    {{ block.settings.desktop_banner | image_url: width: 2000 }} 2000w
+                  "
+                  sizes="100vw"
+                >
+              {% endif %}
+              {% assign _m = block.settings.mobile_banner | default: block.settings.desktop_banner %}
+              {% if _m != blank %}
+                {{
+                  _m
+                  | image_url: width: 800
+                  | image_tag:
+                    widths: '500, 800, 1000',
+                    sizes: '100vw',
+                    loading: 'eager',
+                    fetchpriority: 'high',
+                    alt: block.settings.banner_alt
+                }}
+              {% else %}
+                {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </picture>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    {% comment %} changes for pagination  {% endcomment %}
+    <div class="swiper-pagination"></div>
+    {% comment %} end changes  {% endcomment %}
+  </div>
+
+  {% comment %} arrow navigation {% endcomment %}
+  {% if section.blocks.size > 1 %}
+    <button type="button" class="banner-nav banner-nav-prev" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button type="button" class="banner-nav banner-nav-next" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  {% endif %}
+  {% comment %} end arrow navigation {% endcomment %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.banner-swiper', {
+      slidesPerView: 1,
+      loop: true,
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+      speed: 1000, //changes for pagination
+      pagination: { el: '.swiper-pagination', clickable: true },
+      navigation: { nextEl: '.banner-nav-next', prevEl: '.banner-nav-prev' }, //changes for arrows
+    }); //end changes
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Banner slider Section",
+  "class": "index-section banner-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom Class"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Padding Bottom",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Mobile Spacing"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Padding Bottom",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text Color"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "Background Color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "desktop_banner",
+          "label": "Desktop Banner"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_banner",
+          "label": "Mobile Banner"
+        },
+        {
+          "type": "text",
+          "id": "banner_alt",
+          "label": "Alt text"
+        },
+        {
+          "type": "url",
+          "id": "banner_link",
+          "label": "Banner link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner slider Section"
+    }
+  ]
+}
+{% endschema %}

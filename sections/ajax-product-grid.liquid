@@ -1,0 +1,25 @@
+{% comment %}
+  Helper section for on-demand product loading in Collection Tab V2.
+  Fetched by JavaScript via:
+    /collections/{handle}?section_id=ajax-product-grid&page={n}
+
+  It renders ONLY product cards (no wrapper markup), using the same
+  product-grid-item snippet the main section uses, so cards look identical.
+  PER_PAGE here (by 8) MUST match:
+    - the `limit: 8` in Collection_tab_V2 (first tab server render)
+    - the PER_PAGE constant in the Collection_tab_V2 script
+{% endcomment %}
+
+{% paginate collection.products by 10 %}
+  {% for product in collection.products %}
+    <div class="swipers-slide-inside new-product-card" data-index="{{ forloop.index }}">
+      {%- render 'product-grid-item', product: product, quick_shop_enable: settings.quick_shop_enable -%}
+    </div>
+  {% endfor %}
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "AJAX Product Grid"
+}
+{% endschema %}

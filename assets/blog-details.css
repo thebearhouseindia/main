@@ -1,0 +1,191 @@
+
+.blog-details-page.page-width.page-width--narrow.page-content {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: unset;
+}
+h1.dtl-title.section-header__title {
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 130%;
+    text-transform: uppercase;
+    max-width: 844px;
+    text-align: center;
+    margin: 0 auto;
+}
+.main-content.article__body.rte img{width:100%;margin-top:24px;}
+.article-imag-wrap img {
+    width: 100%;
+}
+.main-content.article__body.rte div img {
+    width: 100%;
+    object-fit: cover;
+}
+.main-content.article__body.rte div {
+    text-align: left !important;
+}
+.head-things {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.read-time-div {
+    display: flex;
+    align-items: center;
+    font-family: 'Roboto';
+font-weight: 300;
+font-style: Light;
+font-size: 14px;
+line-height: 140%;
+text-transform: uppercase;
+}
+.read-time .article__date {
+    margin: 0;
+}
+.blog-details-page header.section-header
+ {
+margin: 0 0 0px;
+ border-bottom: 1px solid #3F3F3F14;
+    padding-bottom: 20px;
+}
+.read-time {
+  position: relative;
+  padding-left:8px; 
+  font-family: 'Roboto';
+font-weight: 300;
+font-style: Light;
+font-size: 14px;
+line-height: 140%;
+text-transform: uppercase;
+}
+
+.read-time::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+width: 1px;
+height: 16px;
+transform: translateY(-50%);
+background:#3F3F3F33;
+
+}
+.blog-details-page .section-header .article__date {
+    margin-bottom: 0px;
+}
+.read-time-div .article__date time{
+font-family: 'Roboto';
+font-weight: 300;
+font-style: Light;
+font-size: 14px;
+line-height: 140%;
+letter-spacing: 0%;
+text-transform: uppercase;}
+.read-time-div .article__date {
+    padding: 0px 8px 0px 0px;
+}
+.main-content.article__body.rte p {
+    font-family: 'Roboto';
+    font-weight: 300;
+    font-style: Light;
+    font-size: 16px;
+    line-height: 140%;
+    color:#3F3F3FCC;
+    /* display:flex; */
+}
+.main-content.article__body h2,
+.main-content.article__body h3 {
+    font-family: 'Roboto';
+    font-weight: 400;
+    color:#3F3F3F;
+    line-height: 140%;
+}
+.main-content.article__body h3{
+    font-size: 18px;
+}
+.main-content.article__body h2{
+    font-size: 20px;
+}
+
+.rte h1, .rte h2, .rte h3, .rte h4, .rte h5, .rte h6 {
+    margin-bottom: 24px;
+    margin-top: 28px;
+}
+.rte ol, .rte p, .rte table, .rte ul {
+        margin-bottom: 24px;
+}
+.main-content.article__body ul li strong{color:#3F3F3F;}
+.main-content.article__body ul li{
+font-family: 'Roboto';
+font-weight: 300;
+font-size: 16px;
+line-height: 140%;
+letter-spacing: 0%;
+color:#3F3F3FCC;
+}
+.main-content.article__body.rte{
+  position:relative;
+}
+.main-content.article__body.rte::after{
+  content:'';
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:100%;
+  height:140px; 
+  pointer-events:none;
+}
+
+
+
+@media(max-width:768px){
+    h1.dtl-title.section-header__title {
+    font-size: 16px;
+    text-align: left;
+    max-width: 319px;
+    margin: 0px 0px 0px 0px;
+}
+.main-content.article__body.rte img{margin-top:24px;}
+
+.head-things {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    padding-bottom:16px;
+}
+.blog-details-page header.section-header {
+    margin: 0  16px !important;
+    padding: 0px 0px 0px 0px  !important;
+}
+.main-content.article__body.rte {
+        padding: 0px 16px;}
+        .main-content.article__body h2 {
+    font-size: 16px;
+}
+.main-content.article__body h3 {
+    font-size: 16px;
+    margin-top: 12px;
+}
+.rte h1, .rte h2, .rte h3, .rte h4, .rte h5, .rte h6 {
+    margin-bottom: 8px;
+    margin-top: 24px;
+}
+.rte ol, .rte p, .rte table, .rte ul {
+        margin-bottom:16px;
+}
+.blog-details-page .social-sharing__title {
+    display: inline-block;
+    font-size: calc(var(--typeBaseSize) * .85);
+    padding-left: 3px;
+    padding-right: 0px;
+    vertical-align: middle;
+}
+.main-content.article__body.rte p {
+     font-size: 14px;}
+  .main-content.article__body ul li {
+    font-size: 14px;}   
+}

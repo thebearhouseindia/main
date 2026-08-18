@@ -1,0 +1,222 @@
+{%- if section.blocks.size > 0 -%}
+{% style %}
+#shopify-section-{{ section.id }} {
+padding-top: {{ section.settings.padding_top }}px;
+padding-bottom: {{ section.settings.padding_bottom }}px;
+background-color: {{ section.settings.color_background }};
+color: {{ section.settings.color_text }};
+overflow:hidden;
+}
+.logo-section .wrap-for {
+  display: flex;
+  gap: {{ section.settings.gap | default:'48' }}px;
+  align-items: center;
+  padding: 20px 0px;
+  border-top: 1px solid rgba(63, 63, 63, 0.1);
+  border-bottom: 1px solid rgba(63, 63, 63, 0.1);
+  position: relative;
+}
+.logo-section .wrap-for:before,
+.logo-section .wrap-for:after {
+  position: absolute;
+  content: "";
+  top: 0;
+  width: 10%;
+  height: 100%;
+  z-index: 1;
+}
+.logo-section .wrap-for:after{
+  left: 0;
+  background: linear-gradient(270deg, rgba(249, 249, 249, 0) 0%, #F9F9F9 100%);
+}
+.logo-section .wrap-for:before{
+  right: 0;
+  background: linear-gradient(90deg, rgba(249, 249, 249, 0) 0%, #F9F9F9 100%);
+}
+.logo-section .scroll-wrapper {
+    display: flex;
+    gap: {{ section.settings.gap | default:'48' }}px;
+     animation: scroll {{ section.settings.speed | default:'120' }}s linear infinite; 
+    flex: none;
+    align-items: center;
+}
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(-100% - {{ section.settings.gap | default:'48' }}px));
+    }
+}
+
+
+@media(max-width:1536px){
+.wrap-for img{
+max-width: 185px !important;
+
+}
+
+}
+@media(max-width:1440px){
+.wrap-for img{
+max-width: 165px !important;
+}
+
+}
+@media only screen and (max-width: 768px) {
+  img.imge-images {
+    max-width: 80px;
+    width: 100%;
+  }
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.mobile_padding_top }}px;
+    padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  }
+  .logo-section .wrap-for {
+    gap: 22px;
+    padding: 10px 0px;
+  }
+  .logo-section .scroll-wrapper {
+    gap: 22px;
+  }
+}
+{% endstyle %}
+
+<div gsap-fadin-anim class="relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }} {% endif %}">
+  <div class="">
+    {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+    {% endif %}
+      <div class="wrap-for">
+          {% for i in (1..4) %}
+            <div class="scroll-wrapper">
+              {% for i in (1..4) %}
+                {% for block in section.blocks %}
+                  {% if block.settings.image != blank %}
+                    <a href="{{ block.settings.link }}">
+                      <img class="imge-images"
+                          src="{{ block.settings.image | image_url }}"
+                          alt="text" width="" height="" >
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+            </div>
+          {% endfor %}
+      </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Logo marquee",
+"class": "logo-section",
+"settings": [
+{
+"type": "text",
+"id": "custom_class",
+"label": "Custom Class"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title"
+},
+{
+"type": "range",
+"id": "speed",
+"min": 20,
+"max": 400,
+"step": 10,
+"unit": "px",
+"label": "Speed",
+"default": 120
+},
+{
+"type": "range",
+"id": "gap",
+"min": 12,
+"max": 80,
+"step": 2,
+"unit": "px",
+"label": "Gap",
+"default": 48
+},
+{
+"type": "range",
+"id": "padding_top",
+"min": 0,
+"max": 120,
+"step": 2,
+"unit": "px",
+"label": "Desktop Padding Top",
+"default": 36
+},
+{
+"type": "range",
+"id": "padding_bottom",
+"min": 0,
+"max": 120,
+"step": 2,
+"unit": "px",
+"label": "Desktop Padding Bottom",
+"default": 36
+},
+{
+"type": "range",
+"id": "mobile_padding_top",
+"min": 0,
+"max": 120,
+"step": 2,
+"unit": "px",
+"label": "Mobile Padding Top",
+"default": 20
+},
+{
+"type": "range",
+"id": "mobile_padding_bottom",
+"min": 0,
+"max": 120,
+"step": 2,
+"unit": "px",
+"label": "Mobile Padding Bottom",
+"default": 20
+},
+{
+"type": "color",
+"id": "color_text",
+"label": "Text Color"
+},
+{
+"type": "color",
+"id": "color_background",
+"label": "Background Color"
+}
+],
+"blocks": [
+{
+"type": "block",
+"name": "Block",
+"settings": [
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image"
+},
+{
+  "type": "url",
+  "id": "link",
+  "label": "Image Link"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Logo marquee",
+}
+]
+}
+{% endschema %}

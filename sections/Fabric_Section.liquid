@@ -1,0 +1,329 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.color_background }};
+    color: {{ section.settings.color_text }};
+    overflow:hidden;
+    position:relative;
+    {% if section.settings.check == true %}
+        border-top:1px solid #3F3F3F26;
+    {% endif %}
+}
+.block-with-icon-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.icon-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 24px;
+    border-right: 1px solid #00000014;
+}
+
+img.icon_image {
+    width: 24px;
+    height: 24px;
+}
+
+.icon-text {
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+.progress-sub-text {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: 0;
+}
+
+.progress-text {
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 140%;
+    letter-spacing: 0;
+}
+
+.block-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding-top: 18px;
+    position: relative;
+    justify-content: flex-start;
+    max-width: 270px;
+}
+.icon-block:last-child {
+    padding: 0;
+    border: none;
+}
+.block-with-progress-wrap {
+    display: flex;
+    justify-content: space-between;
+    margin: 90px auto 0px;
+    position: relative;
+    max-width: 1560px;
+}
+
+.block-progress:before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    width: 12px;
+    height: 12px;
+    background: #3F3F3F;
+}
+
+.block-with-progress-wrap:before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    width: 85%;
+    left: 6%;
+    background: #0000001A;
+    height: 1px;
+    right: auto;
+}
+@media only screen and (max-width: 1660px) {
+    .block-with-progress-wrap:before {
+        width: 83%;
+        left: 7%;
+    }
+}
+@media only screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+        padding-top: {{ section.settings.mobile_padding_top }}px;
+        padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+        .fixed-container{
+            padding: 0 16px;
+        }
+    }
+    .block-with-icon-wrap {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .icon-block {
+        padding-right: 12px;
+        gap: 10px;
+    }
+
+    img.icon_image {
+        width: 20px;
+        height: 20px;
+    }
+    .icon-block:nth-child(2) {
+        padding-right: 0;
+        border-right: 0;
+    }
+
+    .block-with-progress-wrap {
+        margin: 0;
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+    }
+    .block-progress {
+        text-align: left;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding-top: 0;
+        padding-left: 20px;
+        max-width: 100%;
+    }
+    .block-progress:before {
+        top: 4px;
+        left: 0;
+        width: 8px;
+        height: 8px;
+    }
+    .block-with-progress-wrap:before {
+        left: 3px;
+        width: 2px;
+        height: 82%;
+        top: 10px;
+    }
+}
+@media only screen and (max-width: 600px) {
+    .icon-text {
+        font-size: 12px;
+    }
+    .progress-text {
+        font-size: 14px;
+    }
+    .progress-sub-text {
+        font-size: 12px;
+    }
+}
+{% endstyle %}
+<div class="section-relative{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }} {% endif %}">
+    <div class="fixed-container">
+        <div data-fade class="flex-center-block">
+            <h2>{{ section.settings.text }}</h2>
+        </div>
+        <div class="block-with-icon-wrap">
+            {% for block in section.blocks %}
+                {% case block.type %}
+                    {% when 'icon_card' %}
+                    <div data-fade class="icon-block">
+                        <img class="icon_image" src="{{ block.settings.image | img_url: 'master' }}" width="" height="" alt="{{ block.settings.image.alt }}">
+                        <div class="icon-text">{{ block.settings.text }}</div>
+                    </div>
+                {% endcase %}
+            {% endfor %}
+        </div>
+        <div data-fade class="block-with-progress-wrap">
+            {% for block in section.blocks %}
+                {% case block.type %}
+                    {% when 'progress_card' %}
+                    <div class="block-progress">
+                        <div class="progress-sub-text">{{ block.settings.text }}</div>
+                        <div class="progress-text">{{ block.settings.text1 }}</div>
+                    </div>
+                {% endcase %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+{% schema %}
+{
+"name": "Fabric Section",
+"class": "fabric_section",
+"settings": [
+{
+"type": "text",
+"id": "custom_class",
+"label": "Custom Class"
+},
+{
+"type": "text",
+"id": "text",
+"label": "Title"
+},
+{
+"type": "checkbox",
+"id": "check",
+"label": "Border Top"
+},
+{
+"type": "range",
+"id": "range",
+"min": 2,
+"max": 16,
+"step": 1,
+"unit": "px",
+"label": "Product Pre View",
+"default": 10
+},
+{
+"type": "range",
+"id": "padding_top",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Top",
+"default": 36
+},
+{
+"type": "range",
+"id": "padding_bottom",
+"min": 0,
+"max": 120,
+"step": 4,
+"unit": "px",
+"label": "Desktop Padding Bottom",
+"default": 36
+},
+{
+"type": "range",
+"id": "mobile_padding_top",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Top",
+"default": 20
+},
+{
+"type": "range",
+"id": "mobile_padding_bottom",
+"min": 0,
+"max": 52,
+"step": 4,
+"unit": "px",
+"label": "Mobile Padding Bottom",
+"default": 20
+},
+{
+"type": "color",
+"id": "color_text",
+"label": "Text Color"
+},
+{
+"type": "color",
+"id": "color_background",
+"label": "Background Color"
+}
+],
+"blocks": [
+    {
+        "type": "icon_card",
+        "name": "Icon Card",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Icon"
+            },
+            {
+                "type": "text",
+                "id": "text",
+                "label": "Text"
+            },
+        ]
+    },
+    {
+        "type": "progress_card",
+        "name": "Progress Card",
+        "settings": [
+            {
+                "type": "text",
+                "id": "text",
+                "label": "Subtext"
+            },
+            {
+                "type": "text",
+                "id": "text1",
+                "label": "Text"
+            },
+        ]
+    }
+],
+"presets": [
+{
+"name": "Fabric Section",
+}
+]
+}
+{% endschema %}

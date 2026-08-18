@@ -1,0 +1,368 @@
+{{ 'searchtap-collection-template.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'pdp-tlpc.css' | asset_url | stylesheet_tag: preload: true }}
+<div
+  class="collection-content"
+  data-section-id="{{ section.id }}"
+  data-section-type="collection-grid"
+>
+  <div id="CollectionAjaxContent">
+    <div id="collectionmodalcontainer">
+      <div class="st-collection-content">
+        <div class="page-width collection-new-style" style="max-width: unset;">
+          <searchtap></searchtap>
+          <div class="grid searchtap-temp">
+            <!-- <initial-bubble-filters></initial-bubble-filters> -->
+            <!-- <initial-toolbox-bar></initial-toolbox-bar> -->
+            <div class="grid__item medium-up--one-fifth grid__item--sidebar">
+              <initial-search-filters></initial-search-filters>
+            </div>
+            <div class="grid__item medium-up--four-fifths grid__item--content">
+              {%- liquid
+                for block in section.blocks
+                  case block.type
+                    when 'product_grid'
+                      assign paginate_by = block.settings.per_row | times: block.settings.rows_per_page
+                      assign paginate_by = 32
+                  endcase
+                endfor
+              -%}
+              {%- paginate collection.products by paginate_by -%}
+                {%- for block in section.blocks -%}
+                  <div
+                    {{ block.shopify_attributes }}
+                    {%- if block.type == 'product-grid' -%}
+                      data-scroll-to
+                    {%- endif -%}
+                  >
+                    {%- case block.type -%}
+                      {%- when 'collection_description' -%}
+                        {%- if collection.description != blank and current_filter_size == 0 -%}
+                          <div class="rte collection__description">
+                            {{ collection.description }}
+                          </div>
+                        {%- endif -%}
+                      {%- when 'subcollections' -%}
+                        {%- if paginate.current_page == 1 and current_filter_size == 0 -%}
+                          {%- render 'subcollections', per_row: block.settings.subcollections_per_row -%}
+                        {%- endif -%}
+                      {%- when 'product_grid' -%}
+                        <div data-scroll-to>
+                      
+                          {% render 'searchtap-collection-grid',
+                            collection: collection,
+                            items: collection.products,
+                            enable_sidebar: section.settings.enable_sidebar,
+                            filter_style: section.settings.filter_style,
+                            enable_sort: section.settings.enable_sort,
+                            enable_collection_count: block.settings.enable_collection_count,
+                            per_row: block.settings.per_row,
+                            mobile_flush_grid: block.settings.mobile_flush_grid,
+                            quick_shop_enable: settings.quick_shop_enable
+                          %}
+                          {%- if paginate.pages > 1 -%}
+                            <div id="Pagination">
+                              {% if paginate.next %}
+                                <div class="st-collection-load-more-btn">
+                                  <button class="load-more-btn" data-url="{{ paginate.next.url }}" onclick="onClickCollectionPagination(this, event)">Load More Products</button>
+                                </div>
+                                {% comment %} <button
+                                  class="btn btn-outline-primary d-inline-flex align-items-center mt-5 mb-0"
+                                  data-url="{{ paginate.next.url }}"
+                                  onclick="onClickCollectionPagination(this, window.event || event)"
+                                >
+                                  <div class="st-results-loader">
+                                    <div class="result-loading" style="text-align: center"></div>
+                                  </div>
+                                </button> {% endcomment %}
+                              {% else %}
+                                <div class="result-ends" style=""><span>Results End Here</span></div>
+                              {% endif %}
+                            </div>
+                          {%- endif -%}
+                        </div>
+                    {%- endcase -%}
+                  </div>
+                {%- endfor -%}
+              {%- endpaginate -%}
+            </div>
+
+            <div
+              class="st-collection-scroll-top st-fixed st-text-center st-bottom-[130px] st-left-auto st-right-[15px] st-w-[40px] st-h-[40px] st-text-[27px] st-transition-[transform_0.3s,visibility_0.3s,opacity_0.3s] st-text-white st-rounded-[5px] st-z-[2] st-border-2 st-border-[#000] st-border-solid st-leading-[60px] st-bg-[#000] st-cursor-pointer st-flex st-items-center st-justify-center st-shadow-[0_1px_9px_#00000075]"
+              style="display: none;"
+            >
+              <i class="bx bx-chevron-up st-text-[27px] st-text-[#fff]"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.onClickCollectionPagination = async (button, event) => {
+      event.preventDefault();
+      // Prevent multiple clicks
+      if (button.classList.contains('loading')) return;
+      button.classList.add('loading');
+      const originalText = button.innerHTML;
+
+      // Add loader
+      button.innerHTML = `
+        <span class="st-results-loader"></span>
+      `;
+      let nextURL = new URL(button.getAttribute('data-url'), window.location.origin);
+      const currentURL = new URL(window.location.href);
+      // Preserve sort_by
+      if (!nextURL.searchParams.has("sort_by")) {
+        if (currentURL.searchParams.has("sort_by")) {
+          nextURL.searchParams.set(
+            "sort_by",
+            currentURL.searchParams.get("sort_by")
+          );
+        } else {
+          nextURL.searchParams.set("sort_by", "created-descending");
+        }
+      }
+      button.setAttribute("data-url", nextURL.toString());
+      try {
+        const response = await fetch(nextURL.toString());
+        const data = await response.text();
+        const parser = new DOMParser();
+        const newDocument = parser.parseFromString(data, 'text/html');
+        // Current grid
+        const currentGrid = document.querySelector(
+          'div#collectionmodalcontainer .st-collection-content .searchtap-temp .grid__item.medium-up--four-fifths.grid__item--content .collection-grid__wrapper #main-collection-product-grid'
+        );
+        // New grid
+        const newGrid = newDocument.querySelector(
+          'div#collectionmodalcontainer .st-collection-content .searchtap-temp .grid__item.medium-up--four-fifths.grid__item--content .collection-grid__wrapper #main-collection-product-grid'
+        );
+        if (currentGrid && newGrid) {
+          currentGrid.insertAdjacentHTML('beforeend', newGrid.innerHTML);
+        }
+        // AOS animation fix
+        const newImageElements = document.querySelectorAll('image-element[data-aos]');
+        newImageElements.forEach((element) => {
+          element.classList.add('aos-init', 'aos-animate');
+        });
+        // Replace pagination with next pagination
+        const currentPagination = document.querySelector('#Pagination');
+        const newPagination = newDocument.querySelector('#Pagination');
+        if (currentPagination && newPagination) {
+          currentPagination.replaceWith(newPagination);
+        } else if (currentPagination) {
+          // No more pages
+          currentPagination.remove();
+        }
+        // Custom events
+        window.dispatchEvent(
+          new CustomEvent('st.collection.paginated')
+        );
+        button.dispatchEvent(
+          new CustomEvent('ks.collection.paginated')
+        );
+      } catch (error) {
+        console.error('Pagination Error:', error);
+        button.innerHTML = originalText;
+      } finally {
+        button.classList.remove('loading');
+        if (document.body.contains(button)) {
+          button.innerHTML = originalText;
+        }
+      }
+    };
+    {% comment %} window.onClickCollectionPagination = async (button, event) => {
+      event.preventDefault();
+      let nextURL = new URL(button.getAttribute('data-url'), window.location.origin);
+      const currentURL = new URL(window.location.href);
+      if (!nextURL.searchParams.has("sort_by")) {
+        if (currentURL.searchParams.has("sort_by")) {
+          nextURL.searchParams.set("sort_by", currentURL.searchParams.get("sort_by"));
+        } else {
+          nextURL.searchParams.set("sort_by", "created-descending");
+        }
+      }
+
+      button.setAttribute("data-url", nextURL.toString());
+
+      const response = await fetch(button.getAttribute('data-url'));
+      const data = await response.text();
+      const parser = new DOMParser();
+      const newDocument = parser.parseFromString(data, 'text/html');
+
+      document
+        .querySelector('div#collectionmodalcontainer .st-collection-content .searchtap-temp .grid__item.medium-up--four-fifths.grid__item--content .collection-grid__wrapper #main-collection-product-grid')
+        .insertAdjacentHTML('beforeend', newDocument.querySelector('div#collectionmodalcontainer .st-collection-content .searchtap-temp .grid__item.medium-up--four-fifths.grid__item--content .collection-grid__wrapper #main-collection-product-grid').innerHTML);
+    
+        const newImageElements = document.querySelectorAll('image-element[data-aos]');
+        newImageElements.forEach(function (element) {
+          // console.log('element',element)
+          element.classList.add('aos-init', 'aos-animate');
+        });
+      document
+        .querySelector('#Pagination')
+        .replaceWith(newDocument.querySelector('#Pagination'));
+
+      {% comment %} window.observer1.observe(document.querySelector('#Pagination')); {% endcomment %}
+
+      const customEvent = new CustomEvent('ks.collection.paginated');
+      const customEvent2 = new CustomEvent('st.collection.paginated');
+      window.dispatchEvent(customEvent2);
+      button.dispatchEvent(customEvent);
+    }; {% endcomment %}
+    {% comment %} const target = document.querySelector('#Pagination');
+    
+    if (target) {
+      window.observer1 = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (document.querySelector('#Pagination .btn'))
+              document.querySelector('#Pagination .btn').click();
+          }
+        });
+      });
+
+      window.observer1.observe(target);
+      
+      window.onClickCollectionPagination = async (button, event) => {
+        event.preventDefault();
+
+        let nextURL = new URL(button.getAttribute('data-url'), window.location.origin);
+
+        const currentURL = new URL(window.location.href);
+
+        if (!nextURL.searchParams.has("sort_by")) {
+          if (currentURL.searchParams.has("sort_by")) {
+            nextURL.searchParams.set("sort_by", currentURL.searchParams.get("sort_by"));
+          } else {
+            nextURL.searchParams.set("sort_by", "created-descending");
+          }
+        }
+
+        button.setAttribute("data-url", nextURL.toString());
+
+        button.style.width = `${button.offsetWidth}px`;
+        button.style.height = `${button.offsetHeight}px`;
+        button.innerHTML = `
+          
+        <div class="st-results-loader"><div class="result-loading" style="text-align: center">
+        <span class="st-spinner"></span></div></div>
+
+      `;
+
+        const response = await fetch(button.getAttribute('data-url'));
+        const data = await response.text();
+        const parser = new DOMParser();
+        const newDocument = parser.parseFromString(data, 'text/html');
+
+        document
+          .querySelector('div#collectionmodalcontainer .st-collection-content .searchtap-temp .grid__item.medium-up--four-fifths.grid__item--content .collection-grid__wrapper #main-collection-product-grid')
+          .insertAdjacentHTML('beforeend', newDocument.querySelector('div#collectionmodalcontainer .st-collection-content .searchtap-temp .grid__item.medium-up--four-fifths.grid__item--content .collection-grid__wrapper #main-collection-product-grid').innerHTML);
+    
+          const newImageElements = document.querySelectorAll('image-element[data-aos]');
+          newImageElements.forEach(function (element) {
+            // console.log('element',element)
+            element.classList.add('aos-init', 'aos-animate');
+          });
+        
+        
+
+        document
+          .querySelector('#Pagination')
+          .replaceWith(newDocument.querySelector('#Pagination'));
+
+        window.observer1.observe(document.querySelector('#Pagination'));
+
+        const customEvent = new CustomEvent('ks.collection.paginated');
+        const customEvent2 = new CustomEvent('st.collection.paginated');
+        window.dispatchEvent(customEvent2);
+        button.dispatchEvent(customEvent);
+      };
+    }  {% endcomment %}
+    let backToTop = document.querySelector('.st-collection-scroll-top');
+    window.addEventListener('scroll', () => {
+        if(backToTop && window.scrollY > 250){
+          backToTop.style.display = "flex";
+        }
+        else if(backToTop && window.scrollY <= 250){
+          backToTop.style.display = "none";
+        }
+        });
+        backToTop.addEventListener('click', () => {
+      let scrollToPosition = document.querySelector('.category-section-clp') ? 500 : 0;
+      window.scrollTo({ top: scrollToPosition, behavior: 'smooth' });
+    });
+
+    let gridChangerButtons = document.querySelectorAll('.st-grid-changer button');
+    gridChangerButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        let scrollToPosition = document.querySelector('.category-section-clp') ? 500 : 0;
+        window.scrollTo({ top: scrollToPosition, behavior: 'smooth' });
+      });
+    });
+    
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const url = new URL(window.location.href);
+
+  const hasSortBy = url.searchParams.has('sort_by');
+  const hasCustomSort = url.searchParams.has('sort');
+  const hasFilter = Array.from(url.searchParams.keys()).some(key => key.startsWith('f.'));
+  const hasPage = url.searchParams.has('page');
+
+  const isFirstLoad = !hasSortBy && !hasCustomSort && !hasFilter && !hasPage;
+
+  if (!isFirstLoad) {
+    document.body.classList.remove("st-collection-hide");
+    return;
+  }
+
+  try {
+    const sortedUrl = url.pathname + "?sort_by=created-descending";
+
+    const response = await fetch(sortedUrl, { credentials: "same-origin" });
+
+    if (!response.ok) throw new Error("Fetch failed");
+
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    const newGrid = doc.querySelector("#main-collection-product-grid");
+    const oldGrid = document.querySelector("#main-collection-product-grid");
+
+    if (newGrid && oldGrid) {
+      oldGrid.innerHTML = newGrid.innerHTML;
+
+      if (window.AOS && typeof AOS.refreshHard === "function") {
+        AOS.refreshHard();
+      }
+    } else {
+      console.log("Grid not found — no replacement done");
+    }
+
+  } catch (err) {
+    console.error("Error applying default sort:", err);
+  } finally {
+    document.body.classList.remove("st-collection-hide");
+        if (
+      typeof hulkappsWishlistCollection !== "undefined" &&
+      typeof hulkappsWishlistCollection._loadWishlistIcon === "function"
+    ) {
+      hulkappsWishlistCollection._loadWishlistIcon();
+    }
+  }
+
+});
+</script>
+
+
+
+<script src="{{ 'searchtap-collection.js' | asset_url }}" defer></script>

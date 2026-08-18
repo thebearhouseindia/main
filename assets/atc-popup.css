@@ -1,0 +1,136 @@
+atc-popup.mb_variant-wrapper.variant-wrapper--popup {
+  width: 100%;
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  background: #D9CDC2;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  transition: bottom 0.5s ease-in-out;
+  max-height: 50vh;
+  z-index: 999;
+}
+
+.variant-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: black;
+  opacity: 0.2;
+  z-index: 99;
+}
+
+atc-popup.mb_variant-wrapper.variant-wrapper--popup.open {
+  bottom: 0px;
+}
+
+atc-popup .mb_variant-list {
+  border-top: 1px solid;
+  border-color: var(--colorBorder);
+  height: 100%;
+  overflow-y: hidden;
+  transition: height 0.3s ease-in;
+}
+
+.z_i-0 {
+  z-index: 0;
+}
+
+atc-popup .ks-chart-container.sizing-chart-container {
+  position: absolute;
+  top: -51px;
+  background: var(--colorBody);
+  margin: 0;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  width: 95%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px;
+  border-radius: 10px;
+}
+
+atc-popup .ks-chart-container.sizing-chart-container .ks-chart-modal-link.sizing-chart-modal-link {
+  display: block;
+  width: 100%;
+  padding: 0 !important;
+}
+
+atc-popup .mb_variant-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid;
+  border-color: var(--colorBorder);
+  height: 56px;
+}
+
+atc-popup .mb_variant-choose {
+  padding: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+}
+
+atc-popup .mb_variant-item:hover {
+  background-color: var(--colorBody);
+}
+
+atc-popup .mb_variant-item.unavailable {
+  color: gray;
+}
+
+atc-popup .mb_variant-item.low-stock {
+  color: #d35400;
+}
+
+atc-popup .mb_low-stock-message {
+  font-size: 12px;
+  color: #d35400;
+  font-weight: bold;
+}
+
+atc-popup .mb_out-of-stock {
+  font-size: 12px;
+  color: #555;
+}
+
+atc-popup .mb_out-of-stock a {
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+atc-popup .mb_variant-input-wrap .select_text {
+  color: red;
+  margin-bottom: 5px;
+  opacity: 0;
+}
+
+atc-popup .mb_variant-input-wrap .ks-chart-container {
+  margin: 0;
+}
+
+atc-popup .mb_variant-input-wrap .ks-chart-container .kiwi-svg {
+  display: none;
+}
+
+atc-popup .mb_variant-input-wrap .ks-chart-modal-link {
+  margin-left: -25px;
+}
+
+atc-popup .variant-popup-opener {
+  cursor: pointer;
+}
+
+atc-popup .variant-popup-opener:active + .variant-wrapper--popup,
+atc-popup .variant-popup-opener.open + .variant-wrapper--popup {
+  bottom: 0;
+}

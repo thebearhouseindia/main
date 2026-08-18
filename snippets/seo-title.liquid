@@ -1,0 +1,22 @@
+{%- comment -%}
+  SEO page title - updated 20 Jun 2026
+  Replaced shop.name (bearhouseindia) with brand name (The Bear House).
+  Uses pipe separator instead of en-dash for brand portion.
+{%- endcomment -%}
+{%- capture seo_title -%}
+  {{ page_title }}
+  {%- if current_tags -%}
+    {%- assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+  {%- endif -%}
+  {%- if current_page != 1 -%}
+    &ndash; {{ 'general.meta.page' | t: page: current_page }}
+  {%- endif -%}
+  {%- if template == 'password' -%}
+    The Bear House
+  {%- else -%}
+    {%- unless page_title contains 'The Bear House' or page_title contains 'thebearhouse' -%}
+       | The Bear House
+    {%- endunless -%}
+  {%- endif -%}
+{%- endcapture -%}
+<title>{{ seo_title }}</title>

@@ -1,0 +1,307 @@
+{% if section.blocks.size > 0 or section.settings.video != blank %}
+{% style %}
+#shopify-section-{{ section.id }} {
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  background: {{ section.settings.bg_color }};
+}
+.video-texts-section .video-texts-wrapper {
+  display: flex;
+  align-items: center;
+}
+.video-texts-section .video-box {
+  max-width: 50%;
+  width: 100%;
+}
+.video-texts-section .video-box video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.video-box-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-texts-section .content-box {
+  max-width: 50%;
+  width: 100%;
+}
+.video-texts-section .content-box p {
+  font-size: 18px;
+  line-height: 140%;
+  font-weight: 400;
+  margin: 40px 0px 100px;
+  max-width: 400px;
+  width: 100%;
+}
+.video-texts-section .marquees_text {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 140%;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+.video-texts-section .marquees-wrapper {
+  overflow: hidden;
+  position: relative;
+  max-width: 560px;
+  width: 100%;
+}
+.video-texts-section .marquees-wrapper:after,
+.video-texts-section .marquees-wrapper:before {
+    content: "";
+    position: absolute;
+    width: 10%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+}
+.video-texts-section .marquees-wrapper:after {
+   left: 0;
+   background: linear-gradient(90deg, #EDEDED 0%, rgba(237, 237, 237, 0.79) 34.62%, rgba(237, 237, 237, 0) 100%);
+}
+.video-texts-section .marquees-wrapper:before {
+   right: 0;
+   background: linear-gradient(270deg, #EDEDED 0%, rgba(237, 237, 237, 0.79) 34.62%, rgba(237, 237, 237, 0) 100%);
+}
+.video-texts-section .marquees-track {
+  display: flex;
+  animation: scroll {{ section.settings.speed | default: 20 }}s linear infinite;
+}
+.video-texts-section .marquees-item img {
+    max-width: 560px;
+}
+.video-texts-section .content_inner {
+    padding: 0px 110px;
+}
+.video-texts-section .video-box-inner {
+    height: 750px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.video-texts-section .video-box-inner:before {
+    position: absolute;
+    content: "";
+    right: 0;
+    top: 0;
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(270deg, #EDEDED 0%, rgba(237, 237, 237, 0.79) 34.62%, rgba(237, 237, 237, 0) 100%);
+}
+.video-texts-section .video-box-inner video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media(max-width: 768px){
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .video-texts-section .video-texts-wrapper {
+    flex-direction: column;
+  }
+  .video-texts-section .content-box h2 {
+    font-size: 18px;
+  }
+  .video-texts-section .video-box-inner {
+    height: 400px;
+  }
+  .video-texts-section .content_inner {
+    padding: 20px;
+  }
+  .video-texts-section .content-box p {
+    font-size: 16px;
+    margin: 20px 0px 30px;
+    max-width: 100%;
+  }
+  .video-texts-section .video-box,
+  .video-texts-section .content-box {
+    max-width: 100%;
+    width: 100%;
+  }
+  .video-texts-section .marquees-item img {
+    max-width: 300px;
+  }
+  .video-texts-section .marquees_text {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .video-texts-section .video-box-inner:before {
+    position: absolute;
+    content: "";
+    right: 0;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(
+  360deg, #EDEDED 0%, rgba(237, 237, 237, 0.79) 34.62%, rgba(237, 237, 237, 0) 100%);
+  }
+}
+{% endstyle %}
+
+<div class="video-texts-section">
+  <div class="video-texts-wrapper">
+    <div class="video-box">
+      <div class="video-box-inner">
+        {% if section.settings.gif_image == blank %}
+            <video autoplay muted loop playsinline>
+            <source src="{{ section.settings.video.sources[0].url }}" type="video/mp4">
+            </video>
+          {% else %}
+            <img src="{{ section.settings.gif_image | img_url:'master' }}" width="" height="">
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="content-box">
+        <div class="content_inner">
+            {% if section.settings.heading != blank %}
+                <h2>{{ section.settings.heading }}</h2>
+            {% endif %}
+
+            {% if section.settings.text != blank %}
+                <p class="content_p">{{ section.settings.text }}</p>
+            {% endif %}
+
+            <div class="marquees_text">{{ section.settings.marquee_text }}</div>
+
+            {% if section.blocks.size > 0 %}
+                <div class="marquees-wrapper">
+                    <div class="marquees-track">
+                    {% for i in (1..2) %}
+                        {% for block in section.blocks %}
+                            <div class="marquees-item" {{ block.shopify_attributes }}>
+                                {% if block.settings.marquees_image %}
+                                    <img src="{{ block.settings.marquees_image | image_url }}" alt="" width="" height="">
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Video text marquee",
+  "settings": [
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Upload Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "gif_image",
+      "label": "Gif Here",
+      "info": "add vdo or gif"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "BACKED BY STANDARDS"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Description",
+      "default": "We put patience, precision and a lot of care into every tee. Doing it right is a reward in itself."
+    },
+    {
+      "type": "text",
+      "id": "marquee_text",
+      "label": "Heading text",
+      "default": "OUR CERTIFICATIONS:"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "default": 80,
+      "label": "Padding Top"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "default": 80,
+      "label": "Padding Bottom"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "default": 80,
+      "label": "Padding Top Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "default": 80,
+      "label": "Padding Bottom Mobile"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "label": "Marquees Speed (seconds)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "marquees",
+      "name": "Marquees Text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "marquees_image",
+          "label": "Image",
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video text marquee"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,223 @@
+{% comment %} 
+  Arguments
+  - product: product object
+  - [per_row]: number of items per row
+  - [quick_shop_enable]: boolean
+  - [collection]: collection object
+{% endcomment %}
+
+{%- liquid
+  unless per_row
+    assign per_row = 4
+  endunless
+
+  capture gridView
+    render 'products_per_row', products_per_row: per_row, style: 'fractions'
+  endcapture
+
+  # These assignments have no effect if a sizes parameter is passed in
+  if fallback != blank
+    assign fallback = fallback
+  else
+    assign fallback = 'variable'
+  endif
+
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+
+  assign product_tags = product.tags | join: ','
+  assign has_custom_label = false
+  if product.metafields.theme.label and product.metafields.theme.label != blank
+    assign has_custom_label = true
+    assign custom_label = product.metafields.theme.label.value
+  elsif product_tags contains '_label_'
+    for tag in product.tags
+      if tag contains '_label_'
+        assign tag_starts_with = tag | slice: 0
+        if tag_starts_with == '_'
+          assign has_custom_label = true
+          assign custom_label = tag | replace: '_label_', ''
+        endif
+      endif
+    endfor
+  endif
+-%}
+
+<product-card data-id="{% for tag in product.tags %}{{ tag | handleize }}{% unless forloop.last %},{% endunless %}{% endfor %}" class="grid-product">
+  <div
+    class="product__card"
+    data-aos="row-of-{{ per_row }}"
+    data-product-handle="{{ product.handle }}"
+    data-product-id="{{ product.id }}"
+  >
+    <div class="grid-product__content">
+      {%- if has_custom_label -%}
+        <div class="grid-product__tag grid-product__tag--custom">
+          {{ custom_label }}
+        </div>
+      {%- else -%}
+        {%- unless product.available -%}
+          <div class="grid-product__tag grid-product__tag--sold-out">
+            {{ 'products.product.sold_out' | t }}
+          </div>
+        {%- endunless -%}
+        {% comment %}
+          ---------by team searchtap-----------
+          {%- if on_sale and product.available -%}
+            <div class="grid-product__tag grid-product__tag--sale">
+              {{ 'products.general.sale' | t }}
+            </div>
+          {%- endif -%}
+        {% endcomment %}
+      {%- endif -%}
+
+      <div class="grid__item-image-wrapper ">
+        <div class="atc-hover_wrapper">
+          <a href="{{ product.url |  within: collection }}">
+            {%- render 'slider-carousel', product: product -%}
+          </a>
+
+          {% comment %} Add to cart Start (Desktop) {% endcomment %}
+          {%- for option in product.options_with_values -%}
+            {%- render 'atc-hover',
+              product: product,
+              form_id: form_id,
+              section_id: section_id,
+              option: option,
+              forloop: forloop
+            -%}
+          {%- endfor %}
+          {% comment %} Add to cart end (Desktop) {% endcomment %}
+        </div>
+
+        {%- if template.name == 'collection' -%}
+          {% for tag in product.tags %}
+            {% if tag contains 'TBH Exclusive' %}
+              <div class="shark-tank-logo">
+                {% comment %} <img src="{{ 'BEAR ACCESS SVG.svg' | asset_url }}" alt="My Icon"> {% endcomment %}
+                <p>Limited Drop</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {%- endif -%}
+        <div class="grid-product__meta">
+          <div class="icon_title_wrapper">
+            <a href="{{ product.url | within: collection }}" class="grid-product__link">
+              <div class="grid-product__title grid-product__title--{{ settings.type_product_style }}">
+                {{ product.vendor }}
+              </div>
+              {% if product.vendor %}
+                <span class="product_vender">{{ product.vendor | truncate: 25 }}</span>
+              {% endif %}
+            </a>
+
+            <!-- Start of Judge.me code -->
+            {% comment %}
+              <div
+                style="{{ jm_style }}"
+                class="jdgm-widget jdgm-preview-badge"
+                data-id="{{ product.id }}"
+                data-auto-install="false"
+              >
+                {{ product.metafields.judgeme.badge }}
+              </div>
+            {% endcomment %}
+            <!-- End of Judge.me code -->
+
+            {% comment %} Add to cart Start (Mobile) {% endcomment %}
+            {%- for option in product.options_with_values -%}
+              {%- render 'atc-popup',
+                product: product,
+                form_id: form_id,
+                section_id: section_id,
+                option: option,
+                forloop: forloop,
+                variant_labels: block.settings.variant_labels
+              -%}
+            {%- endfor %}
+            {% comment %} Add to cart end (Mobile) {% endcomment %}
+          </div>
+          {%- if settings.vendor_enable -%}
+            <div class="grid-product__vendor">{{ product.vendor }}</div>
+          {%- endif -%}
+          <div class="grid-product__price">
+            {%- if on_sale -%}
+              <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+              <span class="grid-product__price--original">
+                {{- product.compare_at_price | money_without_currency | replace: ',', '' -}}
+              </span>
+              <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
+            {%- endif -%}
+            {% comment %}
+              ------ by team searchtap
+              {%- if product.price_varies -%}
+                {%- assign price = product.price_min | money -%}
+                <span>
+                  {{ 'products.general.from_text_html' | t: price: price }}
+                </span>
+              {%- else -%}
+                <span>
+                  {{ product.price | money_with_currency | replace: ',', '' }}
+                </span>
+              {%- endif -%}
+            {% endcomment %}
+            {% comment %} ------ Added by team searchtap ------ {% endcomment %}
+
+            {%- assign min_instock_price = null -%}
+            {%- for variant in product.variants -%}
+              {%- if variant.available and variant.price > 0 -%}
+                {%- if min_instock_price == null or variant.price < min_instock_price -%}
+                  {%- assign min_instock_price = variant.price -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            <span>
+              {%- if min_instock_price -%}
+                {{ min_instock_price | money_with_currency | replace: ',', '' }}
+              {%- else -%}
+                {{ product.price | money_with_currency | replace: ',', '' }}
+              {%- endif -%}
+            </span>
+
+            {%- if on_sale -%}
+              {%- if settings.product_save_amount -%}
+                {%- if settings.product_save_type == 'dollar' -%}
+                  {%- capture saved_amount -%}{{ product.compare_at_price | minus: product.price | money }}{%- endcapture -%}
+                {%- else -%}
+                  {%- capture saved_amount -%}{{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round }}%{%- endcapture -%}
+                {%- endif -%}
+                <span class="grid-product__price--savings">
+                  {{ 'products.general.save_html' | t: saved_amount: saved_amount }}
+                </span>
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- assign product_variant = product.selected_or_first_available_variant -%}
+            {%- if product_variant.unit_price_measurement -%}
+              <div class="product__unit-price">
+                {%- capture unit_price_base_unit -%}
+                  {%- if product_variant.unit_price_measurement -%}
+                    {%- if product_variant.unit_price_measurement.reference_value != 1 -%}
+                      {{ product_variant.unit_price_measurement.reference_value }}
+                    {%- endif -%}
+                    {{ product_variant.unit_price_measurement.reference_unit }}
+                  {%- endif -%}
+                {%- endcapture -%}
+
+                {{ product_variant.unit_price | money }}/{{ unit_price_base_unit }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+            <button class="quick-product__btn btn--not-ready js-modal-open-quick-modal-{{ product.id }} small--hide">
+              {{ settings.quick_shop_text }}
+            </button>
+    {%- render 'quick-shop-modal', product: product -%}
+  </div>
+</product-card>
+

@@ -1,0 +1,201 @@
+<section class="bear-about-section">
+  <div class="bear-container">
+
+    <div class="bear-left">
+      {% if section.settings.left_image %}
+        <img 
+          src="{{ section.settings.left_image | img_url: '800x' }}" 
+          alt="About Image" width="" height=""
+          class="bear-image">
+      {% endif %}
+    </div>
+
+    <div class="bear-right">
+      <div class="bear_inner">
+        <h2 class="bear-heading">
+            {{ section.settings.heading }}
+        </h2>
+
+        <div class="bear-description">
+            {{ section.settings.description }}
+        </div>
+
+        <ul class="bear-list">
+            {% for block in section.blocks %}
+            <li class="bear-list-item">
+                <span class="checkmark">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.3307 4L5.9974 11.3333L2.66406 8" stroke="#E92E30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              </span>
+                <span>{{ block.settings.text }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.bear-about-section .bear-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  align-items: center;
+  padding: 0px 30px;
+}
+.bear-about-section .bear-left img.bear-image {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  height:100%;
+}
+.bear-about-section .bear_inner {
+  max-width: 74%;
+  width: 100%;
+}
+.bear-about-section .bear-right {
+  background: #F2F2F2;
+  padding: 20px 140px;
+  border-radius: 10px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: auto;
+  justify-content: center;
+}
+.bear-left {
+    width: 100%;
+    height: 100%;
+}
+.bear-about-section .bear-heading {
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  color: #3f3f3f;
+}
+.bear-about-section .bear-description strong {
+  color: #E92E30;
+  font-weight: 500;
+}
+.bear-about-section .bear-description {
+  font-size: 16px;
+  line-height: 150%;
+  color: rgba(63, 63, 63, 0.8);
+  margin-bottom: 80px;
+}
+.bear-about-section .bear-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.bear-about-section .bear-list-item {
+  font-size: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  color: #3f3f3f;
+  text-transform: uppercase;
+}
+.bear-about-section .checkmark {
+  color: #E92E30;
+  margin-right: 12px;
+  font-size: 16px;
+}
+.bear-about-section .bear-heading strong {
+  font-weight: 500;
+  color: #E92E30;
+}
+@media(max-width: 1551px) {
+  .bear-about-section .bear-right {
+    padding: 24px 60px;
+  }
+
+  .bear-about-section .bear_inner {
+     max-width: unset;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+}
+@media(max-width: 768px) {
+  .bear-about-section .bear-list-item {
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: 400;
+  }
+  .bear-about-section .bear-left img.bear-image {
+    border-radius: 4px;
+  }
+  .bear-about-section .bear-container {
+    grid-template-columns: 1fr;
+    padding: 0px 10px;
+  }
+  .bear-about-section .bear-right {
+    padding: 24px;
+    border-radius: 4px;
+  }
+  .bear-about-section .bear_inner {
+    max-width: 100%;
+    width: 100%;
+  }
+  .bear-about-section .bear-heading {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  .bear-about-section .bear-description {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Image text section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Left Side Image"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Right Heading",
+      "default": "<p>WE ARE THE BEAR</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Right Side Description",
+      "default": "<p>Before creating the brand, founders Harsh & Tanvi Somaiya spent years manufacturing garments for global labels...</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "check_item",
+      "name": "Checklist Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "30+ years of manufacturing expertise"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image text section"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,192 @@
+<style>
+.what-we-stand-for {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    text-align: center; 
+}
+
+.what-we-stand-for .section-heading {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 30px;
+    line-height: 140%;
+}
+
+.what-we-stand-for .grid-what {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.what-we-stand-for .item {
+  text-align: center;
+}
+
+.what-we-stand-for .item img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.what-we-stand-for .item-title {
+    font-weight: 500;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    text-transform: uppercase;
+    line-height: 120%;
+}
+
+.what-we-stand-for .item-desc {
+  font-size: 14px;
+  color: #3f3f3f;
+  max-width: 95%;
+  margin: 0 auto;
+}
+.what-we-stand-for .what-we-stand {
+    max-width: 1230px;
+    width: 100%;
+    padding: 0px 10px;
+    margin: auto;
+}
+.what-we-stand-for .item-img {
+    overflow: hidden;
+    border-radius: 10px;
+}
+.what-we-stand-for .item .item-img img {
+    transition: all 0.3s ease-in-out;
+}
+.what-we-stand-for .item:hover .item-img img {
+    transform: scale(1.1);
+}
+@media(max-width: 768px) {
+  .what-we-stand-for .grid-what {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 12px;
+    column-gap: 2px;
+  }
+  .what-we-stand-for .section-heading {
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  .what-we-stand-for .item-title {
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .what-we-stand-for .item img {
+    border-radius: 4px;
+  }
+  .what-we-stand-for {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+}
+</style>
+
+
+<div class="what-we-stand-for">
+    <div class="what-we-stand">
+        {% if section.settings.top_heading != blank %}
+            <h2 class="section-heading">{{ section.settings.top_heading }}</h2>
+        {% endif %}
+
+        <div class="grid-what">
+            {% for block in section.blocks %}
+                <div class="item">
+                    <div class="item-img">
+                        {% if block.settings.item_image %}
+                            <img src="{{ block.settings.item_image | image_url }}" alt="{{ block.settings.item_title }}" width="" height="" >
+                        {% endif %}
+                    </div>
+
+                    {% if block.settings.item_title != blank %}
+                        <div class="item-title">{{ block.settings.item_title }}</div>
+                    {% endif %}
+
+                    {% if block.settings.item_desc != blank %}
+                        <div class="item-desc">{{ block.settings.item_desc }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "What We Stand For",
+  "settings": [
+    {
+      "type": "text",
+      "id": "top_heading",
+      "label": "Top Heading",
+      "default": "WHAT WE STAND FOR"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding Desktop",
+      "min": 20,
+      "max": 100,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding Desktop",
+      "min": 20,
+      "max": 100,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top Padding Mobile",
+      "min": 20,
+      "max": 100,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom Padding Mobile",
+      "min": 20,
+      "max": 100,
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "item_image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "item_title",
+          "label": "Title",
+          "default": "PREMIUM FABRICS"
+        },
+        {
+          "type": "textarea",
+          "id": "item_desc",
+          "label": "Description",
+          "default": "Curated for comfort, breathability, and long-lasting quality."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "What We Stand For"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,391 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom:{{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+
+  .wrapper-contact {
+    display: grid;
+    grid-template-columns: 1fr 0.40fr;
+  }
+  .img-contact.left-con {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .is-mobile {
+      display: none;
+  }
+  .container-contact {
+      padding: 0px 100px 0px 50px;
+  }
+  .texts-here.right-con {
+      margin-left: 50px;
+  }
+  h2.h2-contact {
+      font-family: 'Roboto';
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 130%;
+      text-transform: uppercase;
+      color:#3F3F3F;
+      text-align:left;
+      margin:unset;
+  }
+  .tagline {
+      font-family: 'Roboto';
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 140%;
+      color:#3F3F3FCC;
+      margin:12px 0px 0px 0px
+  }
+  .need-help {
+      margin: 36px 0px 0px 0px;
+      border-bottom: 1px solid #3F3F3F1A;
+      padding: 0px 0px 36px 0px;
+  }
+  .need-text {
+      font-family: 'Roboto';
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 120%;
+      text-transform: uppercase;
+      color:#3F3F3F;
+  }
+  .meet-text {
+      font-family: 'Roboto';
+      font-weight: 300;
+      font-style: Italic;
+      font-size: 16px;
+      line-height: 140%;
+      margin:12px 0px 0px 0px;
+      color:#3F3F3FCC;
+      max-width: 366px;
+  }
+  .contact-title {
+      font-family: 'Roboto';
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 140%;
+      color:#3F3F3F;
+  }
+  .contact-value {
+      font-family: 'Roboto';
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 130%;
+      letter-spacing: 0;
+        color:#3F3F3F;
+      a{
+        text-decoration: underline;
+        text-decoration-style: solid;
+        text-decoration-thickness: 0%;
+        text-decoration-skip-ink: auto;
+        margin: 8px 0px 0px 0px;
+        cursor: pointer;
+      }
+  }
+  .contact-block {
+      margin: 36px 0px 0px 0px;
+  }
+  span.reach {
+      font-family: 'Roboto';
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 140%;
+      color:#3F3F3F;
+  }
+  a.social-link {
+      font-family: 'Roboto';
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 140%;
+      text-decoration: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: auto;
+      color:#3F3F3F;
+      cursor:pointer;
+  }
+  .social-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 8px;
+  }
+
+  @media (min-width: 1440px) {
+    .wrapper-contact {
+      align-items: flex-start;
+    }
+
+    .img-contact.left-con {
+      position: sticky;
+      top: 100px; /* adjust based on your header height */
+      height: fit-content;
+    }
+  }
+
+  @media(max-width: 768px) {
+  .img-contact.left-con {
+    border-radius: 4px;
+  }
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom:{{ section.settings.padding_bottom_mobile }}px;
+  }
+  .texts-here.right-con {
+      margin-left: 0;
+  }
+  .container-contact {
+      padding: 0px 16px 0px 16px;
+  }
+  .wrapper-contact {
+      display: flex;
+      flex-direction: column;
+      margin: 16px 0px 0px 0px;
+  }
+  .is-desktop {
+      display: none;
+  }
+  .is-mobile {
+      display:block;
+  }
+  h2.h2-contact {
+      font-size: 18px;}
+
+  .tagline {
+      font-size: 14px;
+      margin: 10px 0px 0px 0px;
+  }
+  .meet-text {
+      font-size: 14px;
+      margin: 10px 0px 0px 0px;
+  }
+  .need-text {
+      font-size: 14px;}
+      .contact-title {
+      font-size: 12px;}
+   .contact-value {
+      font-size: 14px;cursor:pointer;}
+     span.reach {
+      font-size: 12px;}
+   a.social-link {
+      font-size: 14px;}
+   .social-links {
+      display: flex;
+      gap: 10px;}
+   .contact-block {
+      margin: 30px 0px 0px 0px;
+  }
+  .need-help {
+      margin: 24px 0px 0px 0px;
+      padding: 0px 0px 0px 0px;
+      border:unset;
+  }
+
+  }
+  @media(max-width:366px){
+
+  }
+{% endstyle %}
+
+<div class="container-contact">
+  <!-- MOBILE HEADING -->
+  <h2 class="h2-contact is-mobile">{{ section.settings.text_h2 }}</h2>
+  <div class="tagline is-mobile">{{ section.settings.text_tagline }}</div>
+
+  <div class="wrapper-contact">
+    <!-- LEFT IMAGE -->
+    <div class="img-contact left-con">
+      <img src="{{ section.settings.img_left_desktop | img_url: 'master' }}" class="is-desktop">
+      <img src="{{ section.settings.img_mobile | img_url: 'master' }}" class="is-mobile">
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="texts-here right-con">
+      <h2 class="h2-contact is-desktop">{{ section.settings.text_h2 }}</h2>
+      <div class="tagline is-desktop">{{ section.settings.text_tagline }}</div>
+
+      <div class="need-help">
+        <div class="need-text">{{ section.settings.text_need }}</div>
+        <div class="meet-text"><pre>{{ section.settings.meet }}</pre></div>
+      </div>
+
+      <div class="contact-info">
+        <div class="contact-block" {{ block.shopify_attributes }}>
+          <div class="contact-title">QUICK SUPPORT (WHATSAPP)</div>
+          {% comment %} <button class="lc-widget-toggler contact-value" style="text-decoration: underline;"><strong>Chat with us</strong></button> {% endcomment %}
+          <div class="contact-value"><p><a href="https://wa.me/8448081017" target="_blank" style="text-decoration: underline;" title="Chat with our Customer Support over WhatsApp">+91 84480 81017</a></p></div>
+        </div>
+
+        {% for block in section.blocks %}
+          {% if block.type != 'social' %}
+            <div class="contact-block" {{ block.shopify_attributes }}>
+              <div class="contact-title">{{ block.settings.title }}</div>
+
+              {% if block.settings.url != blank %}
+                <a href="{{ block.settings.url }}" class="contact-value" target="_blank">
+                  {{ block.settings.value }}
+                </a>
+              {% else %}
+                <div class="contact-value">{{ block.settings.value }}</div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- SOCIAL LINKS -->
+      <div class="social-info">
+        <div class="social-links">
+          {% for block in section.blocks %}
+            {% if block.type == 'social' %}
+              <a
+                href="{{ block.settings.link }}"
+                class="social-link"
+                target="_blank"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.label }}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "contact-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "img_left_desktop",
+      "label": "Img desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "img_mobile",
+      "label": "Img Mobile"
+    },
+    {
+      "type": "text",
+      "id": "text-h2",
+      "label": "Text Contact"
+    },
+    {
+      "type": "text",
+      "id": "text_tagline",
+      "label": "Text Tgaline"
+    },
+    {
+      "type": "text",
+      "id": "text_need",
+      "label": "Text Need"
+    },
+    {
+      "type": "text",
+      "id": "meet",
+      "label": "Text Meet"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40,
+      "label": "Padding Top"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40,
+      "label": "Padding Bottom"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40,
+      "label": "Padding Top Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40,
+      "label": "Padding Bottom Mobile"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "contact",
+      "name": "Contact Field",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading (e.g. CALL US AT)"
+        },
+        {
+          "type": "richtext",
+          "id": "value",
+          "label": "Value (number / email / address)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link (optional – WhatsApp, email, social, etc.)"
+        }
+      ]
+    },
+    {
+      "type": "social",
+      "name": "Social Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Platform Name (Instagram, Facebook, etc)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Social URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Make Contact"
+    }
+  ]
+}
+{% endschema %}

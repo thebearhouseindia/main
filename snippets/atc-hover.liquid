@@ -1,0 +1,30 @@
+<atc-hover class="ds_variant-wrapper variant-wrapper--popup js small--hide" data-type="popup">
+  <div class="ds_variant-input-wrap" data-index="option{{ forloop.index }}" data-handle="{{ option.name | handleize }}">
+    <div class="ds_variant-choose">
+      <span>Add To Cart</span>
+    </div>
+    <div class="ds_variant-list">
+      {%- for variant in product.variants -%}
+        <div
+          class="ds_variant-item {% if variant.available == false %}unavailable {% else %}available{% endif %}"
+          data-variant-id="{{ variant.id }}"
+          data-variant-available="{{ variant.available }}"
+        >
+          <span
+            class="variant-label"
+            title="{%- if variant.inventory_quantity > 0 and variant.inventory_quantity <= 10 -%}Last few items!{%- endif -%}{%- unless variant.available -%}Not available.{%- endunless -%}"
+          >
+            {{- variant.option1 -}}
+            <span class="dots">
+              {%- if variant.inventory_quantity > 0 and variant.inventory_quantity <= 10 -%}•{%- endif -%}
+            </span>
+          </span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</atc-hover>
+{% comment %} <button class="quick-product__btn js-modal-open-quick-modal-{{ product.id }} small--hide">
+  {% comment %} {{ settings.quick_shop_text }} {% endcomment %}
+  <span>Add To Cart</span>
+</button> {% endcomment %}

@@ -1,0 +1,70 @@
+
+{{ 'blog-list.css' | asset_url | stylesheet_tag }}
+<div class="new-article-card">
+    <a class="new-article-img-wrap height-article" href="{{ article.url }}">
+        {% if article.image != blank %}
+            <img class="new-article-img" src="{{ article.image | img_url: 'master' }}" width="" height="" alt="{{ article.image.alt }}">
+        {% endif %}
+    </a>
+    <div class="new-articale-detail-block">
+        <div class="div-info-vala">
+        <div class="new-article-info">
+        <div class="new-article-date">{{ article.published_at | date: "%b %d, %Y" }}</div>
+        <span class="point"></span>
+        <div class="new-read">
+         {% if article.metafields.custom.read_time != blank   %}
+          <div class="read-time">{{article.metafields.custom.read_time}}</div>
+          {% else %}
+          <div class="new-author">{{article.author}} </div>
+        {% endif %}
+    </div>
+    </div>
+        <h3 class="new-article-title">{{ article.title | truncate: 35 }}</h3></div>
+        {% comment %} <div class="new-article-desc">
+            {{ article.content | strip_html | strip_newlines | truncatewords: 10, "..." }}
+        </div> {% endcomment %}
+        <a class="read-link" href="{{ article.url }}">Read More</a>
+    </div>
+</div>
+<style>
+
+.new-article-card .new-author {
+  position: relative;
+  padding-left: 14px; /* space for line */
+}
+{% comment %} .new-article-card .new-author::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 8px;
+  height: 1px;
+  background: #000;
+  transform: translateY(-50%);
+} {% endcomment %}
+.new-article-card .new-author::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  width: 1px;
+  height: 70%;
+  background: #3F3F3F33;
+  transform: translateY(0%);
+}
+.new-article-card .read-time {
+  position: relative;
+  padding-left: 14px; /* space for line */
+}
+.new-article-card .read-time::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  width: 1px;
+  height: 70%;
+  background: #3F3F3F33;
+  transform: translateY(0%);
+}
+
+</style>   

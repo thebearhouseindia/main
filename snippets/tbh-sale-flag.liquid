@@ -1,0 +1,208 @@
+{%- comment -%}
+  TBH Big Bear Sale flag
+  Paints a sale badge on every product card image, on both native theme
+  cards (.grid-product__image-mask) and SearchTap collection cards
+  (.st-product-image). Style, text, position and colour come from
+  Theme settings > Big Bear Sale badge.
+
+  Dynamic mode: reads each card's MRP vs selling price, shows the real
+  percent off, and hides the badge on full-price products.
+
+  One-click off:   uncheck "Show ..." in Theme settings.
+  Per collection:  collection metafield custom.hide_sale_badge = true.
+{%- endcomment -%}
+
+{%- if settings.tbh_sale_badge_enabled -%}
+
+  {%- assign tbh_style = settings.tbh_sale_badge_style | default: 'fade' -%}
+  {%- assign tbh_pos   = settings.tbh_sale_badge_position | default: 'tl' -%}
+  {%- assign tbh_solid = settings.tbh_sale_badge_color | default: '#C8102E' -%}
+  {%- assign tbh_fade  = tbh_solid | color_modify: 'alpha', 0 -%}
+
+  {%- assign tbh_hide_here = false -%}
+  {%- if collection and collection.metafields.custom.hide_sale_badge.value == true -%}
+    {%- assign tbh_hide_here = true -%}
+  {%- endif -%}
+
+  {%- comment -%} nothing to show if static mode has no text {%- endcomment -%}
+  {%- assign tbh_can_show = true -%}
+  {%- unless settings.tbh_sale_badge_dynamic -%}
+    {%- if settings.tbh_sale_badge_text == blank -%}{%- assign tbh_can_show = false -%}{%- endif -%}
+  {%- endunless -%}
+
+  {%- if tbh_can_show -%}
+  {% style %}
+    .tbh-flag-host{position:relative}
+    .tbh-sale-flag{pointer-events:none}
+
+    .tbh-fl-fade,.tbh-fl-box,.tbh-fl-ribbon > span{
+      color:#fff !important;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1;white-space:nowrap;
+    }
+
+    /* fade band */
+    .tbh-fl-fade{
+      position:absolute;left:0;z-index:4;max-width:64%;
+      padding:7px 24px 7px 12px;font-size:11px;
+      background:linear-gradient(90deg, {{ tbh_solid }} 0%, {{ tbh_solid }} 38%, {{ tbh_fade }} 100%);
+    }
+    .tbh-fl-fade.is-top{top:10px}
+    .tbh-fl-fade.is-middle{top:50%;transform:translateY(-50%)}
+    .tbh-fl-fade.is-bottom{bottom:10px}
+
+    /* horizontal box */
+    .tbh-fl-box{
+      position:absolute;z-index:4;background:linear-gradient({{ tbh_solid }},{{ tbh_solid }}) !important;
+      padding:7px 10px;font-size:11px;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.22);
+    }
+    .tbh-fl-box.is-tl{top:10px;left:10px}
+    .tbh-fl-box.is-tr{top:10px;right:10px}
+    .tbh-fl-box.is-bl{bottom:10px;left:10px}
+    .tbh-fl-box.is-br{bottom:10px;right:10px}
+    .tbh-fl-box.is-ml{top:50%;left:10px;transform:translateY(-50%)}
+
+    /* diagonal ribbon */
+    .tbh-fl-ribbon{position:absolute;z-index:4;display:block;width:130px;height:130px;overflow:hidden}
+    .tbh-fl-ribbon > span{position:absolute;display:block;width:190px;padding:6px 0;text-align:center;
+      font-size:10px;background:linear-gradient({{ tbh_solid }},{{ tbh_solid }}) !important;box-shadow:0 1px 4px rgba(0,0,0,.22)}
+    .tbh-fl-ribbon.is-tl{top:0;left:0}
+    .tbh-fl-ribbon.is-tl > span{transform:rotate(-45deg);left:-52px;top:30px}
+    .tbh-fl-ribbon.is-tr{top:0;right:0}
+    .tbh-fl-ribbon.is-tr > span{transform:rotate(45deg);right:-52px;top:30px}
+    .tbh-fl-ribbon.is-bl{bottom:0;left:0}
+    .tbh-fl-ribbon.is-bl > span{transform:rotate(45deg);left:-52px;bottom:30px}
+    .tbh-fl-ribbon.is-br{bottom:0;right:0}
+    .tbh-fl-ribbon.is-br > span{transform:rotate(-45deg);right:-52px;bottom:30px}
+
+    @media (max-width:767px){
+      .tbh-fl-fade{font-size:9.5px;padding:6px 20px 6px 10px;max-width:70%;}
+      .tbh-fl-box{font-size:9.5px;padding:6px 8px}
+      .tbh-fl-ribbon > span{font-size:9px}
+    }
+  {% endstyle %}
+
+  <script>
+    (function(){
+      var CFG={
+        text:    {{ settings.tbh_sale_badge_text | default: 'Big Bear Sale' | json }},
+        style:   {{ tbh_style | json }},
+        pos:     {{ tbh_pos | json }},
+        dynamic: {% if settings.tbh_sale_badge_dynamic %}true{% else %}false{% endif %},
+        dlabel:  {{ settings.tbh_sale_badge_dynamic_label | default: '[off]% OFF' | json }},
+        hide:    {% if tbh_hide_here %}true{% else %}false{% endif %}
+      };
+      if(CFG.hide){return;}
+      var SEL='.grid-product__image-mask, .st-product-image';
+
+      function vert(pos){var c=pos.charAt(0);return c==='t'?'top':(c==='m'?'middle':'bottom');}
+
+      function alreadyFlagged(host){
+        var c=host.children;
+        for(var j=0;j<c.length;j++){
+          if(c[j].className && (' '+c[j].className+' ').indexOf(' tbh-sale-flag ')>-1){return true;}
+        }
+        return false;
+      }
+
+      // climb to the nearest ancestor that holds a price, that is this product's card
+      function cardOf(host){
+        var n=host;
+        for(var i=0;i<7 && n;i++){
+          try{
+            if(n.querySelector && (n.querySelector('[class*="price"]')||n.querySelector('[class*="Price"]')||n.querySelector('s')||n.querySelector('del'))){return n;}
+          }catch(e){}
+          n=n.parentElement;
+        }
+        return host.parentElement||host;
+      }
+
+      // pull rupee numbers from the card's price area
+      function priceNums(card){
+        var els=card.querySelectorAll('[class*="price"],[class*="Price"],[class*="amount"],s,del,.money');
+        var txt='';
+        for(var i=0;i<els.length;i++){txt+=' '+(els[i].textContent||'');}
+        if(!txt.replace(/\s/g,'')){txt=card.textContent||'';}
+        var m=txt.match(/\d[\d,]*(?:\.\d+)?/g)||[];
+        var out=[];
+        for(var j=0;j<m.length;j++){
+          var v=parseFloat(m[j].replace(/,/g,''));
+          if(!isNaN(v)&&v>0){out.push(v);}
+        }
+        return out;
+      }
+
+      function discountPct(card){
+        var n=priceNums(card);
+        if(n.length<2){return n.length===0 ? -1 : 0;} // -1 = price not ready, 0 = single price (no MRP)
+        var mx=Math.max.apply(null,n), mn=Math.min.apply(null,n);
+        if(mx<=mn){return 0;}
+        return Math.round((mx-mn)/mx*100);
+      }
+
+      function makeFlag(text){
+        if(CFG.style==='ribbon'){
+          var rp=(CFG.pos==='ml')?'tl':CFG.pos;
+          var wrap=document.createElement('span');
+          wrap.className='tbh-sale-flag tbh-fl-ribbon is-'+rp;
+          wrap.setAttribute('aria-hidden','true');
+          var inner=document.createElement('span');
+          inner.textContent=text;
+          wrap.appendChild(inner);
+          return wrap;
+        }
+        if(CFG.style==='box'){
+          var b=document.createElement('span');
+          b.className='tbh-sale-flag tbh-fl-box is-'+CFG.pos;
+          b.setAttribute('aria-hidden','true');
+          b.textContent=text;
+          return b;
+        }
+        var f=document.createElement('span');
+        f.className='tbh-sale-flag tbh-fl-fade is-'+vert(CFG.pos);
+        f.setAttribute('aria-hidden','true');
+        f.textContent=text;
+        return f;
+      }
+
+      function addFlag(host,text){
+        if(host.className.indexOf('tbh-flag-host')<0){host.className+=' tbh-flag-host';}
+        host.appendChild(makeFlag(text));
+      }
+
+      function process(host){
+        if(host.getAttribute('data-tbh-done')){return;}
+        if(alreadyFlagged(host)){host.setAttribute('data-tbh-done','1');return;}
+
+        if(!CFG.dynamic){
+          host.setAttribute('data-tbh-done','1');
+          addFlag(host,CFG.text);
+          return;
+        }
+        var pct=discountPct(cardOf(host));
+        if(pct===-1){return;}              // price not painted yet, try again on next mutation
+        host.setAttribute('data-tbh-done','1');
+        if(pct<=0){return;}                // full price, no badge
+        addFlag(host, String(CFG.dlabel).split('[off]').join(pct));
+      }
+
+      function inject(){
+        var hosts=document.querySelectorAll(SEL);
+        for(var i=0;i<hosts.length;i++){process(hosts[i]);}
+      }
+
+      if(document.readyState!=='loading'){inject();}
+      else{document.addEventListener('DOMContentLoaded',inject);}
+
+      var pending=false;
+      try{
+        var obs=new MutationObserver(function(){
+          if(pending){return;}
+          pending=true;
+          (window.requestAnimationFrame||window.setTimeout)(function(){pending=false;inject();},0);
+        });
+        obs.observe(document.documentElement,{childList:true,subtree:true});
+      }catch(e){}
+    })();
+  </script>
+  {%- endif -%}
+
+{%- endif -%}

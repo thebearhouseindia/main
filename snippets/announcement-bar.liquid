@@ -1,0 +1,189 @@
+{%- assign show_announcement = false -%}
+{%- assign announcement_block_count = 0 -%}
+{%- assign has_countdown = false -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'announcement' or block.type == '@app' or block.type == 'countdown' -%}
+    {%- assign show_announcement = true -%}
+    {%- assign announcement_block_count = announcement_block_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{% if show_announcement %}
+  <div class="announcement-bar">
+    <div class="page-width">
+      <div class="slideshow-wrapper">
+        <button type="button" class="visually-hidden slideshow__pause" data-id="{{ section.id }}" aria-live="polite">
+          <span class="slideshow__pause-stop">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-pause" viewBox="0 0 10 13"><path d="M0 0h3v13H0zm7 0h3v13H7z" fill-rule="evenodd"/></svg>
+            <span class="icon__fallback-text">{{ 'sections.slideshow.pause_slideshow' | t }}</span>
+          </span>
+          <span class="slideshow__pause-play">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-play" viewBox="18.24 17.35 24.52 28.3"><path fill="#323232" d="M22.1 19.151v25.5l20.4-13.489-20.4-12.011z"/></svg>
+            <span class="icon__fallback-text">{{ 'sections.slideshow.play_slideshow' | t }}</span>
+          </span>
+        </button>
+
+        <div
+          id="AnnouncementSlider"
+          class="announcement-slider"
+          data-compact="{{ section.settings.announcement_compact }}"
+          data-block-count="{{ announcement_block_count }}">
+          {%- assign slide_index = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              <div
+                id="AnnouncementSlide-{{ block.id }}"
+                class="announcement-slider__slide"
+                data-index="{{ slide_index }}"
+                {{ block.shopify_attributes }}
+              >
+                {%- render block -%}
+              </div>
+              {%- assign slide_index = slide_index | plus: 1 -%}
+            {%- endif -%}
+            {%- if block.type == 'announcement' -%}
+              <div
+                id="AnnouncementSlide-{{ block.id }}"
+                class="announcement-slider__slide"
+                data-index="{{ slide_index }}"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.settings.link != blank -%}
+                  <a class="announcement-link" href="{{ block.settings.link }}">
+                {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <span class="announcement-text">{{ block.settings.text }}</span>
+                  {%- endif -%}
+                  {%- if block.settings.link_text != blank -%}
+                    <span class="announcement-link-text">{{ block.settings.link_text }}</span>
+                  {%- endif -%}
+                {%- if block.settings.link != blank -%}
+                  </a>
+                {%- endif -%}
+              </div>
+              {%- assign slide_index = slide_index | plus: 1 -%}
+            {%- endif -%}
+            {%- if block.type == 'countdown' -%}
+              {%- assign has_countdown = true -%}
+              {%- assign cd_d = '0' | append: block.settings.cd_day | slice: -2, 2 -%}
+              {%- assign cd_h = '0' | append: block.settings.cd_hour | slice: -2, 2 -%}
+              {%- assign cd_mi = '0' | append: block.settings.cd_minute | slice: -2, 2 -%}
+              {%- capture cd_end_iso -%}{{ block.settings.cd_year }}-{{ block.settings.cd_month }}-{{ cd_d }}T{{ cd_h }}:{{ cd_mi }}:00+05:30{%- endcapture -%}
+              <div
+                id="AnnouncementSlide-{{ block.id }}"
+                class="announcement-slider__slide announcement-slider__slide--countdown"
+                data-index="{{ slide_index }}"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.settings.link != blank -%}
+                  <a class="announcement-link" href="{{ block.settings.link }}">
+                {%- endif -%}
+                  <div
+                    class="tbh-cdbar{% if block.settings.cd_hide_seconds %} tbh-cdbar--noseconds{% endif %}"
+                    data-end="{{ cd_end_iso | strip }}"
+                    data-expired="{{ block.settings.cd_expired_text | escape }}"
+                    data-hide="{{ block.settings.cd_hide_on_end }}"
+                    style="--tbh-cd-num: {{ block.settings.cd_color }}; --tbh-cd-size: {{ block.settings.cd_number_size | default: 18 }}px;"
+                  >
+                    {%- if block.settings.cd_prefix != blank -%}
+                      <span class="tbh-cdbar__head">{{ block.settings.cd_prefix }}</span>
+                    {%- endif -%}
+                    <span class="tbh-cdbar__timer{% if block.settings.cd_bold %} tbh-cdbar__timer--bold{% endif %}">
+                      <span class="tbh-cdbar__unit">
+                        <span class="tbh-cdbar__num" data-days>00</span>
+                        <span class="tbh-cdbar__lbl">{{ block.settings.cd_label_days | default: 'Days' }}</span>
+                      </span>
+                      <span class="tbh-cdbar__sep">:</span>
+                      <span class="tbh-cdbar__unit">
+                        <span class="tbh-cdbar__num" data-hours>00</span>
+                        <span class="tbh-cdbar__lbl">{{ block.settings.cd_label_hours | default: 'Hrs' }}</span>
+                      </span>
+                      <span class="tbh-cdbar__sep">:</span>
+                      <span class="tbh-cdbar__unit">
+                        <span class="tbh-cdbar__num" data-mins>00</span>
+                        <span class="tbh-cdbar__lbl">{{ block.settings.cd_label_mins | default: 'Mins' }}</span>
+                      </span>
+                      <span class="tbh-cdbar__sep tbh-cdbar__sep--sec">:</span>
+                      <span class="tbh-cdbar__unit tbh-cdbar__unit--sec">
+                        <span class="tbh-cdbar__num" data-secs>00</span>
+                        <span class="tbh-cdbar__lbl">{{ block.settings.cd_label_secs | default: 'Secs' }}</span>
+                      </span>
+                    </span>
+                    <span class="tbh-cdbar__expired"></span>
+                  </div>
+                {%- if block.settings.link != blank -%}
+                  </a>
+                {%- endif -%}
+              </div>
+              {%- assign slide_index = slide_index | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- if has_countdown -%}
+    {% style %}
+      .announcement-slider__slide--countdown{height:auto;padding-top:4px;padding-bottom:4px}
+      .tbh-cdbar{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;line-height:1}
+      .tbh-cdbar__head{font-size:16px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+      .tbh-cdbar__timer{display:inline-flex;align-items:flex-start;gap:6px}
+      .tbh-cdbar__unit{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+      .tbh-cdbar__num{display:inline-flex;align-items:center;justify-content:center;min-width:calc(var(--tbh-cd-size,18px) + 14px);padding:4px 6px;border-radius:6px;background:rgba(0,0,0,.20);color:var(--tbh-cd-num,#fff);font-size:var(--tbh-cd-size,18px);font-variant-numeric:tabular-nums;line-height:1}
+      .tbh-cdbar__timer--bold .tbh-cdbar__num{font-weight:700}
+      .tbh-cdbar__lbl{font-size:9px;letter-spacing:.10em;text-transform:uppercase;opacity:.85}
+      .tbh-cdbar__sep{margin-top:5px;font-size:var(--tbh-cd-size,18px);line-height:1;opacity:.7}
+      .tbh-cdbar--noseconds .tbh-cdbar__unit--sec,.tbh-cdbar--noseconds .tbh-cdbar__sep--sec{display:none}
+      .tbh-cdbar__expired{display:none;font-weight:600;font-size:13px;letter-spacing:.04em}
+      @media (max-width:600px){
+        .tbh-cdbar__head{font-size:11px}
+        .tbh-cdbar__num{min-width:calc(var(--tbh-cd-size,16px) + 10px);padding:3px 5px;font-size:calc(var(--tbh-cd-size,18px) - 2px)}
+        .tbh-cdbar__sep{font-size:calc(var(--tbh-cd-size,18px) - 2px);margin-top:4px}
+      }
+    {% endstyle %}
+    <script>
+      (function(){
+        function pad(n){return (n<10?'0':'')+n;}
+        function parseEnd(raw){
+          raw=(raw||'').trim().replace(' ','T');
+          if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(raw)){raw+=':00';}
+          if(!/(?:[zZ]|[+\-]\d{2}:?\d{2})$/.test(raw)){raw+='+05:30';}
+          return new Date(raw);
+        }
+        function render(bar){
+          if(!bar._end){bar._end=parseEnd(bar.getAttribute('data-end'));}
+          var end=bar._end;
+          if(isNaN(end.getTime())){return;}
+          var expired=bar.getAttribute('data-expired')||'';
+          var hide=bar.getAttribute('data-hide')==='true';
+          var timer=bar.querySelector('.tbh-cdbar__timer');
+          var head=bar.querySelector('.tbh-cdbar__head');
+          var exp=bar.querySelector('.tbh-cdbar__expired');
+          var diff=end.getTime()-Date.now();
+          if(diff<=0){
+            if(hide){var slide=bar.closest('.announcement-slider__slide');if(slide){slide.style.display='none';}return;}
+            if(timer){timer.style.display='none';}
+            if(head){head.style.display='none';}
+            if(exp){exp.textContent=expired;exp.style.display='block';}
+            return;
+          }
+          var t=Math.floor(diff/1000);
+          var d=Math.floor(t/86400),h=Math.floor((t%86400)/3600),m=Math.floor((t%3600)/60),s=t%60;
+          var dd=bar.querySelector('[data-days]'),hh=bar.querySelector('[data-hours]'),mm=bar.querySelector('[data-mins]'),ss=bar.querySelector('[data-secs]');
+          if(dd){dd.textContent=pad(d);}
+          if(hh){hh.textContent=pad(h);}
+          if(mm){mm.textContent=pad(m);}
+          if(ss){ss.textContent=pad(s);}
+        }
+        function tick(){
+          var bars=document.querySelectorAll('.tbh-cdbar');
+          for(var i=0;i<bars.length;i++){render(bars[i]);}
+        }
+        tick();
+        setInterval(tick,1000);
+      })();
+    </script>
+  {%- endif -%}
+
+{% endif %}

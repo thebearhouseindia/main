@@ -1,0 +1,102 @@
+{% comment %}
+  {%- if block.settings.logo -%}
+    {%- style -%}
+      .footer__logo a {
+        height: {{ block.settings.desktop_logo_height }}px;
+      }
+    {%- endstyle -%}
+    <div class="footer__logo">
+      <a href="{{ routes.root_url }}">
+        {%- assign width = block.settings.desktop_logo_height | times: block.settings.logo.aspect_ratio | times: 2 -%}
+        {%- assign height = block.settings.desktop_logo_height -%}
+        {%- capture sizes -%}{{ block.settings.desktop_logo_height | times: block.settings.logo.aspect_ratio }}px{%- endcapture -%}
+        {%- capture widths -%}{{ block.settings.desktop_logo_height | times: block.settings.logo.aspect_ratio }}, {{ block.settings.desktop_logo_height | times: block.settings.logo.aspect_ratio | times: 2 }}{%- endcapture -%}
+        {%- capture style -%}max-width: {{ block.settings.desktop_logo_height | times: block.settings.logo.aspect_ratio }}px;max-height: {{ block.settings.desktop_logo_height }}px;{%- endcapture -%}
+
+        {%- render 'image-element',
+          img: block.settings.logo,
+          img_width: width,
+          img_height: height,
+          sizes: sizes,
+          widths: widths,
+          style: style,
+          alt: block.settings.logo.alt | default: shop.name,
+        -%}
+      </a>
+    </div>
+  {%- endif -%}
+{% endcomment %}
+
+<div class="footer_icon">
+  {% if block.settings.title %}
+    <h2 class="h4 footer__title">{{ block.settings.title }}</h2>
+  {% endif %}
+
+  <div class="inner_social_contact">
+    <div>
+      <div class="footer_contact">
+        <svg  xmlns="http://www.w3.org/2000/svg" width="20" height="20"  
+fill="currentColor" viewBox="2 2 20 20" >
+<!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
+<path fill-rule="evenodd" d="M18.403 5.633A8.92 8.92 0 0 0 12.053 3c-4.948 0-8.976 4.027-8.978 8.977 0 1.582.413 3.126 1.198 4.488L3 21.116l4.759-1.249a9 9 0 0 0 4.29 1.093h.004c4.947 0 8.975-4.027 8.977-8.977a8.93 8.93 0 0 0-2.627-6.35m-6.35 13.812h-.003a7.45 7.45 0 0 1-3.798-1.041l-.272-.162-2.824.741.753-2.753-.177-.282a7.45 7.45 0 0 1-1.141-3.971c.002-4.114 3.349-7.461 7.465-7.461a7.41 7.41 0 0 1 5.275 2.188 7.42 7.42 0 0 1 2.183 5.279c-.002 4.114-3.349 7.462-7.461 7.462m4.093-5.589c-.225-.113-1.327-.655-1.533-.73s-.354-.112-.504.112-.58.729-.711.879-.262.168-.486.056-.947-.349-1.804-1.113c-.667-.595-1.117-1.329-1.248-1.554s-.014-.346.099-.458c.101-.1.224-.262.336-.393s.149-.224.224-.374.038-.281-.019-.393c-.056-.113-.505-1.217-.692-1.666-.181-.435-.366-.377-.504-.383a10 10 0 0 0-.429-.008.83.83 0 0 0-.599.28c-.206.225-.785.767-.785 1.871s.804 2.171.916 2.321 1.582 2.415 3.832 3.387c.536.231.954.369 1.279.473.537.171 1.026.146 1.413.089.431-.064 1.327-.542 1.514-1.066s.187-.973.131-1.067-.207-.151-.43-.263" clip-rule="evenodd"/>
+</svg>
+        {% comment %}
+          <a class="lc-widget-toggler" style="cursor: pointer; text-decoration: underline; font-weight: 500;"
+            >Chat with us</a
+          >
+        {% endcomment %}
+        <a href="https://wa.me/8448081017" target="_blank" style="text-decoration: underline;">+91 84480 81017</a>
+      </div>
+      <div class="footer_contact">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.5162 13.807C11.6884 13.886 11.8823 13.9041 12.066 13.8582C12.2497 13.8123 12.4124 13.7052 12.5271 13.5545L12.8229 13.167C12.9782 12.96 13.1795 12.792 13.4109 12.6763C13.6423 12.5606 13.8975 12.5003 14.1562 12.5003H16.6562C17.0983 12.5003 17.5222 12.6759 17.8348 12.9885C18.1473 13.301 18.3229 13.725 18.3229 14.167V16.667C18.3229 17.109 18.1473 17.5329 17.8348 17.8455C17.5222 18.1581 17.0983 18.3337 16.6562 18.3337C12.678 18.3337 8.86269 16.7533 6.04965 13.9403C3.2366 11.1272 1.65625 7.31191 1.65625 3.33366C1.65625 2.89163 1.83184 2.46771 2.14441 2.15515C2.45697 1.84259 2.88089 1.66699 3.32292 1.66699H5.82292C6.26494 1.66699 6.68887 1.84259 7.00143 2.15515C7.31399 2.46771 7.48958 2.89163 7.48958 3.33366V5.83366C7.48958 6.0924 7.42934 6.34759 7.31363 6.57901C7.19792 6.81044 7.02991 7.01175 6.82292 7.16699L6.43292 7.45949C6.27993 7.57631 6.1721 7.74248 6.12774 7.92978C6.08338 8.11709 6.10524 8.31397 6.18958 8.48699C7.32848 10.8002 9.2016 12.671 11.5162 13.807Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {% if block.settings.support_phone %}
+          <a href="tel:{{ block.settings.support_phone | remove: ' ' }}">
+            {{ block.settings.support_phone }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="footer_contact">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.3307 4.99992C18.3307 4.08325 17.5807 3.33325 16.6641 3.33325H3.33073C2.41406 3.33325 1.66406 4.08325 1.66406 4.99992M18.3307 4.99992V14.9999C18.3307 15.9166 17.5807 16.6666 16.6641 16.6666H3.33073C2.41406 16.6666 1.66406 15.9166 1.66406 14.9999V4.99992M18.3307 4.99992L9.9974 10.8333L1.66406 4.99992" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {% if block.settings.support_email %}
+          <a href="mailto:{{ block.settings.support_email }}">
+            {{ block.settings.support_email }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="footer-app-downloads">
+      {%- if block.settings.app_image_1 != blank and block.settings.app_image_2 != blank -%}
+        <div class="download_app_img">
+          {%- if block.settings.app_image_1 != blank and block.settings.app_link_1 != blank -%}
+            <a href="{{ block.settings.app_link_1 }}" target="_blank" class="footer-app-link">
+              <img
+                src="{{ block.settings.app_image_1 | image_url }}"
+                alt="Download App 1"
+                class="footer-app-img"
+              >
+            </a>
+          {%- endif -%}
+
+          {%- if block.settings.app_image_2 != blank and block.settings.app_link_2 != blank -%}
+            <a href="{{ block.settings.app_link_2 }}" target="_blank" class="footer-app-link">
+              <img
+                src="{{ block.settings.app_image_2 | image_url }}"
+                alt="Download App 2"
+                class="footer-app-img"
+              >
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <h2 class="h4 footer__title">{{ block.settings.title1 }}</h2>
+      {% render 'social-icons', additional_classes: 'footer__social' %}
+    </div>
+  </div>
+</div>

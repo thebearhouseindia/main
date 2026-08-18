@@ -1,0 +1,376 @@
+<section class="fabrics-section">
+  <div class="fabric_inner">
+    <div class="fabrics-inner">
+        <div class="fabrics-left">
+        <h2 class="fabrics-title mobile_view">{{ section.settings.title }}</h2>
+        <div class="fabrics-icons">
+            {% for block in section.blocks %}
+            {% if block.type == "icon" %}
+                <div class="icon-box">
+                {% if block.settings.icon != blank %}
+                    <img src="{{ block.settings.icon | image_url }}" alt="">
+                {% endif %}
+                <p>{{ block.settings.text }}</p>
+                </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        </div>
+
+        
+        <div class="fabrics-right">
+            <h2 class="fabrics-title">{{ section.settings.title }}</h2>
+            <p class="fabrics-desc">{{ section.settings.description | newline_to_br }}</p>
+        </div>
+
+    </div>
+    
+    <div class="fabrics-info-grid">
+        {% for block in section.blocks %}
+        {% if block.type == "info" %}
+            <div class="info-item">
+            <span class="info-dot"></span>
+            <div class="info-content">
+                <h4>{{ block.settings.heading }}</h4>
+                <p>{{ block.settings.content }}</p>
+            </div>
+            </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<style>
+.fabrics-section {
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+}
+.fabrics-section .mobile_view {
+    display: none
+}
+.fabrics-section .fabric_inner {
+    max-width: 1617px;
+    width: 100%;
+    margin: auto;
+    padding: 0px 16px;
+}
+.fabrics-section .fabrics-inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    max-width: 75.71%;
+    width: 100%;
+    margin: auto;
+}
+.fabrics-section .fabrics-title {
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3F3F3F;
+    margin-bottom: 40px;
+}
+
+.fabrics-section .fabrics-icons {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 100px;
+}
+.fabrics-section .icon-box {
+    text-align: center;
+    max-width: 50%;
+    width: 100%;
+    padding: 0px 10px;
+    text-align: center;
+}
+.fabrics-section .icon-box img {
+    width: 50px;
+    height: 50px;
+    margin: auto;
+}
+
+.fabrics-section .icon-box p {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;
+    color: #3F3F3F;
+    margin-top: 20px;
+}
+
+.fabrics-section .fabrics-desc {
+  font-size: 16px;
+  max-width: 450px;
+  color: #3F3F3F;
+}
+.fabrics-section .fabrics-left {
+    max-width: 40%;
+    width: 100%;
+}
+.fabrics-section .fabrics-info-grid {
+    display: flex;
+    margin-top: 100px;
+    justify-content: space-between;
+    position: relative;
+}
+
+.fabrics-section .info-dot {
+    width: 7px;
+    height: 7px;
+    background: #3F3F3F;
+    display: block;
+    margin: auto;
+}
+.fabrics-section .info-content {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+.fabrics-section .info-content h4 {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    color: #3f3f3f;
+    letter-spacing: 0;
+}
+.fabrics-section .info-item {
+    max-width: 15%;
+    width: 100%;
+}
+.fabrics-section .info-content p {
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #3F3F3F;
+    margin: 0px;
+}
+.fabrics-section .fabrics-info-grid:before {
+    content: "";
+    position: absolute;
+    max-width: 85%;
+    width: 100%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: auto;
+    text-align: center;
+    top: 3px;
+    left: 0;
+    right: 0;
+}
+@media(max-width: 1329px) { 
+    .fabrics-section .fabrics-title {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    .fabrics-section .fabrics-left {
+        max-width: 50%;
+        width: 100%;
+    }
+    .fabrics-section .info-item {
+        max-width: 24%;
+        width: 100%;
+    }
+    .fabrics-section .fabrics-info-grid:before {
+        max-width: 77%;
+    }
+}
+@media(max-width: 768px) {
+    .fabrics-section {
+        padding-top: {{ section.settings.padding_top_media }}px;
+        padding-bottom: {{ section.settings.padding_bottom_media }}px;
+    }
+    .fabrics-section .fabrics-title {
+        font-size: 18px;
+        margin-bottom: 24px;
+        display: block;
+    }
+    .fabrics-section .info-item:last-child .info-content {
+        margin-bottom: 0px;
+    }
+    .fabrics-section .info-content {
+        text-align: left;
+    }
+  .fabrics-section .fabrics-inner {
+    flex-direction: column;
+    max-width: 100%;
+  }
+  .fabrics-section .fabrics-info-grid {
+    margin-top: 40px;
+    flex-direction: column; 
+  }
+  .fabrics-section .info-content p {
+    font-size: 14px;
+    }
+  
+  .fabrics-right {
+    display: none;
+  }
+  .fabrics-section .fabrics-left {
+    max-width: 100%;
+    width: 100%;
+    }
+
+  .fabrics-section .fabrics-icons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: flex-start;
+    row-gap: 20px;
+  }
+
+  .fabrics-section .icon-box {
+    text-align: left;
+    width: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 100%;
+    padding: 0px;
+  }
+
+  .fabrics-section .icon-box img {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+  }
+
+  .fabrics-section .icon-box p {
+    font-size: 12px;
+    margin: 0px;
+  }
+  .fabrics-section .info-item {
+    max-width: 100%;
+    display: flex;
+    gap: 15px;
+    }
+    .fabrics-section .info-dot {
+    margin: 0;
+    }
+
+  .fabrics-section .info-content h4 {
+    margin-bottom: 4px;
+  }
+  .fabrics-section .fabrics-info-grid:before {
+    max-width: 1px;
+    height: 85%;
+    margin: 0;
+    top: 0;
+    left: 3px;
+    right: inherit;
+  }
+  .fabrics-section .info-content {
+    text-align: left;
+    margin-top: -4px;
+    margin-bottom: 30px;
+    }
+}
+@media(max-width: 500px) {
+  .fabrics-section .icon-box {
+      padding-right: 10px;
+      border-right: 1px solid #00000014;
+      gap: 8px;
+  }
+
+  .fabrics-section .fabrics-icons {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+  }
+
+  .fabrics-section .icon-box:nth-child(4), .fabrics-section .icon-box:nth-child(2) {
+      padding: 0;
+      border: none;
+  }
+}
+</style>
+{% schema %}
+{
+  "name": "Fabrics Info Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "FABRICS IS LOREM IPSUM"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Grown on the coastal land of Western Europe, this natural fibre is fully compostable, requires zero manual irrigation and comes from a no-waste plant. The oceanic climate and the mineral-rich soil also go a long way in making this one of the best quality linens in the world.\n\nThe fibres have a longer staple length compared to their non-Euro counterparts, which results in a yarn that's not only more durable but also finer, resulting in a softer, more breathable linen."
+    },
+    {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Desktop Padding Top",
+        "default": 80
+    },
+    {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Desktop Padding Bottom",
+        "default": 80
+    },
+    {
+        "type": "range",
+        "id": "padding_top_media",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Mobile Padding Top",
+        "default": 40
+    },
+    {
+        "type": "range",
+        "id": "padding_bottom_media",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Mobile Padding Bottom",
+        "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon",
+      "name": "Icon Item",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon" },
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "info",
+      "name": "Info Item",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "textarea", "id": "content", "label": "Content" }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    { "name": "Fabrics Info Section" }
+  ]
+}
+{% endschema %}
